@@ -1,72 +1,43 @@
-# builds actual library
+cmake_minimum_required(VERSION 3.1)
 
-set(header_path ${${PROJECT_NAME}_SOURCE_DIR}/include/hdac/rpc)
-
-file(GLOB INCS ${header_path}/*.h)
-set(header
-    ${INCS}
-    )
-#message(${header})
+set(prj_base rpc)
 
 set(src
     cif_rpccall.cpp
     rpccaller.cpp
     rpcprotocol.cpp
     )
-#message(${src})
 
-set(lib_dest "lib/rpc")
-set(include_dest "include")
-set(tool_dest "bin")
+add_library(${prj_base}_dynamic SHARED ${src})
+add_library(${prj_base}_static STATIC ${src})
 
-include(${CMAKE_SOURCE_DIR}/cmake/external.cmake)
-add_library(hdac_rpc SHARED ${header} ${src})
-target_include_directories(hdac_rpc
-    PUBLIC
-    $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include/> # for client in subdirectory
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> # for generated files in build mode
-    $<INSTALL_INTERFACE:${${PROJECT_NAME}_INC_INSTALL_DIR}> # for client in install mode
-    PRIVATE
-    ${header_path}) # for source files
+target_link_libraries(${prj_base}_dynamic ${utils_dynamic})
+target_link_libraries(${prj_base}_static ${utils_static})
 
-target_link_libraries(hdac_rpc
-    PUBLIC
-    hdac_utils
-    ${OPENSSL_LIBRARIES}
+target_include_directories(${prj_base}_dynamic 
+    PRIVATE 
+    ../include/${prj_base}
+    ${CMAKE_SOURCE_DIR}/utils/include
+    ${CMAKE_SOURCE_DIR}/crypto/include
     )
 
-target_compile_definitions(hdac_rpc
-    PUBLIC
-    ${PROJECT_NAME}=1
-    ${PROJECT_NAME}_VERSION_MAJOR=${${PROJECT_NAME}_VERSION_MAJOR}
-    ${PROJECT_NAME}_VERSION_MINOR=${${PROJECT_NAME}_VERSION_MINOR}
-    ${PROJECT_NAME}_VERSION_PATCH=${${PROJECT_NAME}_VERSION_PATCH})
+target_include_directories(${prj_base}_static 
+    PRIVATE 
+    ../include/${prj_base}
+    ${CMAKE_SOURCE_DIR}/utils/include
+    ${CMAKE_SOURCE_DIR}/crypto/include
+    )
 
-set_target_properties(hdac_rpc PROPERTIES
-    OUTPUT_NAME "${PROJECT_NAME_LOW}-${${PROJECT_NAME}_VERSION}")
+set_target_properties(${prj_base}_dynamic PROPERTIES OUTPUT_NAME "hdac_${prj_base}")
+set_target_properties(${prj_base}_static PROPERTIES VERSION 1.2 SOVERSION 1)
 
-install(TARGETS hdac_rpc EXPORT hdac_rpcTargets
-        RUNTIME       DESTINATION ${${PROJECT_NAME}_RUNTIME_INSTALL_DIR}
-        LIBRARY       DESTINATION ${${PROJECT_NAME}_LIBRARY_INSTALL_DIR}
-        ARCHIVE       DESTINATION ${${PROJECT_NAME}_ARCHIVE_INSTALL_DIR}
-        FRAMEWORK     DESTINATION ${${PROJECT_NAME}_FRAMEWORK_INSTALL_DIR})
+set_target_properties(${prj_base}_static PROPERTIES OUTPUT_NAME "hdac_${prj_base}")
 
-# Write/install version file
-include(CMakePackageConfigHelpers)
-set(version_file "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME_LOW}-version.cmake")
-write_basic_package_version_file(${version_file}
-                                 VERSION ${${PROJECT_NAME}_VERSION}
-                                 COMPATIBILITY AnyNewerVersion)
+set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 
+install(TARGETS ${prj_base}_dynamic ${prj_base}_static
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib)
 
-#install(FILES ${CMAKE_CURRENT_BINARY_DIR}/config_impl.hpp
-#    DESTINATION ${${PROJECT_NAME}_INC_INSTALL_DIR})
-#install(FILES ${CMAKE_CURRENT_BINARY_DIR}/container_node_sizes_impl.hpp
-#    DESTINATION ${HDAC_UTILS_INC_INSTALL_DIR}/foonathan/memory/detail)
-install(FILES ${header}
-    DESTINATION ${${PROJECT_NAME}_INC_INSTALL_DIR}/hdac/rpc)
-#install(FILES ${detail_header}
-#    DESTINATION ${HDAC_UTILS_INC_INSTALL_DIR}/hdac/utils/detail)
-install(FILES ${version_file}
-    DESTINATION ${${PROJECT_NAME}_CMAKE_CONFIG_INSTALL_DIR})
-
+file(GLOB headers ../include/${prj_base}/*.h )
+install(FILES ${headers} DESTINATION include/hdac/${prj_base})

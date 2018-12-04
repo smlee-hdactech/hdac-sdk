@@ -1,33 +1,37 @@
+cmake_minimum_required(VERSION 3.1)
+
+include(FindBoost)
+include(FindOpenSSL)
+include(FindPkgConfig)
+
+find_package(Boost 1.55.0 REQUIRED system thread)
+find_package(OpenSSL REQUIRED)
+pkg_check_modules (SECP256K1 REQUIRED libsecp256k1)
+
 add_executable(hdac_moduleTest main.cpp)
 
-include(${CMAKE_SOURCE_DIR}/cmake/external.cmake)
-
-target_include_directories(hdac_moduleTest
-    PUBLIC
-    $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include/> # for client in subdirectory
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> # for generated files in build mode
-    $<INSTALL_INTERFACE:${${PROJECT_NAME}_INC_INSTALL_DIR}> # for client in install mode
+target_include_directories(hdac_moduleTest 
     PRIVATE
-    ${header_path}) # for source files
+    ../include/${prj_base}
+    ${CMAKE_SOURCE_DIR}/structs/include
+    ${CMAKE_SOURCE_DIR}/utils/include
+    ${CMAKE_SOURCE_DIR}/crypto/include
+    ${CMAKE_SOURCE_DIR}/rpc/include
+    ${CMAKE_SOURCE_DIR}/keys/include
+    )
 
 target_link_libraries(hdac_moduleTest
     PUBLIC
-    hdac_keys
-    hdac_rpc
-    hdac_structs
-    hdac_utils
-    hdac_crypto
-    ${Boost_LIBRARIES}
+    keys_dynamic
+    script_dynamic
+    structs_dynamic
+    rpc_dynamic
+    utils_dynamic
+    crypto_dynamic
+    ${SECP256K1_LIBRARIES}    
     ${OPENSSL_LIBRARIES}
+    Boost::thread
+    Boost::system    
     )
-#target_link_libraries(hdac_moduleTest
-#    PUBLIC
-#    hdac_keys
-#    hdac_structs
-#    hdac_rpc
-#    hdac_utils
-#    hdac_crypto
-#    ${Boost_LIBRARIES}
-#    ${SECP256K1_LIBRARIES}
-#    ${OPENSSL_LIBRARIES}
-#    )
+
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
