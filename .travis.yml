@@ -1,1 +1,5 @@
 language: cpp
+script:
+#build
+- cmake -S . -B_build
+- cmake --build _build
