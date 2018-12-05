@@ -13,6 +13,14 @@ script:
   - ./configure --enable-module-recovery
   - make && sudo make install
   - cd -
+#get json_spirit
+  - git clone https://github.com/smlee-hdactech/json_spirit.git
+  - cd json_spirit
+  - mkdir build
+  - cd build
+  - cmake ..
+  - make && sudo make install
+  - cd -
 #build
   - cmake -S . -B_build
   - cmake --build _build
