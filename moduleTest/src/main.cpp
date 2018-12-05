@@ -3,7 +3,8 @@
 #include <structs/hashes.h>
 #include <rpc/cif_rpccall.h>
 #include <keys/key.h>
-#include <utils/strcodeclib.h>
+#include <utils/utilstrencodings.h>
+#include <keys/bitcoinaddress.h>
 
 using namespace std;
 using namespace json_spirit;
@@ -35,20 +36,51 @@ void createKeyPairs()
         return;
     }
 
+    ShowResultWithRPC("getblockchainparams", Array());
+
     CKey secret;
     //secret.MakeNewKey(fCompressed);
     secret.MakeNewKey(true);
 
     CPubKey pubkey = secret.GetPubKey();
 
+    //"address-pubkeyhash-version" : "003fd61c",
+    //"address-scripthash-version" : "0571a3e6",
+    CBitcoinAddress addr(pubkey.GetID(),
+        ParseHex("003fd61c"), ParseHex("0571a3e6"), 0);
+
+    cout << "address : " << addr.ToString() << endl;
     cout << "pubkey ID: " << HexStr(pubkey.GetID()) << endl;
     cout << "pubKey: " << HexStr(pubkey) << endl;
 
     ECC_Stop();
 }
 
+int32_t parseHexToInt32(const string& hexString)
+{
+    auto hexList = ParseHex(hexString);
+    int32_t checksum = 0;
+    for (int i = 0; i < hexList.size(); i++) {
+        checksum |= ((int32_t)hexList[i]) << 8*i;
+    }
+    return checksum;
+}
+
+void testPubkeyToAddr()
+{
+    CPubKey pubkey(ParseHex("027e75736b41474547b7e2443d7235f4030cbb378093bbd2e98ea36ded6d703c2b"));
+    cout << "pubKey: " << HexStr(pubkey) << endl;
+
+    //cout << hex << checksum << endl;
+    CBitcoinAddress addr(pubkey.GetID(),
+        ParseHex("003fd61c"), ParseHex("0571a3e6"), parseHexToInt32("cb507245"));
+
+    cout << "address : " << addr.ToString() << endl;
+}
+
 int main()
 {
+#if 0
     cout << "1. test sha256 of \"This is test message\"" << endl;
     testCalcSHA256();
 
@@ -64,6 +96,11 @@ int main()
 
     cout << "5. create key pairs" << endl;
     createKeyPairs();
+
+#endif
+
+    cout << "6. pubkey test" << endl;
+    testPubkeyToAddr();
 
     return 0;
 }

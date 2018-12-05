@@ -4,7 +4,7 @@ set(prj_base utils)
 
 set(src
     base64.cpp
-    strcodeclib.cpp
+    utilstrencodings.cpp
     allocators.cpp
     random.cpp
     utiltime.cpp

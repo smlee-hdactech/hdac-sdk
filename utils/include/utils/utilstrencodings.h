@@ -3,10 +3,13 @@
 
 #include "strcodeclib_global.h"
 #include <string>
+#include <vector>
+
+std::vector<unsigned char> ParseHex(const char* psz);
+std::vector<unsigned char> ParseHex(const char* psz,bool &fIsHex);
+std::vector<unsigned char> ParseHex(const std::string& str);
 
 STRCODECLIBSHARED_EXPORT signed char HexDigit(char c);
-
-
 
 template<typename T>
 std::string HexStr(const T itbegin, const T itend, bool fSpaces=false)

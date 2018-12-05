@@ -4,6 +4,7 @@
 #include <structs/base58.h>
 #include "pubkey.h"
 #include <script/standard.h>
+#include <utils/utility.h>
 
 /** base58-encoded Bitcoin addresses.
  * Public-key-hash-addresses have version 0 (or 111 testnet).
@@ -24,9 +25,19 @@ public:
                  const std::vector<unsigned char>& scriptPrefix) const;
 
     CBitcoinAddress(const std::vector<unsigned char>& pubkeyPrefix,
-                    const std::vector<unsigned char>& scriptPrefix) :
-        _pubkeyPrefix(pubkeyPrefix), _scriptPrefix(scriptPrefix){}
-    CBitcoinAddress(const CTxDestination &dest) { Set(dest); }
+                    const std::vector<unsigned char>& scriptPrefix,
+                    int32_t addressChecksumValue) :
+        CBase58Data(addressChecksumValue),
+        _pubkeyPrefix(pubkeyPrefix),
+        _scriptPrefix(scriptPrefix) {}
+    CBitcoinAddress(const CTxDestination &dest,
+        const std::vector<unsigned char>& pubkeyPrefix,
+        const std::vector<unsigned char>& scriptPrefix,
+        int32_t addressChecksumValue) :
+        CBase58Data(addressChecksumValue),
+        _pubkeyPrefix(pubkeyPrefix),
+        _scriptPrefix(scriptPrefix)
+        { Set(dest); }
     CBitcoinAddress(const std::string& strAddress, unsigned int pubkeyAddressSize) {
         SetString(strAddress, pubkeyAddressSize);
     }

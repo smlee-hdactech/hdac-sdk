@@ -1,5 +1,5 @@
 #include "uint256.h"
-#include <utils/strcodeclib.h>
+#include <utils/utilstrencodings.h>
 #include <cstring>
 
 template <unsigned int BITS>

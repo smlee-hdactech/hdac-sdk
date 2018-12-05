@@ -1,5 +1,5 @@
 #include "script.h"
-#include <utils/strcodeclib.h>
+#include <utils/utilstrencodings.h>
 #include <utils/tinyformat.h>
 
 namespace {

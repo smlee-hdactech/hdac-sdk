@@ -1,7 +1,7 @@
 #ifndef BASE58_H
 #define BASE58_H
 
-#include <utils/strcodeclib.h>
+#include <utils/utilstrencodings.h>
 #include <utils/allocators.h>
 #include <vector>
 /**
@@ -75,7 +75,7 @@ public:
     bool operator> (const CBase58Data& b58) const { return CompareTo(b58) >  0; }
 
 private:
-    int _checksumValue;
+    int32_t _checksumValue;
 };
 
 #endif // BASE58_H

@@ -18,6 +18,7 @@ target_include_directories(hdac_moduleTest
     ${CMAKE_SOURCE_DIR}/crypto/include
     ${CMAKE_SOURCE_DIR}/rpc/include
     ${CMAKE_SOURCE_DIR}/keys/include
+    ${CMAKE_SOURCE_DIR}/script/include
     )
 
 target_link_libraries(hdac_moduleTest
