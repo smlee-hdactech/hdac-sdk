@@ -1,12 +1,18 @@
+dist: xenial
 language: cpp
+addons:
+  apt:
+    packages:
+    - libboost-system-dev
+    - libboost-thread-dev
 script:
 #get libsecp256k1
-- git clone https://github.com/bitcoin-core/secp256k1.git
-- cd secp256k1
-- ./autogen.sh
-- ./configure --enable-module-recovery
-- make && sudo make install
-- cd -
+  - git clone https://github.com/bitcoin-core/secp256k1.git
+  - cd secp256k1
+  - ./autogen.sh
+  - ./configure --enable-module-recovery
+  - make && sudo make install
+  - cd -
 #build
-- cmake -S . -B_build
-- cmake --build _build
+  - cmake -S . -B_build
+  - cmake --build _build
