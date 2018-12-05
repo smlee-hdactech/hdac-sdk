@@ -6,6 +6,7 @@ script:
 - ./autogen.sh
 - ./configure --enable-module-recovery
 - make && sudo make install
+- cd -
 #build
 - cmake -S . -B_build
 - cmake --build _build
