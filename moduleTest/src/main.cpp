@@ -5,6 +5,11 @@
 #include <keys/key.h>
 #include <utils/utilstrencodings.h>
 #include <keys/bitcoinaddress.h>
+#include <utils/utilsfront.h>
+#include <rpc/rpcresult.h>
+#include <rpc/rpcclient.h>
+#include <keys/bitcoinsecret.h>
+#include <keys/keyshelper.h>
 
 using namespace std;
 using namespace json_spirit;
@@ -20,6 +25,87 @@ void testCalcSHA256()
 //    obtainHash("This is test message", compareHash1);
 }
 
+// TODO : should add the logging function
+// TODO : parameters from config-file.
+Object blockChainParams()
+{
+    RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
+    return client.CallRPC("getblockchainparams");
+}
+
+class KeysHelper {
+public:
+    KeysHelper() {
+        const Object reply = blockChainParams();
+
+        string resultStr;
+        int nRet = result(reply, resultStr);
+        if (nRet) {
+            cerr << "rpc error : " << resultStr;
+            return;
+        }
+
+        std::vector<string> keys{
+            "address-pubkeyhash-version",
+            "address-scripthash-version",
+            "address-checksum-value",
+            "private-key-version"
+        };
+
+        _resultMap = mapFromRpcResult(resultStr, keys);
+        _addrHelper.reset(new WalletAddrHelper(_resultMap));
+        _privHelper.reset(new PrivateKeyHelper(_resultMap));
+    }
+
+    IWalletAddrHelper& addrHelper() {
+        return *_addrHelper;
+    }
+
+    IPrivateKeyHelper& privHelper() {
+        return *_privHelper;
+    }
+
+private:
+    map<string, string> _resultMap;
+
+    class WalletAddrHelper : public IWalletAddrHelper {
+    public:
+        WalletAddrHelper(const map<string, string> &result) :
+            _resultMap(result)  { }
+
+        const std::vector<unsigned char> pubkeyAddrPrefix() const override  {
+            return ParseHex(_resultMap.at("address-pubkeyhash-version"));
+        }
+        const std::vector<unsigned char> scriptAddrPrefix() const override  {
+            return ParseHex(_resultMap.at("address-scripthash-version"));
+        }
+
+        int32_t addrChecksumValue() const override {
+            return parseHexToInt32Le(_resultMap.at("address-checksum-value"));
+        }
+    private:
+        const map<string, string> & _resultMap;
+
+    };
+    std::unique_ptr<WalletAddrHelper> _addrHelper;
+
+    class PrivateKeyHelper : public IPrivateKeyHelper {
+    public:
+        PrivateKeyHelper(const map<string, string> &result) :
+            _resultMap(result)  { }
+
+        const std::vector<unsigned char> privkeyPrefix() const override {
+            return ParseHex(_resultMap.at("private-key-version"));
+        }
+
+        int32_t addrChecksumValue() const override  {
+            return parseHexToInt32Le(_resultMap.at("address-checksum-value"));
+        }
+    private:
+        const map<string, string> &_resultMap;
+    };
+    std::unique_ptr<PrivateKeyHelper> _privHelper;
+};
 
 
 void createKeyPairs()
@@ -36,71 +122,69 @@ void createKeyPairs()
         return;
     }
 
-    ShowResultWithRPC("getblockchainparams", Array());
-
     CKey secret;
     //secret.MakeNewKey(fCompressed);
     secret.MakeNewKey(true);
 
     CPubKey pubkey = secret.GetPubKey();
 
-    //"address-pubkeyhash-version" : "003fd61c",
-    //"address-scripthash-version" : "0571a3e6",
-    CBitcoinAddress addr(pubkey.GetID(),
-        ParseHex("003fd61c"), ParseHex("0571a3e6"), 0);
+    KeysHelper helper;
+
+    CBitcoinAddress addr(pubkey.GetID(), helper.addrHelper());
+
+    //signmessage with private key, and compare pubkeys each other
 
     cout << "address : " << addr.ToString() << endl;
     cout << "pubkey ID: " << HexStr(pubkey.GetID()) << endl;
     cout << "pubKey: " << HexStr(pubkey) << endl;
+    cout << "privkey: "
+         << CBitcoinSecret(secret, helper.privHelper()).ToString() << endl;
 
     ECC_Stop();
 }
 
-int32_t parseHexToInt32(const string& hexString)
+
+string resultWithRPC(const string &method, const Array &params = Array())
 {
-    auto hexList = ParseHex(hexString);
-    int32_t checksum = 0;
-    for (int i = 0; i < hexList.size(); i++) {
-        checksum |= ((int32_t)hexList[i]) << 8*i;
-    }
-    return checksum;
+    RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
+    const Object reply = client.CallRPC(method, params);
+
+    string resultStr;
+    int nRet = result(reply, resultStr);
+    if (!nRet)
+        return resultStr;
+    return "";
 }
 
-void testPubkeyToAddr()
+void testPubkeyToAddrAfterGettingParams()
 {
+    // from cli, getaddresses true
     CPubKey pubkey(ParseHex("027e75736b41474547b7e2443d7235f4030cbb378093bbd2e98ea36ded6d703c2b"));
     cout << "pubKey: " << HexStr(pubkey) << endl;
 
+    KeysHelper helper;
     //cout << hex << checksum << endl;
-    CBitcoinAddress addr(pubkey.GetID(),
-        ParseHex("003fd61c"), ParseHex("0571a3e6"), parseHexToInt32("cb507245"));
+    CBitcoinAddress addr(pubkey.GetID(), helper.addrHelper());
 
     cout << "address : " << addr.ToString() << endl;
 }
 
 int main()
 {
-#if 0
     cout << "1. test sha256 of \"This is test message\"" << endl;
     testCalcSHA256();
 
     cout << "2. test sha256 of file, video1.mp4" << endl;
     hashFromFile("video1.mp4");
 
-    cout << "3. test fo rpc call" << endl;
-    Array params;
-    ShowResultWithRPC("getinfo", params);
-
-    cout << "4. temp test" << endl;
+    cout << "3. temp test" << endl;
     getinfo();
 
-    cout << "5. create key pairs" << endl;
+    cout << "4. create key pairs" << endl;
     createKeyPairs();
 
-#endif
-
-    cout << "6. pubkey test" << endl;
-    testPubkeyToAddr();
+    cout << "5. pubkey test" << endl;
+    testPubkeyToAddrAfterGettingParams();
 
     return 0;
 }

@@ -7,13 +7,14 @@ set(src
     keyslib.cpp
     pubkey.cpp
     bitcoinaddress.cpp
+    bitcoinsecret.cpp
     )
 
 add_library(${prj_base}_dynamic SHARED ${src})
 add_library(${prj_base}_static STATIC ${src})
 
-target_link_libraries(${prj_base}_dynamic ${script_dynamic})
-target_link_libraries(${prj_base}_static ${script_static})
+target_link_libraries(${prj_base}_dynamic script_dynamic)
+target_link_libraries(${prj_base}_static script_static)
 
 target_include_directories(${prj_base}_dynamic 
     PRIVATE 

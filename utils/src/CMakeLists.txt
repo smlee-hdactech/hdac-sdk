@@ -9,13 +9,14 @@ set(src
     random.cpp
     utiltime.cpp
     utility.cpp
+    utilsfront.cpp
     )
 
 add_library(${prj_base}_dynamic SHARED ${src})
 add_library(${prj_base}_static STATIC ${src})
 
-target_link_libraries(${prj_base}_dynamic ${crypto_dynamic})
-target_link_libraries(${prj_base}_static ${crypto_static})
+target_link_libraries(${prj_base}_dynamic crypto_dynamic)
+target_link_libraries(${prj_base}_static crypto_static)
 
 target_include_directories(${prj_base}_dynamic 
     PRIVATE 

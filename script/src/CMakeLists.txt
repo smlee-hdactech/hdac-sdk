@@ -11,8 +11,8 @@ set(src
 add_library(${prj_base}_dynamic SHARED ${src})
 add_library(${prj_base}_static STATIC ${src})
 
-target_link_libraries(${prj_base}_dynamic ${structs_dynamic})
-target_link_libraries(${prj_base}_static ${structs_static})
+target_link_libraries(${prj_base}_dynamic structs_dynamic)
+target_link_libraries(${prj_base}_static structs_static)
 
 target_include_directories(${prj_base}_dynamic 
     PRIVATE 

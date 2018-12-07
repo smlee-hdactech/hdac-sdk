@@ -6,6 +6,8 @@ set(src
     cif_rpccall.cpp
     rpccaller.cpp
     rpcprotocol.cpp
+    rpcclient.cpp
+    rpcresult.cpp
     )
 
 add_library(${prj_base}_dynamic SHARED ${src})

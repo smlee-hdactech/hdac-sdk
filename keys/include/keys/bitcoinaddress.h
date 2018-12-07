@@ -5,6 +5,7 @@
 #include "pubkey.h"
 #include <script/standard.h>
 #include <utils/utility.h>
+#include "keyshelper.h"
 
 /** base58-encoded Bitcoin addresses.
  * Public-key-hash-addresses have version 0 (or 111 testnet).
@@ -24,24 +25,29 @@ public:
     bool IsValid(const std::vector<unsigned char>& pubkeyPrefix,
                  const std::vector<unsigned char>& scriptPrefix) const;
 
-    CBitcoinAddress(const std::vector<unsigned char>& pubkeyPrefix,
-                    const std::vector<unsigned char>& scriptPrefix,
-                    int32_t addressChecksumValue) :
-        CBase58Data(addressChecksumValue),
-        _pubkeyPrefix(pubkeyPrefix),
-        _scriptPrefix(scriptPrefix) {}
+    CBitcoinAddress(const IWalletAddrHelper &helper) :
+        CBase58Data(helper.addrChecksumValue()),
+        _pubkeyPrefix(helper.pubkeyAddrPrefix()),
+        _scriptPrefix(helper.scriptAddrPrefix()) {}
+
     CBitcoinAddress(const CTxDestination &dest,
-        const std::vector<unsigned char>& pubkeyPrefix,
-        const std::vector<unsigned char>& scriptPrefix,
-        int32_t addressChecksumValue) :
-        CBase58Data(addressChecksumValue),
-        _pubkeyPrefix(pubkeyPrefix),
-        _scriptPrefix(scriptPrefix)
-        { Set(dest); }
-    CBitcoinAddress(const std::string& strAddress, unsigned int pubkeyAddressSize) {
+        const IWalletAddrHelper &helper) :
+        CBase58Data(helper.addrChecksumValue()),
+        _pubkeyPrefix(helper.pubkeyAddrPrefix()),
+        _scriptPrefix(helper.scriptAddrPrefix()) {
+        Set(dest);
+    }
+
+    CBitcoinAddress(const std::string& strAddress,
+                    unsigned int pubkeyAddressSize, const IAddrChecksumValueHelper &helper) :
+        CBase58Data(helper.addrChecksumValue())   {
         SetString(strAddress, pubkeyAddressSize);
     }
-    CBitcoinAddress(const char* pszAddress) { SetString(pszAddress); }
+
+    CBitcoinAddress(const char* pszAddress, const IAddrChecksumValueHelper &helper) :
+        CBase58Data(helper.addrChecksumValue())   {
+        SetString(pszAddress);
+    }
 
     CTxDestination Get() const;
     bool GetKeyID(CKeyID &keyID) const;
