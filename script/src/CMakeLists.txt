@@ -6,6 +6,7 @@ set(src
     standard.cpp
     script.cpp
     hdacscript.cpp
+    utilparse.cpp
     )
 
 add_library(${prj_base}_dynamic SHARED ${src})
@@ -14,20 +15,21 @@ add_library(${prj_base}_static STATIC ${src})
 target_link_libraries(${prj_base}_dynamic structs_dynamic)
 target_link_libraries(${prj_base}_static structs_static)
 
-target_include_directories(${prj_base}_dynamic 
-    PRIVATE 
+set(${prj_base}_includes
     ../include/${prj_base}
     ${CMAKE_SOURCE_DIR}/structs/include
     ${CMAKE_SOURCE_DIR}/utils/include
     ${CMAKE_SOURCE_DIR}/crypto/include
+    ${CMAKE_SOURCE_DIR}/entities/include
+    )
+target_include_directories(${prj_base}_dynamic 
+    PRIVATE 
+    ${${prj_base}_includes}
     )
 
 target_include_directories(${prj_base}_static 
     PRIVATE 
-    ../include/${prj_base}
-    ${CMAKE_SOURCE_DIR}/structs/include
-    ${CMAKE_SOURCE_DIR}/utils/include
-    ${CMAKE_SOURCE_DIR}/crypto/include
+    ${${prj_base}_includes}
     )
 
 set_target_properties(${prj_base}_dynamic PROPERTIES OUTPUT_NAME "hdac_${prj_base}")

@@ -9,6 +9,12 @@
 #include <stdexcept>
 #include "hdacscript.h"
 
+template <typename T>
+std::vector<unsigned char> ToByteVector(const T& in)
+{
+    return std::vector<unsigned char>(in.begin(), in.end());
+}
+
 /** Script opcodes */
 enum opcodetype
 {

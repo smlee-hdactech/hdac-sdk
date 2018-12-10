@@ -5,10 +5,11 @@
 #include <ios>
 
 // TODO : make MAX_SIZE changed from extern
-#ifndef MAX_SIZE
-#define MAX_SIZE 0x02000000
+//#ifndef MAX_SIZE
+//#define MAX_SIZE 0x02000000
 //unsigned int MAX_SIZE = 0x02000000;
-#endif
+//#endif
+static uint64_t MAX_SIZE = 0x02000000;
 
 // TODO : how to manage protoco version
 static const int PROTOCOL_VERSION = 70002;
