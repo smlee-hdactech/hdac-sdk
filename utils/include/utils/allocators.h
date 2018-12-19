@@ -6,6 +6,8 @@
 
 #include <openssl/crypto.h> // for OPENSSL_cleanse()
 
+#include <vector>
+
 /**
  * Thread-safe class to keep track of locked (ie, non-swappable) memory pages.
  *
@@ -246,5 +248,8 @@ struct zero_after_free_allocator : public std::allocator<T> {
         std::allocator<T>::deallocate(p, n);
     }
 };
+
+// Byte-vector that clears its contents before deletion.
+typedef std::vector<char, zero_after_free_allocator<char> > CSerializeData;
 
 #endif // ALLOCATORS_H

@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <cassert>
+#include <cstring>
 
 class uint_error : public std::runtime_error {
 public:

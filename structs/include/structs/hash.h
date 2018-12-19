@@ -9,7 +9,7 @@
 
 #include <crypto/ripemd160.h>
 #include <crypto/sha256.h>
-#include "utils/serialize.h"
+#include <utils/serialize.h>
 #include "uint256.h"
 //#include "version/bcversion.h"
 

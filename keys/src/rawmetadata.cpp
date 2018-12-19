@@ -4,6 +4,8 @@
 #include <utils/utilstrencodings.h>
 #include "transactions.h"
 #include <utils/utility.h>
+// TODO : remove the dependency with rpc
+#include <rpc/rpcprotocol.h>
 
 using namespace json_spirit;
 using namespace std;
@@ -809,7 +811,7 @@ CScript ParseRawMetadata(Value param,uint32_t allowed_objects,mc_EntityDetails *
         delete lpDetailsScript;
         if(strError.size())
         {
-            throw JSONRPCError(RPC_INVALID_PARAMETER, strError);
+            throw to_string(RPC_INVALID_PARAMETER) + ": " + strError;
         }
     }
     else
@@ -820,7 +822,7 @@ CScript ParseRawMetadata(Value param,uint32_t allowed_objects,mc_EntityDetails *
             vector<unsigned char> dataData(ParseHex(param.get_str().c_str(),fIsHex));
             if(!fIsHex)
             {
-                throw JSONRPCError(RPC_INVALID_PARAMETER, "data-hex should be hexadecimal string or recognized object format");
+                throw to_string(RPC_INVALID_PARAMETER) + ": " + "data-hex should be hexadecimal string or recognized object format";
             }
             scriptOpReturn << OP_RETURN << dataData;
         }

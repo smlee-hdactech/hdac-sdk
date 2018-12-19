@@ -13,6 +13,11 @@
 #include <utils/tinyformat.h>
 #include <script/utilparse.h>
 #include "rawmetadata.h"
+#include <utils/define.h>
+#include <primitives/transaction.h>
+#include <primitives/interpreter.h>
+#include "standard.h"
+#include "bitcoinsecret.h"
 
 // TODO : remove dependencies with rpc module
 #include <rpc/rpcprotocol.h>
@@ -161,12 +166,7 @@ static inline int64_t roundint64(double d)
     return (int64_t)(d > 0 ? d + 0.5 : d - 0.5);
 }
 
-// TODO : COIN is from nativecurrencymultiple param
-static int64_t COIN = 100000000;
-// TODO : MAX_MONEY is from "maximumperoutput"
-static int64_t MAX_MONEY = 21000000 * COIN;
 
-inline bool MoneyRange(const CAmount& nValue) { return (nValue >= 0 && nValue <= MAX_MONEY); }
 CAmount AmountFromValue(const Value& value)
 {
     double dAmount = value.get_real();
@@ -236,7 +236,7 @@ int ParseAssetKey(const char* asset_key,unsigned char *txid,unsigned char *asset
     }
 
     uint256 hash=0;
-    if(size == 64)
+    if(size == 64)      // maybe txid
     {
         if(type)
         {
@@ -327,6 +327,8 @@ int ParseAssetKey(const char* asset_key,unsigned char *txid,unsigned char *asset
                 }
 #else
                 // TODO : how to implement
+                //tempory return
+                return MC_ASSET_KEY_VALID;
                 assert(!"how to implement");
 #endif
             }
@@ -920,177 +922,384 @@ vector <pair<CScript, CAmount> > ParseRawOutputMultiObject(Object sendTo,int *re
     return vecSend;
 }
 
-Value createrawsendfrom(const string &strAddr, const string &jsonAddrOrAmount,
-                        const string &jsonAppendRawdata,
-                        const IWalletAddrHelper& helper)
+bool ExtractDestinationScriptValid(const CScript& scriptPubKey, CTxDestination& addressRet)
 {
-    vector<CTxDestination> fromaddresses;
-    set<CTxDestination> thisFromAddresses;
+    CScript::const_iterator pc1 = scriptPubKey.begin();
+    unsigned char *ptr;
+    int size;
 
-    fromaddresses=ParseAddresses(strAddr, true, helper);
+    ptr=(unsigned char*)(&pc1[0]);
+    size=scriptPubKey.end()-pc1;
 
-    if(fromaddresses.size() != 1)
+    if( (size >= 25) && (ptr[0] == OP_DUP) )                                    // pay-to-pubkeyhash
     {
-        throw "Single from-address should be specified";
+        addressRet = CKeyID(*(uint160*)(ptr+3));
+        return true;
     }
 
-#if 0   // TODO : how to handle mine
-    if( IsMine(*pwalletMain, fromaddresses[0]) == ISMINE_NO )
+    if( (size >= 23) && (ptr[0] == OP_HASH160) )                                // pay-to-scripthash
     {
-        throw JSONRPCError(RPC_WALLET_ADDRESS_NOT_FOUND, "from-address is not found in this wallet");
-    }
-#endif
+        addressRet = CScriptID(*(uint160*)(ptr+2));
+        return true;
 
-
-    for (const CTxDestination& fromaddress : fromaddresses) {
-        thisFromAddresses.insert(fromaddress);
     }
 
-    //Object sendTo = params[1].get_obj();
-    Value addrOrAmount;
-    if (read_string(jsonAddrOrAmount, addrOrAmount) == false)    {
-        throw "json error : addr or amount is not valid";
-    }
-    Object sendTo = addrOrAmount.get_obj();
-
-    vector <pair<CScript, CAmount> > vecSend;
-    vecSend=ParseRawOutputMultiObject(sendTo,NULL);
-
-    std::unique_ptr<mc_Buffer> assetOut(new mc_Buffer);
-    std::unique_ptr<mc_Script> script(new mc_Script);
-    //mc_gState->m_TmpAssetsOut->Clear();
-
-    for(int i=0;i<(int)vecSend.size();i++)
+    if( size >= 35 )                                                            // pay-to-pubkey
     {
-        //FindFollowOnsInScript(vecSend[i].first,mc_gState->m_TmpAssetsOut,mc_gState->m_TmpScript);
-        FindFollowOnsInScript(vecSend[i].first,assetOut.get(),script.get());
-    }
-
-    mc_EntityDetails entity;
-    entity.Zero();
-
-    //if(mc_gState->m_TmpAssetsOut->GetCount())
-    if(assetOut->GetCount())
-    {
-#if 0
-        if(!mc_gState->m_Assets->FindEntityByFullRef(&entity,mc_gState->m_TmpAssetsOut->GetRow(0)))
+        if( (ptr[0] >= 33) && (ptr[0] <= 65) )
         {
-            throw "Follow-on script rejected - asset not found";
+            if(size >= 2+ptr[0])
+            {
+                CPubKey pubKey(ptr+1, ptr+1+ptr[0]);
+                if (!pubKey.IsValid())
+                    return false;
+
+                addressRet = pubKey.GetID();
+                return true;
+            }
         }
-#else
-        // TODO : how to implement
-        assert(!"how to implement");
-#endif
     }
+
+    return false;
+}
+
+
+class SamplePrivateKeyHelper : public IPrivateKeyHelper {
+public:
+    SamplePrivateKeyHelper() { }
+
+    const std::vector<unsigned char> privkeyPrefix() const override {
+        return ParseHex("8075fa23");
+    }
+
+    int32_t addrChecksumValue() const override {
+        return parseHexToInt32Le("cb507245");
+    }
+};
+
+class EccAutoInitReleaseHandler
+{
+public:
+    EccAutoInitReleaseHandler() {
+        ECC_Start();
+        verifyHandle.reset(new ECCVerifyHandle);
+        if(!ECC_InitSanityCheck()) {
+            cerr << "Elliptic curve cryptography sanity check failure. Aborting." << endl;
+            //InitError("Elliptic curve cryptography sanity check failure. Aborting.");
+            verifyHandle.reset();
+            ECC_Stop();
+            return;
+        }
+    }
+
+    ~EccAutoInitReleaseHandler() {
+        ECC_Stop();
+    }
+
+private:
+    unique_ptr<ECCVerifyHandle> verifyHandle;
+};
+
+Value createMultisigStreamTx(const string &strAddr, const string& streamName,
+                             const string& streamKey, const string& streamItem,
+                             const string& createTxid,
+                             const string& unspentScriptPubKey, const string& unspentTxid, uint32_t unspentVOut,
+                             const string& unspentRedeemScript, const string& privateKey)
+{
+    EccAutoInitReleaseHandler eccScoper;
 
     mc_EntityDetails found_entity;
 
-    Value appendRawdata;
-    read_string(jsonAppendRawdata, appendRawdata);
-    //if (params.size() > 2 && params[2].type() != null_type)    {
-    if (appendRawdata.type() != null_type) {
-        //for (const Value& data : params[2].get_array()) {
-        for (const Value& data : appendRawdata.get_array()) {
-            CScript scriptOpReturn=ParseRawMetadata(data,0x01FF,&entity,&found_entity);
-#if 0
-            if(found_entity.GetEntityType() == MC_ENT_TYPE_STREAM)
-            {
-                FindAddressesWithPublishPermission(fromaddresses,&found_entity);
-            }
-#endif
-            vecSend.push_back(make_pair(scriptOpReturn, 0));
-        }
+    // from CScript scriptOpReturn=ParseRawMetadata(data,0x01FF,&entity,&found_entity);
+    vector <pair<CScript, CAmount> > vecSend;
+    CScript scriptOpReturn;
+    const unsigned char *script;
+    std::unique_ptr<mc_Script> detailsScript(new mc_Script);
+    detailsScript->Clear();
+    // from liststreams ${streamName}
+    auto hexTxid = ParseHex(createTxid);
+
+    std::reverse(hexTxid.begin(), hexTxid.end());
+    //detailsScript->SetEntity(entity.GetTxID()+MC_AST_SHORT_TXID_OFFSET);
+    detailsScript->SetEntity(hexTxid.data()+MC_AST_SHORT_TXID_OFFSET);
+    size_t bytes;
+    script = detailsScript->GetData(0,&bytes);
+    scriptOpReturn << vector<unsigned char>(script, script + bytes) << OP_DROP;
+
+    vector<unsigned char> vKey(streamKey.begin(), streamKey.end());
+    vector<unsigned char> vValue(streamItem.begin(), streamItem.end());
+
+    detailsScript->Clear();
+    if(detailsScript->SetItemKey(&vKey[0],vKey.size()) == MC_ERR_NOERROR)
+    {
+        script = detailsScript->GetData(0,&bytes);
+        scriptOpReturn << vector<unsigned char>(script, script + bytes) << OP_DROP;
     }
 
-#if 0 // TODO : should implement
-    string action="";
+    scriptOpReturn << OP_RETURN << vValue;
+    vecSend.push_back(make_pair(scriptOpReturn, 0));
+
+
     string hex;
-    Value signedTx;
-    Value txid;
-    bool sign_it=false;
-    bool lock_it=false;
-    bool send_it=false;
-    if (params.size() > 3 && params[3].type() != null_type)
-    {
-        ParseRawAction(params[3].get_str(),lock_it,sign_it,send_it);
+
+    CMutableTransaction txNew;
+    for (const auto& s : vecSend)   {
+        CTxOut txout(s.second, s.first);
+        txNew.vout.push_back(txout);
     }
 
+    //string strPubkeyScript = "a9143e45d3a48882576ad5900978303705e1a6000305871473706b700600000000000000ffffffff52ff095c75";
+    //string strPubkeyScript = "a9143e45d3a48882576ad5900978303705e1a6000305871473706b658f70622f63195d4844d12f6f8c9eb5a0751473706b700800000000000000ffffffff24fc095c75";     
+    // from ./hdac-cli kcc listunspent 1 99999999 '["48R3XwXEYBtbq74WrRzRV4UeWugTPUSZmG1deQ"]', scriptPubKey
 
-    CReserveKey reservekey(pwalletMain);
-    CAmount nFeeRequired;
-    string strError;
-    uint32_t flags=MC_CSF_ALLOW_NOT_SPENDABLE_P2SH | MC_CSF_ALLOW_SPENDABLE_P2SH | MC_CSF_ALLOW_NOT_SPENDABLE;
+    auto pubkeyScript = ParseHex(unspentScriptPubKey);
 
-    if(!sign_it)
+    CTxOut txOut1(0, CScript(pubkeyScript.begin(), pubkeyScript.end()));
+    const CScript& script1 = txOut1.scriptPubKey;
+
+    // TODO : check, where from destination
+    CTxDestination addressRet;
+    ExtractDestinationScriptValid(script1, addressRet);
+
+    CScript scriptChange=GetScriptForDestination(addressRet);
+    CTxOut txout2(0, scriptChange);
+    txNew.vout.push_back(txout2);
+
+    //txNew.vin.push_back(CTxIn(uint256("812b4f1732cfacde79511b2d49a851a05ead33bb4e79926a7351946ae49665bc"), 0/*out.i*/));
+    //txNew.vin.push_back(CTxIn(uint256("21386e1f4e1d9cfe7c858f7d23486e1a7da4d9c86c3a19e73a4cad4fdba8a4dc"), 0/*out.i*/));
+    // from ./hdac-cli kcc listunspent 1 99999999 '["48R3XwXEYBtbq74WrRzRV4UeWugTPUSZmG1deQ"]', txid
+
+    txNew.vin.push_back(CTxIn(uint256(unspentTxid), unspentVOut));
+
+    hex=EncodeHexTx(txNew);
+    cout << "before sign, TxHex: " << hex << endl;
+
+
+    int nIn = 0;
+    int nHashType = SIGHASH_ALL;
+
+    uint256 hash = SignatureHash(script1, txNew, nIn, nHashType);
+    cout << "hash: " << HexStr(hash) << endl;
+
+    CTxIn& txin = txNew.vin[nIn];
+
+    //if (!Solver(keystore, script1, hash, nHashType, txin.scriptSig, whichType))
+    //    return false;
+
+    typedef vector<unsigned char> valtype;
+    vector<valtype> vSolutions;
+    txnouttype whichType;
+    if (!TemplateSolver(script1, whichType, vSolutions))
+        return false;
+
+    CScript& scriptSigRet = txin.scriptSig;
+    scriptSigRet.clear();
+
+    CKeyID keyID;
+    switch (whichType)
     {
-        flags |= MC_CSF_ALLOWED_COINS_ARE_MINE;
-    }
-
-    if(vecSend.size() == 0)
-    {
-        throw "Either addresses object or data array should not be empty";
-    }
-
-    CWalletTx rawTx;
-
-    EnsureWalletIsUnlocked();
-    {
-        LOCK (pwalletMain->cs_wallet_send);
-        int eErrorCode;
-        if(!CreateAssetGroupingTransaction(pwalletMain, vecSend, rawTx, reservekey, nFeeRequired, strError, NULL, &thisFromAddresses, 1, -1, -1, NULL, flags, &eErrorCode))
+#if 0
+    case TX_NONSTANDARD:
+    case TX_NULL_DATA:
+        return false;
+    case TX_PUBKEY:
+        keyID = CPubKey(vSolutions[0]).GetID();
+        return Sign1(keyID, keystore, hash, nHashType, scriptSigRet);
+    case TX_PUBKEYHASH:
+        keyID = CKeyID(uint160(vSolutions[0]));
+        if (!Sign1(keyID, keystore, hash, nHashType, scriptSigRet))
+            return false;
+        else
         {
-            if(fDebug>0)LogPrintf("createrawsendfrom : %s\n", strError);
-            throw JSONRPCError(eErrorCode, strError);
+            CPubKey vch;
+            keystore.GetPubKey(keyID, vch);
+            scriptSigRet << ToByteVector(vch);
         }
-    }
-
-    hex=EncodeHexTx(rawTx);
-
-
-    if(sign_it)
-    {
-        Array signrawtransaction_params;
-        signrawtransaction_params.push_back(hex);
-        signedTx=signrawtransaction(signrawtransaction_params,false);
-    }
-    if(lock_it)
-    {
-        for (const CTxIn& txin : rawTx.vin) {
-            COutPoint outpt(txin.prevout.hash, txin.prevout.n);
-            pwalletMain->LockCoin(outpt);
+        return true;
+#endif
+    case TX_SCRIPTHASH: {
+        cout << "scripthash: " << HexStr(uint160(vSolutions[0])) << endl;
+        //return keystore.GetCScript(uint160(vSolutions[0]), scriptSigRet);
+        // from ./hdac-cli kcc listunspent 1 99999999 '["48R3XwXEYBtbq74WrRzRV4UeWugTPUSZmG1deQ"]', redeemScript
+        // TODO : should check redeemScript can be from this
+#if 0
+        auto hexScriptSig = ParseHex("5221027e75736b41474547b7e2443d7235f4030cbb378093bbd2e98ea36ded6d703c2b21038d7724f227aab828d771eb6ab697f333e615d39b585944d99737ce7b7ae650fd52ae");
+#else
+        auto hexScriptSig = ParseHex(unspentRedeemScript);
+#endif
+        scriptSigRet = CScript(hexScriptSig.begin(), hexScriptSig.end());
         }
-    }
-    if(send_it)
-    {
-        Array sendrawtransaction_params;
-        for (const Pair& s : signedTx.get_obj())    {
-            if(s.name_=="complete")
+        break;
+
+    case TX_MULTISIG:
+        scriptSigRet << OP_0; // workaround CHECKMULTISIG bug
+        //return (SignN(vSolutions, keystore, hash, nHashType, scriptSigRet));
+        //bool signOk = SignN(vSolutions, keystore, hash, nHashType, scriptSigRet);
+        bool signOk = false;
+        {
+            int nSigned = 0;
+            int nRequired = vSolutions.front()[0];
+
+            for (unsigned int i = 1; i < vSolutions.size()-1 && (nSigned < nRequired); i++)
             {
-                if(!s.value_.get_bool())
+                const valtype& pubkey = vSolutions[i];
+                CKeyID keyID = CPubKey(pubkey).GetID();
+                                                                                        // We are trying to use at least one address with send permission
+                //if (Sign1(keyID, keystore, hash, nHashType, scriptSigRet))
+                //    ++nSigned;
                 {
-                    throw JSONRPCError(RPC_TRANSACTION_ERROR, "Transaction was not signed properly");
+
+
+                    CBitcoinSecret vchSecret{SamplePrivateKeyHelper{}};
+
+#if 0
+                    string strPrivKey("VHXjccrTPdRXG8asyos5oqvw6mhWtqASkbFsVuBnkpi4WXn2jr8eMwwp");
+                    //bool fGood = vchSecret.SetString(string("VHXjccrTPdRXG8asyos5oqvw6mhWtqASkbFsVuBnkpi4WXn2jr8eMwwp"));
+                    bool fGood = vchSecret.SetString(strPrivKey);
+#else
+                    bool fGood = vchSecret.SetString(privateKey);
+#endif
+
+                    if (!fGood)  {
+                        throw to_string(RPC_INVALID_ADDRESS_OR_KEY) + ": " + "Invalid private key";
+                    }
+                    CKey key = vchSecret.GetKey();
+                    if (!key.IsValid()) {
+                        throw to_string(RPC_INVALID_ADDRESS_OR_KEY) + ": " + "Private key outside allowed range";
+                    }
+
+                    vector<unsigned char> vchSig;
+                    if (!key.Sign(hash, vchSig))    {
+                        throw "sign error";
+                    }
+                    vchSig.push_back((unsigned char)nHashType);
+                    scriptSigRet << vchSig;
+
+                    ++nSigned;
                 }
             }
-            if(s.name_=="hex")
+                                                                                        // As a result of looking for send permission we may can sign more than required
+            signOk = nSigned>=nRequired;
+        }
+    }
+
+    if (whichType == TX_SCRIPTHASH) {
+        CScript subscript = txin.scriptSig;
+        uint256 hash2 = SignatureHash(subscript, txNew, nIn, nHashType);
+        cout << "hash2: " << HexStr(hash2) << endl;
+        {
+            CTxIn& txin = txNew.vin[nIn];
+
+            //if (!Solver(keystore, script1, hash, nHashType, txin.scriptSig, whichType))
+            //    return false;
+
+            typedef vector<unsigned char> valtype;
+            vector<valtype> vSolutions;
+            txnouttype subType;
+            if (!TemplateSolver(subscript, subType, vSolutions))
+                return false;
+
+            CScript& scriptSigRet = txin.scriptSig;
+            scriptSigRet.clear();
+
+            CKeyID keyID;
+            switch (subType)
             {
-                sendrawtransaction_params.push_back(s.value_.get_str());
+        #if 0
+            case TX_NONSTANDARD:
+            case TX_NULL_DATA:
+                return false;
+            case TX_PUBKEY:
+                keyID = CPubKey(vSolutions[0]).GetID();
+                return Sign1(keyID, keystore, hash, nHashType, scriptSigRet);
+            case TX_PUBKEYHASH:
+                keyID = CKeyID(uint160(vSolutions[0]));
+                if (!Sign1(keyID, keystore, hash, nHashType, scriptSigRet))
+                    return false;
+                else
+                {
+                    CPubKey vch;
+                    keystore.GetPubKey(keyID, vch);
+                    scriptSigRet << ToByteVector(vch);
+                }
+                return true;
+        #endif
+            case TX_SCRIPTHASH: {
+                cout << "scripthash: " << HexStr(uint160(vSolutions[0])) << endl;
+                //return keystore.GetCScript(uint160(vSolutions[0]), scriptSigRet);
+                // from ./hdac-cli kcc listunspent 1 99999999 '["48R3XwXEYBtbq74WrRzRV4UeWugTPUSZmG1deQ"]', redeemScript
+#if 0
+                scriptSigRet = CScript(ParseHex("5221027e75736b41474547b7e2443d7235f4030cbb378093bbd2e98ea36ded6d703c2b21038d7724f227aab828d771eb6ab697f333e615d39b585944d99737ce7b7ae650fd52ae"));
+#else
+                auto hexScriptSig = ParseHex(unspentRedeemScript);
+                scriptSigRet = CScript(hexScriptSig.begin(), hexScriptSig.end());
+#endif
+            }
+                break;
+
+            case TX_MULTISIG:
+                scriptSigRet << OP_0; // workaround CHECKMULTISIG bug
+                //return (SignN(vSolutions, keystore, hash, nHashType, scriptSigRet));
+                //bool signOk = SignN(vSolutions, keystore, hash, nHashType, scriptSigRet);
+                bool signOk = false;
+                {
+                    int nSigned = 0;
+                    int nRequired = vSolutions.front()[0];
+
+                    for (unsigned int i = 1; i < vSolutions.size()-1 && (nSigned < nRequired); i++)
+                    {
+                        const valtype& pubkey = vSolutions[i];
+                        CKeyID keyID = CPubKey(pubkey).GetID();
+                                                                                                // We are trying to use at least one address with send permission
+                        //if (Sign1(keyID, keystore, hash, nHashType, scriptSigRet))
+                        //    ++nSigned;
+                        {
+                            CBitcoinSecret vchSecret{SamplePrivateKeyHelper{}};
+
+#if 0
+                            string strPrivKey("VHXjccrTPdRXG8asyos5oqvw6mhWtqASkbFsVuBnkpi4WXn2jr8eMwwp");
+
+                            //bool fGood = vchSecret.SetString(string("VHXjccrTPdRXG8asyos5oqvw6mhWtqASkbFsVuBnkpi4WXn2jr8eMwwp"));
+                            bool fGood = vchSecret.SetString(strPrivKey);
+#else
+                            bool fGood = vchSecret.SetString(privateKey);
+#endif
+
+                            if (!fGood)  {
+                                throw to_string(RPC_INVALID_ADDRESS_OR_KEY) + ": " + "Invalid private key";
+                            }
+                            CKey key = vchSecret.GetKey();
+                            if (!key.IsValid()) {
+                                throw to_string(RPC_INVALID_ADDRESS_OR_KEY) + ": " + "Private key outside allowed range";
+                            }
+
+                            cout << "from private : " << key.GetPubKey().GetID().ToString() << endl;
+                            cout << "from pubkey : " << keyID.ToString() << endl << endl;
+                            if (key.GetPubKey().GetID() != keyID) {
+                                continue;
+                            }
+
+                            vector<unsigned char> vchSig;
+                            if (!key.Sign(hash2, vchSig))    {
+                                throw "sign error";
+                            }
+
+                            vchSig.push_back((unsigned char)nHashType);
+                            scriptSigRet << vchSig;
+
+                            ++nSigned;
+                        }
+                    }
+                                                                                                // As a result of looking for send permission we may can sign more than required
+                    signOk = nSigned>=nRequired;
+                }
             }
         }
-        txid=sendrawtransaction(sendrawtransaction_params,false);
+        txin.scriptSig << static_cast<valtype>(subscript);
     }
+    hex=EncodeHexTx(txNew);
+    cout << "after sign, TxHex: " << hex << endl;
 
-    if(send_it)
-    {
-        return txid;
-    }
-
-    if(sign_it)
-    {
-        return signedTx;
-    }
 
     return hex;
-#endif
-    return string();
 }
-
