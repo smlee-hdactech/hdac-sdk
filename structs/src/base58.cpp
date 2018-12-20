@@ -135,9 +135,9 @@ bool DecodeBase58Check(const char* psz, std::vector<unsigned char>& vchRet, int3
     return true;
 }
 
-bool DecodeBase58Check(const std::string& str, std::vector<unsigned char>& vchRet)
+bool DecodeBase58Check(const std::string& str, std::vector<unsigned char>& vchRet, int32_t addressChecksumValue)
 {
-    return DecodeBase58Check(str.c_str(), vchRet);
+    return DecodeBase58Check(str.c_str(), vchRet, addressChecksumValue);
 }
 
 CBase58Data::CBase58Data(int32_t checksumValue) :
@@ -163,7 +163,9 @@ void CBase58Data::SetData(const std::vector<unsigned char>& vchVersionIn, const 
 bool CBase58Data::SetString(const char* psz, unsigned int nVersionBytes)
 {
     std::vector<unsigned char> vchTemp;
-    bool rc58 = DecodeBase58Check(psz, vchTemp);
+
+    assert(_checksumValue != 0);
+    bool rc58 = DecodeBase58Check(psz, vchTemp, _checksumValue);
     if ((!rc58) || (vchTemp.size() < nVersionBytes)) {
         vchData.clear();
         vchVersion.clear();

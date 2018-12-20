@@ -10,4 +10,8 @@ add_subdirectory(structs)
 add_subdirectory(script)
 add_subdirectory(keys)
 add_subdirectory(rpc)
+add_subdirectory(entities)
+add_subdirectory(primitives)
+#add_subdirectory(protocol)
 add_subdirectory(moduleTest)
+

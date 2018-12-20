@@ -26,6 +26,16 @@ signed char HexDigit(char c)
     return p_util_hexdigit[(unsigned char)c];
 }
 
+bool IsHex(const string& str)
+{
+    for(std::string::const_iterator it(str.begin()); it != str.end(); ++it)
+    {
+        if (HexDigit(*it) < 0)
+            return false;
+    }
+    return (str.size() > 0) && (str.size()%2 == 0);
+}
+
 vector<unsigned char> ParseHex(const char* psz)
 {
     // convert hex dump to vector

@@ -7,6 +7,7 @@
 #include <vector>
 
 #include <cstring>
+#include <script/standard.h>
 
 /**
  * secp256k1:
@@ -17,14 +18,6 @@
  * see www.keylength.com
  * script supports up to 75 for single byte push
  */
-
-/** A reference to a CKey: the Hash160 of its serialized public key */
-class CKeyID : public uint160
-{
-public:
-    CKeyID() : uint160(0) {}
-    CKeyID(const uint160& in) : uint160(in) {}
-};
 
 typedef uint256 ChainCode;
 

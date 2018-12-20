@@ -32,20 +32,19 @@ public:
 
     CBitcoinAddress(const CTxDestination &dest,
         const IWalletAddrHelper &helper) :
-        CBase58Data(helper.addrChecksumValue()),
-        _pubkeyPrefix(helper.pubkeyAddrPrefix()),
-        _scriptPrefix(helper.scriptAddrPrefix()) {
+        CBitcoinAddress(helper) {
         Set(dest);
     }
 
     CBitcoinAddress(const std::string& strAddress,
-                    unsigned int pubkeyAddressSize, const IAddrChecksumValueHelper &helper) :
-        CBase58Data(helper.addrChecksumValue())   {
-        SetString(strAddress, pubkeyAddressSize);
+                    const IWalletAddrHelper &helper) :
+        CBitcoinAddress(helper) {
+        SetString(strAddress, helper.pubkeyAddrPrefix().size());
     }
 
-    CBitcoinAddress(const char* pszAddress, const IAddrChecksumValueHelper &helper) :
-        CBase58Data(helper.addrChecksumValue())   {
+    CBitcoinAddress(const char* pszAddress,
+                    const IWalletAddrHelper &helper) :
+        CBitcoinAddress(helper) {
         SetString(pszAddress);
     }
 

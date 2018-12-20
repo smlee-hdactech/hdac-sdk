@@ -1,17 +1,10 @@
 cmake_minimum_required(VERSION 3.1)
 
-set(prj_base keys)
+set(prj_base primitives)
 
 set(src
-    standard.cpp
-    key.cpp
-    keyslib.cpp
-    pubkey.cpp
-    bitcoinaddress.cpp
-    bitcoinsecret.cpp
-    multisig.cpp
-    transactions.cpp
-    rawmetadata.cpp
+    transaction.cpp
+    interpreter.cpp
     )
 
 add_library(${prj_base}_dynamic SHARED ${src})
@@ -20,24 +13,18 @@ add_library(${prj_base}_static STATIC ${src})
 target_link_libraries(${prj_base}_dynamic
     script_dynamic
     entities_dynamic
-    primitives_dynamic
     )
 target_link_libraries(${prj_base}_static
     script_static
     entities_static
-    primitives_static
     )
 
 set(${prj_base}_includes
     ../include/${prj_base}
-    ${CMAKE_SOURCE_DIR}/protocol/include
+    ${CMAKE_SOURCE_DIR}/crypto/include
+    ${CMAKE_SOURCE_DIR}/utils/include
     ${CMAKE_SOURCE_DIR}/script/include
     ${CMAKE_SOURCE_DIR}/structs/include
-    ${CMAKE_SOURCE_DIR}/utils/include
-    ${CMAKE_SOURCE_DIR}/crypto/include
-    ${CMAKE_SOURCE_DIR}/entities/include
-    ${CMAKE_SOURCE_DIR}/primitives/include
-    ${CMAKE_SOURCE_DIR}/rpc/include    
     )
 
 target_include_directories(${prj_base}_dynamic 

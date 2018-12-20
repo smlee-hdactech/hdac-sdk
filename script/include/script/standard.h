@@ -1,12 +1,18 @@
-#ifndef STANDARD_H
-#define STANDARD_H
+#ifndef SCRIPT_STANDARD_H
+#define SCRIPT_STANDARD_H
 
 #include <structs/uint256.h>
 #include <boost/variant.hpp>
 
-class CKeyID;
-class CScript;
+/** A reference to a CKey: the Hash160 of its serialized public key */
+class CKeyID : public uint160
+{
+public:
+    CKeyID() : uint160(0) {}
+    CKeyID(const uint160& in) : uint160(in) {}
+};
 
+class CScript;
 /** A reference to a CScript: the Hash160 of its serialization (see script.h) */
 class CScriptID : public uint160
 {
@@ -31,4 +37,5 @@ public:
  */
 typedef boost::variant<CNoDestination, CKeyID, CScriptID> CTxDestination;
 
-#endif  //STANDARD_H
+
+#endif  //SCRIPT_STANDARD_H
