@@ -17,19 +17,14 @@ class mc_EntityDetails;
 
 
 bool AssetRefDecode(unsigned char *bin, const char* string, const size_t stringLen);
-int ParseAssetKeyToFullAssetRef(const char* asset_key,unsigned char *full_asset_ref,int *multiple,int *type,int entity_type);
 
-json_spirit::Value createMultisigStreamTx(const std::string &strAddr, const std::string& streamName,
-                                          const std::string& streamKey, const std::string& streamItem,
-                                          const std::string &createTxid,
-                                          const std::string &unspentScriptPubKey, const std::string &unspentTxid, uint32_t unspentVOut,
-                                          const std::string &unspentRedeemScript, const std::string &privateKey);
+class IPrivateKeyHelper;
+std::string createStreamPublishTx(const std::string& streamKey, const std::string& streamItem,
+                                  const std::string &createTxid,
+                                  const std::string &unspentScriptPubKey, const std::string &unspentTxid, uint32_t unspentVOut,
+                                  const std::string &unspentRedeemScript, const std::string &privateKey,
+                                  const IPrivateKeyHelper &helper);
 
-#if 0
-json_spirit::Value createrawsendfrom(const std::string &strAddr, const std::string &jsonAddrOrAmount,
-                                     const std::string &jsonAppendRawdata,
-                                     const IWalletAddrHelper& helper);
-#endif
 void ParseEntityIdentifier(json_spirit::Value entity_identifier,mc_EntityDetails *entity,uint32_t entity_type);
 
 #endif // TRANSACTIONS_H

@@ -79,93 +79,11 @@ CScript GetScriptForPubKey(const CPubKey& key)
     return script;
 }
 
-class SampleWalletAddrHelper : public IWalletAddrHelper {
-public:
-    SampleWalletAddrHelper() { }
-
-    const std::vector<unsigned char> pubkeyAddrPrefix() const override  {
-        return ParseHex("003fd61c");
-    }
-    const std::vector<unsigned char> scriptAddrPrefix() const override  {
-        return ParseHex("0571a3e6");
-    }
-
-    int32_t addrChecksumValue() const override {
-        return parseHexToInt32Le("cb507245");
-    }
-};
-
-CScript GetScriptForString(string source)
-{
-    vector<string> destinations;
-
-    string tok;
-
-    stringstream ss(source);
-    while(getline(ss, tok, ','))
-    {
-        destinations.push_back(tok);
-    }
-
-    if(destinations.size() == 0)
-    {
-        throw runtime_error(" Address cannot be empty");
-    }
-
-    if(destinations.size() == 1)
-    {
-        // TODO : SampleWalletAddrHelper to external
-        CBitcoinAddress address(destinations[0], SampleWalletAddrHelper());
-#if 0   // TODO : how to handle pwalletMain
-        if (pwalletMain && address.IsValid())
-#else
-        if (address.IsValid())
-#endif
-        {
-            return GetScriptForDestination(address.Get());
-        }
-        else
-        {
-            if (IsHex(destinations[0]))
-            {
-                CPubKey vchPubKey(ParseHex(destinations[0]));
-                if (!vchPubKey.IsFullyValid())
-                    throw runtime_error(" Invalid public key: "+destinations[0]);
-                return GetScriptForPubKey(vchPubKey);
-            }
-            else
-            {
-                throw runtime_error(" Invalid public key: "+destinations[0]);
-            }
-        }
-    }
-
-    //int required=atoi(destinations[0]);
-    int required=stoi(destinations[0]);
-    if( (required <= 0) || (required > 16) )
-        throw runtime_error(" Invalid required for bare multisig: "+destinations[0]);
-
-    if(required > (int)destinations.size()-1)
-        throw runtime_error(" To few public keys");
-
-    vector <CPubKey> vPubKeys;
-    for(int i=1;i<(int)destinations.size();i++)
-    {
-        CPubKey vchPubKey(ParseHex(destinations[i]));
-        if (!vchPubKey.IsFullyValid())
-            throw runtime_error(" Invalid public key: "+destinations[i]);
-        vPubKeys.push_back(vchPubKey);
-    }
-
-    return GetScriptForMultisig(required,vPubKeys);
-}
-
 // TODO : replace
 static inline int64_t roundint64(double d)
 {
     return (int64_t)(d > 0 ? d + 0.5 : d - 0.5);
 }
-
 
 CAmount AmountFromValue(const Value& value)
 {
@@ -368,22 +286,6 @@ int ParseAssetKey(const char* asset_key,unsigned char *txid,unsigned char *asset
     return ret;
 }
 
-int ParseAssetKeyToFullAssetRef(const char* asset_key,unsigned char *full_asset_ref,int *multiple,int *type,int entity_type)
-{
-    int ret;
-    unsigned char txid[MC_ENT_KEY_SIZE];
-    ret=ParseAssetKey(asset_key,txid,NULL,NULL,multiple,type,entity_type);
-    if(ret == MC_ASSET_KEY_UNCONFIRMED_GENESIS)
-    {
-        ret=0;
-    }
-    memcpy(full_asset_ref+MC_AST_SHORT_TXID_OFFSET,txid+MC_AST_SHORT_TXID_OFFSET,MC_AST_SHORT_TXID_SIZE);
-
-    mc_SetABRefType(full_asset_ref,MC_AST_ASSET_REF_TYPE_SHORT_TXID);
-
-    return ret;
-}
-
 void ParseEntityIdentifier(Value entity_identifier,mc_EntityDetails *entity,uint32_t entity_type)
 {
     unsigned char buf[32];
@@ -480,448 +382,6 @@ void ParseEntityIdentifier(Value entity_identifier,mc_EntityDetails *entity,uint
     }
 }
 
-// TODO : where to locate
-string ParseRawOutputObject(Value param,CAmount& nAmount,mc_Script *lpScript, int *required,int *eErrorCode)
-{
-    // TODO : maxstdelementsize from params
-    static unsigned int MAX_SCRIPT_ELEMENT_SIZE = 520;
-
-    string strError="";
-    unsigned char buf[MC_AST_ASSET_FULLREF_BUF_SIZE];
-    //mc_Buffer *lpBuffer=mc_gState->m_TmpBuffers->m_RpcABNoMapBuffer1;
-    //lpBuffer->Clear();
-    std::unique_ptr<mc_Buffer> buffer(new mc_Buffer);
-    //mc_Buffer *lpFollowonBuffer=mc_gState->m_TmpBuffers->m_RpcABNoMapBuffer2;
-    //lpFollowonBuffer->Clear();
-    std::unique_ptr<mc_Buffer> followonBuffer(new mc_Buffer);
-
-    int assets_per_opdrop=(MAX_SCRIPT_ELEMENT_SIZE-4)/(m_AssetRefSize+MC_AST_ASSET_QUANTITY_SIZE);
-    int32_t verify_level=-1;
-    int asset_error=0;
-    int multiple;
-    int64_t max_block=0xffffffff;
-    string asset_name;
-    string type_string;
-    nAmount=0;
-
-    if(eErrorCode)
-    {
-        *eErrorCode=RPC_INVALID_PARAMETER;
-    }
-
-    memset(buf,0,MC_AST_ASSET_FULLREF_BUF_SIZE);
-
-    //BOOST_FOREACH(const Pair& a, param.get_obj())
-    for (const Pair& a : param.get_obj())    {
-        if(a.value_.type() == obj_type)    {
-            bool parsed=false;
-
-            if(!parsed && (a.name_ == "hidden_verify_level"))            {
-                //BOOST_FOREACH(const Pair& d, a.value_.get_obj())                {
-                for (const Pair& d : a.value_.get_obj()) {
-                    bool field_parsed=false;
-                    if(!field_parsed && (d.name_ == "value"))
-                    {
-                        verify_level=d.value_.get_int();
-                        field_parsed=true;
-                    }
-                    if(!field_parsed)
-                    {
-                        strError=string("Invalid field for object ") + a.name_ + string(": ") + d.name_;
-                        goto exitlbl;
-                    }
-                }
-                parsed=true;
-            }
-
-            if(!parsed && (a.name_ == "issue"))
-            {
-                int64_t quantity=-1;
-                //BOOST_FOREACH(const Pair& d, a.value_.get_obj()){
-                for (const Pair& d : a.value_.get_obj())    {
-                    bool field_parsed=false;
-                    if(!field_parsed && (d.name_ == "raw")) {
-                        if (d.value_.type() != null_type)   {
-                            quantity=d.value_.get_int64();
-                            if(quantity<0)  {
-                                strError=string("Negative value for issue raw qty");
-                                goto exitlbl;
-                            }
-                        }
-                        else    {
-                            strError=string("Invalid value for issue raw qty");
-                            goto exitlbl;
-
-                        }
-                        field_parsed=true;
-                    }
-                    if(!field_parsed)   {
-                        strError=string("Invalid field for object ") + a.name_ + string(": ") + d.name_;
-                        goto exitlbl;
-                    }
-                }
-                if(quantity < 0)    {
-                    strError=string("Issue raw qty not specified");
-                    goto exitlbl;
-                }
-                lpScript->SetAssetGenesis(quantity);
-                parsed=true;
-            }
-
-            if(!parsed && (a.name_ == "issuemore")) {
-                int64_t quantity=-1;
-                asset_name="";
-                //BOOST_FOREACH(const Pair& d, a.value_.get_obj())  {
-                for (const Pair& d : a.value_.get_obj()) {
-                    bool field_parsed=false;
-                    if(!field_parsed && (d.name_ == "raw")) {
-                        if (d.value_.type() != null_type)   {
-                            quantity=d.value_.get_int64();
-                            if(quantity<0)  {
-                                strError=string("Negative value for issuemore raw qty");
-                                goto exitlbl;
-                            }
-                        }
-                        else    {
-                            strError=string("Invalid value for issuemore raw qty");
-                            goto exitlbl;
-
-                        }
-                        field_parsed=true;
-                    }
-                    if(!field_parsed && (d.name_ == "asset"))   {
-                        if(d.value_.type() != null_type && !d.value_.get_str().empty()) {
-                            asset_name=d.value_.get_str();
-                        }
-                        if(asset_name.size())   {
-                            asset_error=ParseAssetKeyToFullAssetRef(asset_name.c_str(),buf,&multiple,NULL, MC_ENT_TYPE_ASSET);
-                            if(asset_error) {
-                                goto exitlbl;
-                            }
-                            field_parsed=true;
-                        }
-                    }
-                    if(!field_parsed)   {
-                        strError=string("Invalid field for object ") + a.name_ + string(": ") + d.name_;
-                        goto exitlbl;
-                    }
-                }
-                if(asset_name.size() == 0)  {
-                    strError=string("Issuemore asset not specified");
-                    goto exitlbl;
-                }
-                if(quantity < 0)    {
-                    strError=string("Issuemore raw qty not specified");
-                    goto exitlbl;
-                }
-                //if(lpFollowonBuffer->GetCount())    {
-                if(followonBuffer->GetCount())    {
-                    if(verify_level & 0x0008)   {
-                        //if(memcmp(buf,lpFollowonBuffer->GetRow(0),MC_AST_ASSET_QUANTITY_OFFSET))    {
-                        if(memcmp(buf,followonBuffer->GetRow(0),MC_AST_ASSET_QUANTITY_OFFSET))    {
-                            strError=string("Issuemore for different assets");
-                            goto exitlbl;
-                        }
-                    }
-                    //lpFollowonBuffer->Clear();
-                    followonBuffer->Clear();
-                }
-                mc_SetABQuantity(buf,quantity);
-                //lpFollowonBuffer->Add(buf);
-                followonBuffer->Add(buf);
-                //lpScript->SetAssetQuantities(lpFollowonBuffer,MC_SCR_ASSET_SCRIPT_TYPE_FOLLOWON);
-                lpScript->SetAssetQuantities(followonBuffer.get(),MC_SCR_ASSET_SCRIPT_TYPE_FOLLOWON);
-                parsed=true;
-            }
-
-            if(!parsed && (a.name_ == "permissions"))   {
-                uint32_t type,from,to,timestamp;
-                int64_t v;
-                mc_EntityDetails entity;
-                entity.Zero();
-
-                type_string="";
-                type=0;
-                from=0;
-                to=4294967295U;
-                timestamp=mc_TimeNowAsUInt();
-
-                //BOOST_FOREACH(const Pair& d, a.value_.get_obj())  {
-                for (const Pair& d : a.value_.get_obj())    {
-                    bool field_parsed=false;
-
-                    if(!field_parsed && (d.name_ == "for")) {
-                        entity.Zero();
-                        if(d.value_.type() != null_type && !d.value_.get_str().empty()) {
-                            ParseEntityIdentifier(d.value_,&entity, MC_ENT_TYPE_ANY);
-                        }
-                        field_parsed=true;
-                    }
-                    if(!field_parsed && (d.name_ == "type"))    {
-                        if(d.value_.type() == str_type && !d.value_.get_str().empty())  {
-                            type_string=d.value_.get_str();
-                        }
-                        else    {
-                            strError=string("Invalid value for permission type");
-                            goto exitlbl;
-
-                        }
-                        field_parsed=true;
-                    }
-                    if(!field_parsed && (d.name_ == "startblock"))  {
-                        if (d.value_.type() != null_type)   {
-
-                            v=d.value_.get_int64();
-                            if(v<0) {
-                                strError=string("Negative value for permissions startblock");
-                                goto exitlbl;
-                            }
-                            if(v>max_block) {
-                                strError=string("Invalid value for permissions endblock");
-                                goto exitlbl;
-                            }
-                            from=v;
-                        }
-                        else    {
-                            strError=string("Invalid value for permissions startblock");
-                            goto exitlbl;
-
-                        }
-                        field_parsed=true;
-                    }
-                    if(!field_parsed && (d.name_ == "endblock"))    {
-                        if (d.value_.type() != null_type)   {
-                            v=d.value_.get_int64();
-                            if(v<0) {
-                                strError=string("Negative value for permissions endblock");
-                                goto exitlbl;
-                            }
-                            if(v>max_block) {
-                                strError=string("Invalid value for permissions endblock");
-                                goto exitlbl;
-                            }
-                            to=v;
-                        }
-                        else    {
-                            strError=string("Invalid value for permissions endblock");
-                            goto exitlbl;
-
-                        }
-                        field_parsed=true;
-                    }
-                    if(!field_parsed && (d.name_ == "timestamp"))   {
-                        if (d.value_.type() != null_type)   {
-                            timestamp=(uint32_t)d.value_.get_uint64();
-                        }
-                        else    {
-                            strError=string("Invalid value for permissions timestamp");
-                            goto exitlbl;
-
-                        }
-                        field_parsed=true;
-                    }
-                    if(!field_parsed)   {
-                        strError=string("Invalid field for object ") + a.name_ + string(": ") + d.name_;
-                        goto exitlbl;
-                    }
-                }
-
-                if(type_string.size())  {
-#if 0
-                    type=mc_gState->m_Permissions->GetPermissionType(type_string.c_str(),entity.GetEntityType());
-                    if(entity.GetEntityType() == MC_ENT_TYPE_NONE)  {
-                        if(required)    {
-                            *required |= type;
-                        }
-                    }
-                    if(type == 0)   {
-                        strError=string("Invalid value for permission type: ") + type_string;
-                        goto exitlbl;
-                    }
-#else
-                    // TODO : how to implement
-                    assert(!"how to implement");
-#endif
-                }
-
-                if(type == 0)   {
-                    strError=string("Permission type not specified");
-                    goto exitlbl;
-                }
-
-                if(entity.GetEntityType())  {
-                    lpScript->SetEntity(entity.GetTxID()+MC_AST_SHORT_TXID_OFFSET);
-                }
-                lpScript->SetPermission(type,from,to,timestamp);
-                parsed=true;
-            }
-
-            if(!parsed) {
-                strError=string("Invalid object: ") + a.name_;
-                goto exitlbl;
-            }
-        }
-        else    {
-            if(a.name_.size())  {
-                asset_name=a.name_;
-                asset_error=ParseAssetKeyToFullAssetRef(asset_name.c_str(),buf,&multiple,NULL, MC_ENT_TYPE_ASSET);
-                if(asset_error) {
-                    goto exitlbl;
-                }
-                int64_t quantity = (int64_t)(a.value_.get_real() * multiple + 0.499999);
-                if(verify_level & 0x0010)   {
-                    if(quantity < 0)    {
-                        strError=string("Negative asset quantity");
-                        goto exitlbl;
-                    }
-                }
-                mc_SetABQuantity(buf,quantity);
-                //lpBuffer->Add(buf);
-                buffer->Add(buf);
-                if(verify_level & 0x0001)   {
-                    //if(lpBuffer->GetCount() >= assets_per_opdrop)   {
-                    if(buffer->GetCount() >= assets_per_opdrop)   {
-                        lpScript->SetAssetQuantities(buffer.get(),MC_SCR_ASSET_SCRIPT_TYPE_TRANSFER);
-                        //lpBuffer->Clear();
-                        buffer->Clear();
-                    }
-                }
-            }
-            else    {
-                nAmount += AmountFromValue(a.value_);
-            }
-        }
-    }
-
-    // TODO : fRequireStandard is following
-    //fRequireStandard = (mc_gState->m_NetworkParams->GetInt64Param("onlyacceptstdtxs") != 0);
-    //fRequireStandard=GetBoolArg("-requirestandard", fRequireStandard);
-    static bool fRequireStandard = true;
-    //if(lpBuffer->GetCount())    {
-    if(buffer->GetCount())    {
-        //if(Params().RequireStandard())  {
-        if (fRequireStandard) {
-            if(verify_level & 0x0002)   {
-                //if(lpBuffer->GetCount() > assets_per_opdrop)    {
-                if(buffer->GetCount() > assets_per_opdrop)    {
-                    strError=string("Too many assets in one group");
-                    goto exitlbl;
-                }
-            }
-        }
-        //lpScript->SetAssetQuantities(lpBuffer,MC_SCR_ASSET_SCRIPT_TYPE_TRANSFER);
-        lpScript->SetAssetQuantities(buffer.get(),MC_SCR_ASSET_SCRIPT_TYPE_TRANSFER);
-        //lpBuffer->Clear();
-        buffer->Clear();
-    }
-
-    // TODO : should get MCP_STD_OP_DROP_COUNT from mc_OneHdacParam
-    static int MCP_STD_OP_DROP_COUNT = 5;
-    if(verify_level & 0x0004)    {
-        //if(Params().RequireStandard())  {
-        if (fRequireStandard) {
-            if(lpScript->GetNumElements() > MCP_STD_OP_DROP_COUNT)  {
-                strError=string("Too many objects in output");
-                goto exitlbl;
-            }
-        }
-    }
-
-exitlbl:
-
-    switch(asset_error)    {
-        case MC_ASSET_KEY_INVALID_TXID:
-            if(eErrorCode)  {
-                *eErrorCode=RPC_ENTITY_NOT_FOUND;
-            }
-            strError=string("Issue transaction with this txid not found: ")+asset_name;
-            break;
-        case MC_ASSET_KEY_INVALID_REF:
-            if(eErrorCode)  {
-                *eErrorCode=RPC_ENTITY_NOT_FOUND;
-            }
-            strError=string("Issue transaction with this asset reference not found: ")+asset_name;
-            break;
-        case MC_ASSET_KEY_INVALID_NAME:
-            if(eErrorCode)  {
-                *eErrorCode=RPC_ENTITY_NOT_FOUND;
-            }
-            strError=string("Issue transaction with this name not found: ")+asset_name;
-            break;
-        case MC_ASSET_KEY_INVALID_SIZE:
-            strError=string("Could not parse asset key: ")+asset_name;
-            break;
-        case MC_ASSET_KEY_UNCONFIRMED_GENESIS:
-            if(eErrorCode)  {
-                *eErrorCode=RPC_UNCONFIRMED_ENTITY;
-            }
-            strError=string("Unconfirmed asset: ")+asset_name;
-            break;
-    }
-
-    return strError;
-
-}
-
-string ParseRawOutputObject(Value param,CAmount& nAmount,mc_Script *lpScript,int *eErrorCode)
-{
-    return ParseRawOutputObject(param,nAmount,lpScript,NULL,eErrorCode);
-}
-
-vector <pair<CScript, CAmount> > ParseRawOutputMultiObject(Object sendTo,int *required)
-{
-    vector <pair<CScript, CAmount> > vecSend;
-
-    set<CBitcoinAddress> setAddress;
-    for (const Pair& s : sendTo)    {
-        CScript scriptPubKey = GetScriptForString(s.name_);
-
-        CAmount nAmount;
-
-        if (s.value_.type() != obj_type)
-        {
-            nAmount = AmountFromValue(s.value_);
-        }
-        else
-        {
-            //mc_Script *lpScript=mc_gState->m_TmpBuffers->m_RpcScript4;
-            //lpScript->Clear();
-
-            std::unique_ptr<mc_Script> script(new mc_Script);
-
-
-            nAmount=0;
-            int eErrorCode;
-
-            string strError=ParseRawOutputObject(s.value_,nAmount, script.get(), required, &eErrorCode);
-            if(strError.size())
-            {
-                throw std::to_string(eErrorCode) + ": " + strError;
-            }
-
-            size_t elem_size;
-            const unsigned char *elem;
-            //for(int element=0;element < lpScript->GetNumElements();element++)
-            for(int element=0;element < script->GetNumElements();element++)
-            {
-                //elem = lpScript->GetData(element,&elem_size);
-                elem = script->GetData(element,&elem_size);
-                if(elem)
-                {
-                    scriptPubKey << vector<unsigned char>(elem, elem + elem_size) << OP_DROP;
-                }
-                else
-                    //throw JSONRPCError(RPC_INTERNAL_ERROR, "Invalid script");
-                    throw to_string(RPC_INTERNAL_ERROR) + "Invalid script";
-            }
-
-        }
-        vecSend.push_back(make_pair(scriptPubKey, nAmount));
-    }
-
-    return vecSend;
-}
-
 bool ExtractDestinationScriptValid(const CScript& scriptPubKey, CTxDestination& addressRet)
 {
     CScript::const_iterator pc1 = scriptPubKey.begin();
@@ -963,20 +423,6 @@ bool ExtractDestinationScriptValid(const CScript& scriptPubKey, CTxDestination& 
     return false;
 }
 
-
-class SamplePrivateKeyHelper : public IPrivateKeyHelper {
-public:
-    SamplePrivateKeyHelper() { }
-
-    const std::vector<unsigned char> privkeyPrefix() const override {
-        return ParseHex("8075fa23");
-    }
-
-    int32_t addrChecksumValue() const override {
-        return parseHexToInt32Le("cb507245");
-    }
-};
-
 class EccAutoInitReleaseHandler
 {
 public:
@@ -1000,15 +446,167 @@ private:
     unique_ptr<ECCVerifyHandle> verifyHandle;
 };
 
-Value createMultisigStreamTx(const string &strAddr, const string& streamName,
-                             const string& streamKey, const string& streamItem,
-                             const string& createTxid,
-                             const string& unspentScriptPubKey, const string& unspentTxid, uint32_t unspentVOut,
-                             const string& unspentRedeemScript, const string& privateKey)
+bool sign(const CKey &privateKey, uint256 hash, int nHashType, CScript& scriptSigRet)
 {
+    vector<unsigned char> vchSig;
+    if (!privateKey.Sign(hash, vchSig))    {
+        throw "sign error";
+    }
+    vchSig.push_back((unsigned char)nHashType);
+    scriptSigRet << vchSig;
+
+    return true;
+}
+
+bool sign(const string &privateKey, uint256 hash, int nHashType, const IPrivateKeyHelper& helper, CScript& scriptSigRet)
+{
+    CBitcoinSecret vchSecret{helper};
+
+    bool fGood = vchSecret.SetString(privateKey);
+
+    if (!fGood)  {
+        throw to_string(RPC_INVALID_ADDRESS_OR_KEY) + ": " + "Invalid private key";
+    }
+    CKey key = vchSecret.GetKey();
+    if (!key.IsValid()) {
+        throw to_string(RPC_INVALID_ADDRESS_OR_KEY) + ": " + "Private key outside allowed range";
+    }
+
+    return sign(key, hash, nHashType, scriptSigRet);
+}
+
+typedef vector<unsigned char> valtype;
+
+// TODO : multi privatekeys
+bool signN(const vector<valtype>& multisigdata, const string& privateKey, uint256 hash, int nHashType, const IPrivateKeyHelper& helper, CScript& scriptRet)
+{
+    bool signOk = false;
+
+    int nSigned = 0;
+    int nRequired = multisigdata.front()[0];
+
+    for (unsigned int i = 1; i < multisigdata.size()-1 && (nSigned < nRequired); i++)    {
+        const valtype& pubkey = multisigdata[i];
+        CKeyID keyID = CPubKey(pubkey).GetID();
+        // We are trying to use at least one address with send permission
+        CBitcoinSecret vchSecret{helper};
+
+        bool fGood = vchSecret.SetString(privateKey);
+        if (!fGood)  {
+            throw to_string(RPC_INVALID_ADDRESS_OR_KEY) + ": " + "Invalid private key";
+        }
+        CKey key = vchSecret.GetKey();
+        if (!key.IsValid()) {
+            throw to_string(RPC_INVALID_ADDRESS_OR_KEY) + ": " + "Private key outside allowed range";
+        }
+
+        if (key.GetPubKey().GetID() != keyID) {
+            continue;
+        }
+
+        if (sign(key, hash, nHashType, scriptRet)) {
+            ++nSigned;
+        }
+    }
+                                                                                // As a result of looking for send permission we may can sign more than required
+    signOk = nSigned>=nRequired;
+    return signOk;
+}
+
+CKey keyFromPrivateKey(const string& privateKey, const IPrivateKeyHelper& helper)
+{
+    CBitcoinSecret vchSecret{helper};
+    bool fGood = vchSecret.SetString(privateKey);
+    if (!fGood)  {
+        throw to_string(RPC_INVALID_ADDRESS_OR_KEY) + ": " + "Invalid private key";
+    }
+    CKey key = vchSecret.GetKey();
+    if (!key.IsValid()) {
+        throw to_string(RPC_INVALID_ADDRESS_OR_KEY) + ": " + "Private key outside allowed range";
+    }
+    return key;
+}
+
+bool solver(const string& privateKey, const IPrivateKeyHelper& helper, const CScript& scriptPubKey, uint256 hash, int nHashType,
+            const string& unspentRedeemScript, CScript& scriptSigRet, txnouttype& whichTypeRet)
+{
+    vector<valtype> vSolutions;
+    if (!TemplateSolver(scriptPubKey, whichTypeRet, vSolutions))
+        return false;
+
+    scriptSigRet.clear();
+
     EccAutoInitReleaseHandler eccScoper;
 
-    mc_EntityDetails found_entity;
+    CKeyID keyID;
+    switch (whichTypeRet)
+    {
+    case TX_NONSTANDARD:
+    case TX_NULL_DATA:
+        return false;
+    case TX_PUBKEY: {
+            keyID = CPubKey(vSolutions[0]).GetID();
+
+            CKey keyFromPriv = keyFromPrivateKey(privateKey, helper);
+            if (keyFromPriv.GetPubKey().GetID() != keyID) {
+                return false;
+            }
+
+            return sign(keyFromPriv, hash, nHashType, scriptSigRet);
+        }
+
+    case TX_PUBKEYHASH: {
+            keyID = CKeyID(uint160(vSolutions[0]));
+
+            CKey keyFromPriv = keyFromPrivateKey(privateKey, helper);
+            if (keyFromPriv.GetPubKey().GetID() != keyID) {
+                return false;
+            }
+
+            if (!sign(keyFromPriv, hash, nHashType, scriptSigRet))
+                return false;
+            else
+            {
+                CPubKey vch = keyFromPriv.GetPubKey();
+                scriptSigRet << ToByteVector(vch);
+            }
+            return true;
+        }
+
+    case TX_SCRIPTHASH: {
+            //cout << "scripthash: " << HexStr(uint160(vSolutions[0])) << endl;
+            //return keystore.GetCScript(uint160(vSolutions[0]), scriptSigRet);
+            // from ./hdac-cli kcc listunspent 1 99999999 '["48R3XwXEYBtbq74WrRzRV4UeWugTPUSZmG1deQ"]', redeemScript
+            // TODO : should check redeemScript can be from this
+            // maybe HexStr(uint160(vSolutions[0])) is the ID for redeem script
+            auto hexScriptSig = ParseHex(unspentRedeemScript);
+            scriptSigRet = CScript(hexScriptSig.begin(), hexScriptSig.end());
+        }
+        return true;
+
+    case TX_MULTISIG:
+        scriptSigRet << OP_0; // workaround CHECKMULTISIG bug
+        return signN(vSolutions, privateKey, hash, nHashType, helper, scriptSigRet);
+    }
+}
+
+string createStreamPublishTx(const string& streamKey, const string& streamItem,
+                     const string& createTxid,
+                     const string& unspentScriptPubKey, const string& unspentTxid, uint32_t unspentVOut,
+                     const string& unspentRedeemScript, const string& privateKey, const IPrivateKeyHelper& helper)
+{
+    // TODO : implement
+    // create
+    // publish
+    // issue
+    // follow-on
+    // pure details
+    // approval
+    // create upgrade
+    // encode empty hex
+    // cache input script
+
+    //mc_EntityDetails found_entity;
 
     // from CScript scriptOpReturn=ParseRawMetadata(data,0x01FF,&entity,&found_entity);
     vector <pair<CScript, CAmount> > vecSend;
@@ -1039,18 +637,11 @@ Value createMultisigStreamTx(const string &strAddr, const string& streamName,
     scriptOpReturn << OP_RETURN << vValue;
     vecSend.push_back(make_pair(scriptOpReturn, 0));
 
-
-    string hex;
-
     CMutableTransaction txNew;
     for (const auto& s : vecSend)   {
         CTxOut txout(s.second, s.first);
         txNew.vout.push_back(txout);
     }
-
-    //string strPubkeyScript = "a9143e45d3a48882576ad5900978303705e1a6000305871473706b700600000000000000ffffffff52ff095c75";
-    //string strPubkeyScript = "a9143e45d3a48882576ad5900978303705e1a6000305871473706b658f70622f63195d4844d12f6f8c9eb5a0751473706b700800000000000000ffffffff24fc095c75";     
-    // from ./hdac-cli kcc listunspent 1 99999999 '["48R3XwXEYBtbq74WrRzRV4UeWugTPUSZmG1deQ"]', scriptPubKey
 
     auto pubkeyScript = ParseHex(unspentScriptPubKey);
 
@@ -1065,241 +656,38 @@ Value createMultisigStreamTx(const string &strAddr, const string& streamName,
     CTxOut txout2(0, scriptChange);
     txNew.vout.push_back(txout2);
 
-    //txNew.vin.push_back(CTxIn(uint256("812b4f1732cfacde79511b2d49a851a05ead33bb4e79926a7351946ae49665bc"), 0/*out.i*/));
-    //txNew.vin.push_back(CTxIn(uint256("21386e1f4e1d9cfe7c858f7d23486e1a7da4d9c86c3a19e73a4cad4fdba8a4dc"), 0/*out.i*/));
-    // from ./hdac-cli kcc listunspent 1 99999999 '["48R3XwXEYBtbq74WrRzRV4UeWugTPUSZmG1deQ"]', txid
-
     txNew.vin.push_back(CTxIn(uint256(unspentTxid), unspentVOut));
-
-    hex=EncodeHexTx(txNew);
-    cout << "before sign, TxHex: " << hex << endl;
-
 
     int nIn = 0;
     int nHashType = SIGHASH_ALL;
 
     uint256 hash = SignatureHash(script1, txNew, nIn, nHashType);
-    cout << "hash: " << HexStr(hash) << endl;
+    //cout << "hash: " << HexStr(hash) << endl;
 
     CTxIn& txin = txNew.vin[nIn];
 
-    //if (!Solver(keystore, script1, hash, nHashType, txin.scriptSig, whichType))
-    //    return false;
-
-    typedef vector<unsigned char> valtype;
-    vector<valtype> vSolutions;
+    //vector<valtype> vSolutions;
     txnouttype whichType;
-    if (!TemplateSolver(script1, whichType, vSolutions))
-        return false;
-
     CScript& scriptSigRet = txin.scriptSig;
-    scriptSigRet.clear();
 
-    CKeyID keyID;
-    switch (whichType)
-    {
-#if 0
-    case TX_NONSTANDARD:
-    case TX_NULL_DATA:
-        return false;
-    case TX_PUBKEY:
-        keyID = CPubKey(vSolutions[0]).GetID();
-        return Sign1(keyID, keystore, hash, nHashType, scriptSigRet);
-    case TX_PUBKEYHASH:
-        keyID = CKeyID(uint160(vSolutions[0]));
-        if (!Sign1(keyID, keystore, hash, nHashType, scriptSigRet))
-            return false;
-        else
-        {
-            CPubKey vch;
-            keystore.GetPubKey(keyID, vch);
-            scriptSigRet << ToByteVector(vch);
-        }
-        return true;
-#endif
-    case TX_SCRIPTHASH: {
-        cout << "scripthash: " << HexStr(uint160(vSolutions[0])) << endl;
-        //return keystore.GetCScript(uint160(vSolutions[0]), scriptSigRet);
-        // from ./hdac-cli kcc listunspent 1 99999999 '["48R3XwXEYBtbq74WrRzRV4UeWugTPUSZmG1deQ"]', redeemScript
-        // TODO : should check redeemScript can be from this
-#if 0
-        auto hexScriptSig = ParseHex("5221027e75736b41474547b7e2443d7235f4030cbb378093bbd2e98ea36ded6d703c2b21038d7724f227aab828d771eb6ab697f333e615d39b585944d99737ce7b7ae650fd52ae");
-#else
-        auto hexScriptSig = ParseHex(unspentRedeemScript);
-#endif
-        scriptSigRet = CScript(hexScriptSig.begin(), hexScriptSig.end());
-        }
-        break;
-
-    case TX_MULTISIG:
-        scriptSigRet << OP_0; // workaround CHECKMULTISIG bug
-        //return (SignN(vSolutions, keystore, hash, nHashType, scriptSigRet));
-        //bool signOk = SignN(vSolutions, keystore, hash, nHashType, scriptSigRet);
-        bool signOk = false;
-        {
-            int nSigned = 0;
-            int nRequired = vSolutions.front()[0];
-
-            for (unsigned int i = 1; i < vSolutions.size()-1 && (nSigned < nRequired); i++)
-            {
-                const valtype& pubkey = vSolutions[i];
-                CKeyID keyID = CPubKey(pubkey).GetID();
-                                                                                        // We are trying to use at least one address with send permission
-                //if (Sign1(keyID, keystore, hash, nHashType, scriptSigRet))
-                //    ++nSigned;
-                {
-
-
-                    CBitcoinSecret vchSecret{SamplePrivateKeyHelper{}};
-
-#if 0
-                    string strPrivKey("VHXjccrTPdRXG8asyos5oqvw6mhWtqASkbFsVuBnkpi4WXn2jr8eMwwp");
-                    //bool fGood = vchSecret.SetString(string("VHXjccrTPdRXG8asyos5oqvw6mhWtqASkbFsVuBnkpi4WXn2jr8eMwwp"));
-                    bool fGood = vchSecret.SetString(strPrivKey);
-#else
-                    bool fGood = vchSecret.SetString(privateKey);
-#endif
-
-                    if (!fGood)  {
-                        throw to_string(RPC_INVALID_ADDRESS_OR_KEY) + ": " + "Invalid private key";
-                    }
-                    CKey key = vchSecret.GetKey();
-                    if (!key.IsValid()) {
-                        throw to_string(RPC_INVALID_ADDRESS_OR_KEY) + ": " + "Private key outside allowed range";
-                    }
-
-                    vector<unsigned char> vchSig;
-                    if (!key.Sign(hash, vchSig))    {
-                        throw "sign error";
-                    }
-                    vchSig.push_back((unsigned char)nHashType);
-                    scriptSigRet << vchSig;
-
-                    ++nSigned;
-                }
-            }
-                                                                                        // As a result of looking for send permission we may can sign more than required
-            signOk = nSigned>=nRequired;
-        }
-    }
+    if (!solver(privateKey, helper, script1, hash, nHashType, unspentRedeemScript, scriptSigRet, whichType)) {
+        return "";
+    };
 
     if (whichType == TX_SCRIPTHASH) {
         CScript subscript = txin.scriptSig;
         uint256 hash2 = SignatureHash(subscript, txNew, nIn, nHashType);
-        cout << "hash2: " << HexStr(hash2) << endl;
+        //cout << "hash2: " << HexStr(hash2) << endl;
         {
-            CTxIn& txin = txNew.vin[nIn];
-
-            //if (!Solver(keystore, script1, hash, nHashType, txin.scriptSig, whichType))
-            //    return false;
-
-            typedef vector<unsigned char> valtype;
-            vector<valtype> vSolutions;
-            txnouttype subType;
-            if (!TemplateSolver(subscript, subType, vSolutions))
-                return false;
-
             CScript& scriptSigRet = txin.scriptSig;
-            scriptSigRet.clear();
-
-            CKeyID keyID;
-            switch (subType)
-            {
-        #if 0
-            case TX_NONSTANDARD:
-            case TX_NULL_DATA:
-                return false;
-            case TX_PUBKEY:
-                keyID = CPubKey(vSolutions[0]).GetID();
-                return Sign1(keyID, keystore, hash, nHashType, scriptSigRet);
-            case TX_PUBKEYHASH:
-                keyID = CKeyID(uint160(vSolutions[0]));
-                if (!Sign1(keyID, keystore, hash, nHashType, scriptSigRet))
-                    return false;
-                else
-                {
-                    CPubKey vch;
-                    keystore.GetPubKey(keyID, vch);
-                    scriptSigRet << ToByteVector(vch);
-                }
-                return true;
-        #endif
-            case TX_SCRIPTHASH: {
-                cout << "scripthash: " << HexStr(uint160(vSolutions[0])) << endl;
-                //return keystore.GetCScript(uint160(vSolutions[0]), scriptSigRet);
-                // from ./hdac-cli kcc listunspent 1 99999999 '["48R3XwXEYBtbq74WrRzRV4UeWugTPUSZmG1deQ"]', redeemScript
-#if 0
-                scriptSigRet = CScript(ParseHex("5221027e75736b41474547b7e2443d7235f4030cbb378093bbd2e98ea36ded6d703c2b21038d7724f227aab828d771eb6ab697f333e615d39b585944d99737ce7b7ae650fd52ae"));
-#else
-                auto hexScriptSig = ParseHex(unspentRedeemScript);
-                scriptSigRet = CScript(hexScriptSig.begin(), hexScriptSig.end());
-#endif
-            }
-                break;
-
-            case TX_MULTISIG:
-                scriptSigRet << OP_0; // workaround CHECKMULTISIG bug
-                //return (SignN(vSolutions, keystore, hash, nHashType, scriptSigRet));
-                //bool signOk = SignN(vSolutions, keystore, hash, nHashType, scriptSigRet);
-                bool signOk = false;
-                {
-                    int nSigned = 0;
-                    int nRequired = vSolutions.front()[0];
-
-                    for (unsigned int i = 1; i < vSolutions.size()-1 && (nSigned < nRequired); i++)
-                    {
-                        const valtype& pubkey = vSolutions[i];
-                        CKeyID keyID = CPubKey(pubkey).GetID();
-                                                                                                // We are trying to use at least one address with send permission
-                        //if (Sign1(keyID, keystore, hash, nHashType, scriptSigRet))
-                        //    ++nSigned;
-                        {
-                            CBitcoinSecret vchSecret{SamplePrivateKeyHelper{}};
-
-#if 0
-                            string strPrivKey("VHXjccrTPdRXG8asyos5oqvw6mhWtqASkbFsVuBnkpi4WXn2jr8eMwwp");
-
-                            //bool fGood = vchSecret.SetString(string("VHXjccrTPdRXG8asyos5oqvw6mhWtqASkbFsVuBnkpi4WXn2jr8eMwwp"));
-                            bool fGood = vchSecret.SetString(strPrivKey);
-#else
-                            bool fGood = vchSecret.SetString(privateKey);
-#endif
-
-                            if (!fGood)  {
-                                throw to_string(RPC_INVALID_ADDRESS_OR_KEY) + ": " + "Invalid private key";
-                            }
-                            CKey key = vchSecret.GetKey();
-                            if (!key.IsValid()) {
-                                throw to_string(RPC_INVALID_ADDRESS_OR_KEY) + ": " + "Private key outside allowed range";
-                            }
-
-                            cout << "from private : " << key.GetPubKey().GetID().ToString() << endl;
-                            cout << "from pubkey : " << keyID.ToString() << endl << endl;
-                            if (key.GetPubKey().GetID() != keyID) {
-                                continue;
-                            }
-
-                            vector<unsigned char> vchSig;
-                            if (!key.Sign(hash2, vchSig))    {
-                                throw "sign error";
-                            }
-
-                            vchSig.push_back((unsigned char)nHashType);
-                            scriptSigRet << vchSig;
-
-                            ++nSigned;
-                        }
-                    }
-                                                                                                // As a result of looking for send permission we may can sign more than required
-                    signOk = nSigned>=nRequired;
-                }
-            }
+            bool solved = solver(privateKey, helper, subscript, hash2, nHashType, unspentRedeemScript, scriptSigRet, whichType);
         }
         txin.scriptSig << static_cast<valtype>(subscript);
     }
-    hex=EncodeHexTx(txNew);
-    cout << "after sign, TxHex: " << hex << endl;
 
+    string hex=EncodeHexTx(txNew);
+    //cout << "after sign, TxHex: " << hex << endl;
 
     return hex;
 }
+

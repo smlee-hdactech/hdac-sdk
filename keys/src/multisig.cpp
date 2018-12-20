@@ -3,6 +3,8 @@
 #include "pubkey.h"
 #include <utils/utilstrencodings.h>
 #include <utils/tinyformat.h>
+#include "keyshelper.h"
+#include "bitcoinaddress.h"
 
 using namespace std;
 using namespace json_spirit;
@@ -121,4 +123,26 @@ CScript createMultisigRedeemScript(int nRequired, const vector<string>& keys,
     }
 
     return result;
+}
+
+void createMultisigInfo(const vector<string>& pubkeys, int required, const IWalletAddrHelper& addrHelper, MultisigAddrInfo& info)
+{
+    // "027e75736b41474547b7e2443d7235f4030cbb378093bbd2e98ea36ded6d703c2b","038d7724f227aab828d771eb6ab697f333e615d39b585944d99737ce7b7ae650fd"
+
+    CScript script = createMultisigRedeemScript(required, pubkeys);
+    //cout << "MultisigRedeemScript: ";
+    //cout << HexStr(script) << endl;
+
+    CScriptID scriptID(script);
+    //cout << "MultisigRedeemScript ID: ";
+    //cout << HexStr(scriptID) << endl;
+
+    CScript outer = GetScriptForDestination(scriptID);
+    //cout << "outer: " << HexStr(outer) << endl;
+
+    //return CBitcoinAddress(innerID).ToString();
+    //cout << "multisig addr: ";
+    //cout << CBitcoinAddress(scriptID, SampleWalletAddrHelper()).ToString() << endl;
+    info.addr = CBitcoinAddress(scriptID, addrHelper).ToString();
+    info.redeemScript = HexStr(script);
 }
