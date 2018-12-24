@@ -10,6 +10,9 @@
 #include <rpc/rpcclient.h>
 #include <keys/bitcoinsecret.h>
 #include <keys/keyshelper.h>
+#include <json_spirit/json_spirit_reader_template.h>
+#include <json_spirit/json_spirit_writer_template.h>
+#include <keys/transactions.h>
 
 using namespace std;
 using namespace json_spirit;
@@ -25,12 +28,91 @@ void testCalcSHA256()
 //    obtainHash("This is test message", compareHash1);
 }
 
+// TODO : make class
+RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
+//RpcClient client{"127.0.0.1", 4260, "hdacrpc", "1234"};
+//RpcClient client{"13.209.104.165", 4260, "hdacrpc", "1234"};
+
 // TODO : should add the logging function
 // TODO : parameters from config-file.
 Object blockChainParams()
 {
-    RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
+    //RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
     return client.CallRPC("getblockchainparams");
+}
+
+Object listunspent(int minConf = 1, int maxConf = 9999999, const vector<string>& addresses = vector<string>{})
+{
+    //RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
+    Array params;
+
+    if (minConf > 1) {
+        params.push_back(minConf);
+    }
+    if (maxConf < 9999999)  {
+        params.clear();
+        params.push_back(minConf);
+        params.push_back(maxConf);
+    }
+    if (!addresses.empty()) {
+        params.clear();
+        params.push_back(minConf);
+        params.push_back(maxConf);
+        Array addressArray;
+        for (const string& addr : addresses)    {
+            addressArray.push_back(addr);
+        }
+        params.push_back(addressArray);
+    }
+    return client.CallRPC("listunspent", params);
+}
+
+Object listunspent(const vector<string>& addresses)
+{
+    return listunspent(1, 9999999, addresses);
+}
+
+Object listunspent(const string& address)
+{
+    return listunspent(1, 9999999, vector<string>{address});
+}
+
+Object lockunspent(bool unlock, string txid, int vout) {
+    //RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
+    Array params;
+    params.push_back(unlock);
+    Array transactions;
+    Object transaction;
+    transaction.push_back(Pair("txid", txid));
+    transaction.push_back(Pair("vout", vout));
+    transactions.push_back(transaction);
+    params.push_back(transactions);
+    return client.CallRPC("lockunspent", params);
+}
+
+Object listlockunspent()
+{
+    //RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
+    return client.CallRPC("listlockunspent");
+}
+
+Object liststreams(const vector<string> &streamNames)
+{
+    //RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
+    Array params;
+    Array streamArray;
+
+    for (const string& stream : streamNames) {
+        streamArray.push_back(stream);
+    }
+    params.push_back(streamArray);
+    return client.CallRPC("liststreams", params);
+}
+
+Object liststreams(const string &streamName = "all")
+{
+    vector<string> streams{streamName};
+    return liststreams(streams);
 }
 
 class KeysHelper {
@@ -146,7 +228,7 @@ void createKeyPairs()
 
 string resultWithRPC(const string &method, const Array &params = Array())
 {
-    RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
+    //RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
     const Object reply = client.CallRPC(method, params);
 
     string resultStr;
@@ -169,6 +251,116 @@ void testPubkeyToAddrAfterGettingParams()
     cout << "address : " << addr.ToString() << endl;
 }
 
+bool rpcResult(const Object& reply, string &resultStr)
+{
+    int nRet = result(reply, resultStr);
+    if (nRet) {
+        cerr << "rpc error : " << resultStr;
+        return false;
+    }
+    return true;
+}
+
+void testRawTransactionForStreamPublish()
+{
+    vector<tuple<string, string>> addrNPrivates = {
+        {"1WCRNaPb3jAjb4GE9t34uLiLtPseA8JKEvdtg5", "V6X4NaaDQSTgXdAcCzUrSxWqAuFcd53TRXRqmSafUYEbY5DgGMitPEzk"},
+        {"18wD7MBodeTYRAvN5bRuWYB11jwHdkGVCBLSnB", "VHXjccrTPdRXG8asyos5oqvw6mhWtqASkbFsVuBnkpi4WXn2jr8eMwwp"},
+        {"1EpVCtEHe61hVdgQLKSzM8ZyeFJGdsey29sMQi", "V9ugoEazm16SKbvj7DVxMUcXQnvKpBPaeZ3KEUxTUWoChXQTuHKyzbKx"}
+    };
+    //string walletAddr = "1WCRNaPb3jAjb4GE9t34uLiLtPseA8JKEvdtg5";
+    //string walletAddr = "18wD7MBodeTYRAvN5bRuWYB11jwHdkGVCBLSnB";
+    int selected = 0;
+    //string walletAddr = "1EpVCtEHe61hVdgQLKSzM8ZyeFJGdsey29sMQi";
+    string walletAddr;
+    string privateKey;
+    tie(walletAddr, privateKey) = addrNPrivates[selected];
+
+    string resultStr;
+    if (!rpcResult(listunspent(walletAddr), resultStr))  {
+        return;
+    }
+
+    Value resultValue;
+    string txid;
+    int vout;
+    string scriptPubKey;
+
+    //string privateKey = "V6X4NaaDQSTgXdAcCzUrSxWqAuFcd53TRXRqmSafUYEbY5DgGMitPEzk";
+    //string privateKey = "VHXjccrTPdRXG8asyos5oqvw6mhWtqASkbFsVuBnkpi4WXn2jr8eMwwp";
+    //string privateKey = "V9ugoEazm16SKbvj7DVxMUcXQnvKpBPaeZ3KEUxTUWoChXQTuHKyzbKx";
+
+    cout << "listunspent result: " << endl;
+    if (read_string(resultStr, resultValue))   {
+        if (resultValue.type() != array_type) {
+            throw "wrong result format";
+        }
+        Array unspents = resultValue.get_array();
+        Object selected;
+        for (int i = 0; i < unspents.size(); i++) {
+            Value value = find_value(unspents[i].get_obj(), "assets");
+            if (value.type() == array_type && value.get_array().size() == 0) {
+                selected = unspents[i].get_obj();
+                break;
+            }
+        }
+
+        txid = find_value(selected, "txid").get_str();
+        vout = find_value(selected, "vout").get_int();
+//        txid = find_value(unspents[0].get_obj(), "txid").get_str();
+//        vout = find_value(unspents[0].get_obj(), "vout").get_int();
+        scriptPubKey = find_value(selected, "scriptPubKey").get_str();
+        cout << "txid = " << txid << endl;
+        cout << "vout = " << vout << endl;
+        cout << "scriptPubKey = " << scriptPubKey << endl;
+    }
+
+    if (!rpcResult(lockunspent(false, txid, vout), resultStr))  {
+        return;
+    }
+
+    if (!rpcResult(listlockunspent(), resultStr))  {
+        return;
+    }
+
+    //Value resultValue;
+    //string txid;
+    //int vout;
+    cout << "listlockunspent result: " << endl;
+    if (read_string(resultStr, resultValue))   {
+        if (resultValue.type() != array_type) {
+            throw "wrong result format";
+        }
+        Array unspents = resultValue.get_array();
+        txid = find_value(unspents[0].get_obj(), "txid").get_str();
+        vout = find_value(unspents[0].get_obj(), "vout").get_int();
+        cout << "txid = " << txid << endl;
+        cout << "vout = " << vout << endl;
+    }
+
+    if (!rpcResult(lockunspent(true, txid, vout), resultStr))  {
+        return;
+    }
+
+    if (!rpcResult(liststreams("stream9"), resultStr))  {
+        return;
+    }
+
+    string createTxid;
+    if (read_string(resultStr, resultValue))   {
+        if (resultValue.type() != array_type) {
+            throw "wrong result format";
+        }
+        Array unspents = resultValue.get_array();
+        createTxid = find_value(unspents[0].get_obj(), "createtxid").get_str();
+        cout << "createtxid = " << createTxid << endl;
+    }
+
+    string txHex = createStreamPublishTx("key1", "first programmed version", createTxid,
+                                         scriptPubKey, txid, vout, "", privateKey, KeysHelper().privHelper());
+    cout << "raw transaction: " << txHex << endl;
+}
+
 int main()
 {
     cout << "1. test sha256 of \"This is test message\"" << endl;
@@ -177,14 +369,22 @@ int main()
     cout << "2. test sha256 of file, video1.mp4" << endl;
     hashFromFile("video1.mp4");
 
-    cout << "3. temp test" << endl;
-    getinfo();
+    //cout << "3. temp test" << endl;
+    //getinfo();
 
     cout << "4. create key pairs" << endl;
     createKeyPairs();
 
     cout << "5. pubkey test" << endl;
     testPubkeyToAddrAfterGettingParams();
+
+    cout << "6. stream publish test" << endl;
+    try {
+        testRawTransactionForStreamPublish();
+    } catch(std::exception &e) {
+        cout << e.what() << endl;
+    }
+
 
     return 0;
 }
