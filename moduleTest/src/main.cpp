@@ -28,20 +28,27 @@ void testCalcSHA256()
 //    obtainHash("This is test message", compareHash1);
 }
 
+Object getinfo(const RpcClient& client)
+{
+    const bool fWait = false; // TODO : to parameter
+
+    return client.CallRPC("getinfo");
+}
+
 // TODO : make class
-RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
+
 //RpcClient client{"127.0.0.1", 4260, "hdacrpc", "1234"};
 //RpcClient client{"13.209.104.165", 4260, "hdacrpc", "1234"};
 
 // TODO : should add the logging function
 // TODO : parameters from config-file.
-Object blockChainParams()
+Object blockChainParams(const RpcClient& client)
 {
     //RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
     return client.CallRPC("getblockchainparams");
 }
 
-Object listunspent(int minConf = 1, int maxConf = 9999999, const vector<string>& addresses = vector<string>{})
+Object listunspent(const RpcClient& client, int minConf = 1, int maxConf = 9999999, const vector<string>& addresses = vector<string>{})
 {
     //RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
     Array params;
@@ -67,17 +74,17 @@ Object listunspent(int minConf = 1, int maxConf = 9999999, const vector<string>&
     return client.CallRPC("listunspent", params);
 }
 
-Object listunspent(const vector<string>& addresses)
+Object listunspent(const RpcClient& client, const vector<string>& addresses)
 {
-    return listunspent(1, 9999999, addresses);
+    return listunspent(client, 1, 9999999, addresses);
 }
 
-Object listunspent(const string& address)
+Object listunspent(const RpcClient& client, const string& address)
 {
-    return listunspent(1, 9999999, vector<string>{address});
+    return listunspent(client, 1, 9999999, vector<string>{address});
 }
 
-Object lockunspent(bool unlock, string txid, int vout) {
+Object lockunspent(const RpcClient& client, bool unlock, string txid, int vout) {
     //RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
     Array params;
     params.push_back(unlock);
@@ -90,13 +97,13 @@ Object lockunspent(bool unlock, string txid, int vout) {
     return client.CallRPC("lockunspent", params);
 }
 
-Object listlockunspent()
+Object listlockunspent(const RpcClient& client)
 {
     //RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
     return client.CallRPC("listlockunspent");
 }
 
-Object liststreams(const vector<string> &streamNames)
+Object liststreams(const RpcClient& client, const vector<string> &streamNames)
 {
     //RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
     Array params;
@@ -109,16 +116,16 @@ Object liststreams(const vector<string> &streamNames)
     return client.CallRPC("liststreams", params);
 }
 
-Object liststreams(const string &streamName = "all")
+Object liststreams(const RpcClient& client, const string &streamName = "all")
 {
     vector<string> streams{streamName};
-    return liststreams(streams);
+    return liststreams(client, streams);
 }
 
 class KeysHelper {
 public:
-    KeysHelper() {
-        const Object reply = blockChainParams();
+    KeysHelper(const RpcClient& client) {
+        const Object reply = blockChainParams(client);
 
         string resultStr;
         int nRet = result(reply, resultStr);
@@ -210,7 +217,8 @@ void createKeyPairs()
 
     CPubKey pubkey = secret.GetPubKey();
 
-    KeysHelper helper;
+    RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234", "kcc"};
+    KeysHelper helper(client);
 
     CBitcoinAddress addr(pubkey.GetID(), helper.addrHelper());
 
@@ -226,7 +234,7 @@ void createKeyPairs()
 }
 
 
-string resultWithRPC(const string &method, const Array &params = Array())
+string resultWithRPC(const RpcClient& client, const string &method, const Array &params = Array())
 {
     //RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
     const Object reply = client.CallRPC(method, params);
@@ -244,7 +252,8 @@ void testPubkeyToAddrAfterGettingParams()
     CPubKey pubkey(ParseHex("027e75736b41474547b7e2443d7235f4030cbb378093bbd2e98ea36ded6d703c2b"));
     cout << "pubKey: " << HexStr(pubkey) << endl;
 
-    KeysHelper helper;
+    RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234", "kcc"};
+    KeysHelper helper(client);
     //cout << hex << checksum << endl;
     CBitcoinAddress addr(pubkey.GetID(), helper.addrHelper());
 
@@ -261,6 +270,16 @@ bool rpcResult(const Object& reply, string &resultStr)
     return true;
 }
 
+void testgetinfo()
+{
+    string resultStr;
+    RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234", "kcc"};
+    if (!rpcResult(getinfo(client), resultStr))  {
+        return;
+    }
+    //cout <<
+}
+
 void testRawTransactionForStreamPublish()
 {
     vector<tuple<string, string>> addrNPrivates = {
@@ -268,16 +287,14 @@ void testRawTransactionForStreamPublish()
         {"18wD7MBodeTYRAvN5bRuWYB11jwHdkGVCBLSnB", "VHXjccrTPdRXG8asyos5oqvw6mhWtqASkbFsVuBnkpi4WXn2jr8eMwwp"},
         {"1EpVCtEHe61hVdgQLKSzM8ZyeFJGdsey29sMQi", "V9ugoEazm16SKbvj7DVxMUcXQnvKpBPaeZ3KEUxTUWoChXQTuHKyzbKx"}
     };
-    //string walletAddr = "1WCRNaPb3jAjb4GE9t34uLiLtPseA8JKEvdtg5";
-    //string walletAddr = "18wD7MBodeTYRAvN5bRuWYB11jwHdkGVCBLSnB";
     int selected = 0;
-    //string walletAddr = "1EpVCtEHe61hVdgQLKSzM8ZyeFJGdsey29sMQi";
     string walletAddr;
     string privateKey;
     tie(walletAddr, privateKey) = addrNPrivates[selected];
 
+    RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234", "kcc"};
     string resultStr;
-    if (!rpcResult(listunspent(walletAddr), resultStr))  {
+    if (!rpcResult(listunspent(client, walletAddr), resultStr))  {
         return;
     }
 
@@ -285,10 +302,6 @@ void testRawTransactionForStreamPublish()
     string txid;
     int vout;
     string scriptPubKey;
-
-    //string privateKey = "V6X4NaaDQSTgXdAcCzUrSxWqAuFcd53TRXRqmSafUYEbY5DgGMitPEzk";
-    //string privateKey = "VHXjccrTPdRXG8asyos5oqvw6mhWtqASkbFsVuBnkpi4WXn2jr8eMwwp";
-    //string privateKey = "V9ugoEazm16SKbvj7DVxMUcXQnvKpBPaeZ3KEUxTUWoChXQTuHKyzbKx";
 
     cout << "listunspent result: " << endl;
     if (read_string(resultStr, resultValue))   {
@@ -307,19 +320,17 @@ void testRawTransactionForStreamPublish()
 
         txid = find_value(selected, "txid").get_str();
         vout = find_value(selected, "vout").get_int();
-//        txid = find_value(unspents[0].get_obj(), "txid").get_str();
-//        vout = find_value(unspents[0].get_obj(), "vout").get_int();
         scriptPubKey = find_value(selected, "scriptPubKey").get_str();
         cout << "txid = " << txid << endl;
         cout << "vout = " << vout << endl;
         cout << "scriptPubKey = " << scriptPubKey << endl;
     }
 
-    if (!rpcResult(lockunspent(false, txid, vout), resultStr))  {
+    if (!rpcResult(lockunspent(client, false, txid, vout), resultStr))  {
         return;
     }
 
-    if (!rpcResult(listlockunspent(), resultStr))  {
+    if (!rpcResult(listlockunspent(client), resultStr))  {
         return;
     }
 
@@ -338,11 +349,11 @@ void testRawTransactionForStreamPublish()
         cout << "vout = " << vout << endl;
     }
 
-    if (!rpcResult(lockunspent(true, txid, vout), resultStr))  {
+    if (!rpcResult(lockunspent(client, true, txid, vout), resultStr))  {
         return;
     }
 
-    if (!rpcResult(liststreams("stream9"), resultStr))  {
+    if (!rpcResult(liststreams(client, "stream9"), resultStr))  {
         return;
     }
 
@@ -357,7 +368,7 @@ void testRawTransactionForStreamPublish()
     }
 
     string txHex = createStreamPublishTx("key1", "first programmed version", createTxid,
-                                         scriptPubKey, txid, vout, "", privateKey, KeysHelper().privHelper());
+                                         scriptPubKey, txid, vout, "", privateKey, KeysHelper(client).privHelper());
     cout << "raw transaction: " << txHex << endl;
 }
 

@@ -158,7 +158,7 @@ private:
     boost::asio::ssl::stream<typename Protocol::socket>& stream;
 };
 
-std::string JSONRPCRequest(const std::string& strMethod, const json_spirit::Array& params, const json_spirit::Value& id);
+std::string JSONRPCRequest(const std::string& strMethod, const json_spirit::Array& params, const json_spirit::Value& id, const std::string &chaninName = "hdac");
 std::string HTTPPost(const std::string& strMsg, const std::map<std::string,std::string>& mapRequestHeaders);
 int ReadHTTPStatus(std::basic_istream<char>& stream, int &proto);
 int ReadHTTPMessage(std::basic_istream<char>& stream, std::map<std::string, std::string>& mapHeadersRet,

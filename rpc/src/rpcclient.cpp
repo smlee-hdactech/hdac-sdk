@@ -23,31 +23,23 @@ public:
 
 };
 
-Object RpcClient::CallRPC(const string& strMethod, const Array& params)
+Object RpcClient::CallRPC(const string& strMethod, const Array& params) const
 {
-    // TODO : to parameter
-//    bool fUseSSL = false;   // default : not use ssl
-//    string server = "13.125.145.98";
-//    string port = "4260";
-//    string rpcuser = "hdacrpc";
-//    string rpcpassword = "1234";
-//    string requestout = "stderr";
-
     asio::io_service io_service;
     ssl::context context(io_service, ssl::context::sslv23);
     asio::ssl::stream<asio::ip::tcp::socket> sslStream(io_service, context);
     SSLIOStreamDevice<asio::ip::tcp> d(sslStream, _fUseSSL);
     iostreams::stream< SSLIOStreamDevice<asio::ip::tcp> > stream(d);
 
-    const bool fConnected = d.connect(_server, _port);
+    const bool fConnected = d.connect(_accessInfo.server, _accessInfo.port);
     if (!fConnected)
         throw CConnectionFailed("couldn't connect to server");
 
-    string strUserPass64 = EncodeBase64(_rpcuser + ":" + _rpcpassword);
+    string strUserPass64 = EncodeBase64(_accessInfo.rpcuser + ":" + _accessInfo.rpcpassword);
     map<string, string> mapRequestHeaders;
     mapRequestHeaders["Authorization"] = string("Basic ") + strUserPass64;
 
-    string strRequest = JSONRPCRequest(strMethod, params, 1);
+    string strRequest = JSONRPCRequest(strMethod, params, 1, _chainName);
     string strPost = HTTPPost(strRequest, mapRequestHeaders);
     stream << strPost << std::flush;
 

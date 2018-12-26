@@ -7,7 +7,6 @@
 extern "C" {
 #endif
 
-RPCCALLERSHARED_EXPORT void getinfo();
 
 #ifdef __cplusplus
 }
