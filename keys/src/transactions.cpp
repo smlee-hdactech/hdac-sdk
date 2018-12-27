@@ -18,6 +18,7 @@
 #include <primitives/interpreter.h>
 #include "standard.h"
 #include "bitcoinsecret.h"
+#include <entities/asset.h>
 
 // TODO : remove dependencies with rpc module
 #include <rpc/rpcprotocol.h>
@@ -559,6 +560,9 @@ bool solver(const string& privateKey, const IPrivateKeyHelper& helper, const CSc
             keyID = CKeyID(uint160(vSolutions[0]));
 
             CKey keyFromPriv = keyFromPrivateKey(privateKey, helper);
+            auto checkKeyID = keyFromPriv.GetPubKey().GetID();
+            cout << "from script: " << HexStr(keyID) << endl;
+            cout << "from private key: " << HexStr(checkKeyID) << endl;
             if (keyFromPriv.GetPubKey().GetID() != keyID) {
                 return false;
             }
@@ -590,21 +594,157 @@ bool solver(const string& privateKey, const IPrivateKeyHelper& helper, const CSc
     }
 }
 
+// TODO : implement
+// create
+// publish : single -> O, multisig -> X
+// issue
+// send asset
+
+#define MC_AST_ASSET_REF_TYPE_OFFSET        32
+#define MC_AST_ASSET_REF_TYPE_SIZE           4
+
+string createAssetSendTx(const string& toAddr, double quantity,
+                         const string& issueTxid, int multiple,
+                         const string& unspentScriptPubKey, const string& unspentTxid, uint32_t unspentVOut,
+                         const string& unspentRedeemScript, const string& privateKey,
+                         const IPrivateKeyHelper& privateHelper, const IWalletAddrHelper& walletHelper)
+{
+    auto hexTxid = ParseHex(issueTxid);
+    std::reverse(hexTxid.begin(), hexTxid.end());
+
+    unsigned char buf[MC_AST_ASSET_FULLREF_BUF_SIZE];
+    memset(buf, 0, MC_AST_ASSET_FULLREF_BUF_SIZE);
+    memcpy(buf+MC_AST_SHORT_TXID_OFFSET, hexTxid.data()+MC_AST_SHORT_TXID_OFFSET, MC_AST_SHORT_TXID_SIZE);
+
+    uint32_t type = MC_AST_ASSET_REF_TYPE_SHORT_TXID;
+    mc_PutLE((unsigned char*)buf+MC_AST_ASSET_REF_TYPE_OFFSET,&type,MC_AST_ASSET_REF_TYPE_SIZE);
+
+    int64_t qnt = (int64_t)(quantity * multiple + 0.499999);
+    mc_PutLE((unsigned char*)buf+MC_AST_ASSET_QUANTITY_OFFSET,&qnt,MC_AST_ASSET_QUANTITY_SIZE);
+
+    std::unique_ptr<mc_Buffer> buffer(new mc_Buffer);
+    mc_InitABufferDefault(buffer.get());
+    buffer->Clear();
+    buffer->Add(buf);
+
+    std::unique_ptr<mc_Script> dropScript(new mc_Script);
+    dropScript->Clear();
+
+    dropScript->SetAssetQuantities(buffer.get(), MC_SCR_ASSET_SCRIPT_TYPE_TRANSFER);
+
+    CBitcoinAddress toWalletAddress(toAddr, walletHelper);
+    CTxDestination addressRet = toWalletAddress.Get();
+
+    CScript scriptSend=GetScriptForDestination(addressRet);
+    //CKeyID keyIdAddrRet = boost::get<CKeyID>(addressRet);
+    //cout << "toAddr key: " << keyIdAddrRet.ToString() << endl;
+
+    //CScript scriptPubKey=GetScriptForDestination(addressRet);
+
+    size_t elem_size;
+    const unsigned char *elem;
+
+    for(int element=0;element < dropScript->GetNumElements();element++)
+    {
+        elem = dropScript->GetData(element,&elem_size);
+        if(elem)    {
+            //scriptPubKey << vector<unsigned char>(elem, elem + elem_size) << OP_DROP;
+            scriptSend << vector<unsigned char>(elem, elem + elem_size) << OP_DROP;
+        }
+        else    {
+            throw to_string(RPC_INTERNAL_ERROR) + ": Invalid script";
+        }
+    }
+
+
+#if 0
+    std::unique_ptr<mc_Buffer> change_amounts(new mc_Buffer);
+    change_amounts->Initialize(MC_AST_ASSET_QUANTITY_OFFSET,MC_AST_ASSET_FULLREF_BUF_SIZE+sizeof(int),MC_BUF_MODE_MAP);
+    change_amounts->Clear();
+#endif
+
+    // TODO : need to handle multiple scriptPubKeys
+    CMutableTransaction txNew;
+
+    CTxOut txout2(0, scriptSend);
+    txNew.vout.push_back(txout2);
+
+    CKey keyFromPriv = keyFromPrivateKey(privateKey, privateHelper);
+    CScript scriptChange;
+    {
+        EccAutoInitReleaseHandler eccScoper;
+        CTxDestination changeAddr = keyFromPriv.GetPubKey().GetID();
+        scriptChange=GetScriptForDestination(changeAddr);
+    }
+
+    int64_t changeQnt = (int64_t)(990 * multiple - qnt);
+    mc_PutLE((unsigned char*)buf+MC_AST_ASSET_QUANTITY_OFFSET,&changeQnt,MC_AST_ASSET_QUANTITY_SIZE);
+
+    buffer->Clear();
+    buffer->Add(buf);
+
+    dropScript->Clear();
+    dropScript->SetAssetQuantities(buffer.get(), MC_SCR_ASSET_SCRIPT_TYPE_TRANSFER);
+
+    for(int element=0;element < dropScript->GetNumElements();element++)
+    {
+        elem = dropScript->GetData(element,&elem_size);
+        if(elem)    {
+            //scriptPubKey << vector<unsigned char>(elem, elem + elem_size) << OP_DROP;
+            scriptChange << vector<unsigned char>(elem, elem + elem_size) << OP_DROP;
+        }
+        else    {
+            throw to_string(RPC_INTERNAL_ERROR) + ": Invalid script";
+        }
+    }
+
+    CTxOut txout3(0, scriptChange);
+    txNew.vout.push_back(txout3);
+
+    auto pubkeyScript = ParseHex(unspentScriptPubKey);
+    CTxOut txOut1(0, CScript(pubkeyScript.begin(), pubkeyScript.end()));
+    const CScript& script1 = txOut1.scriptPubKey;
+
+    txNew.vin.push_back(CTxIn(uint256(unspentTxid), unspentVOut));
+
+    int nIn = 0;
+    int nHashType = SIGHASH_ALL;
+
+    uint256 hash = SignatureHash(script1, txNew, nIn, nHashType);
+    cout << "hash: " << HexStr(hash) << endl;
+
+    CTxIn& txin = txNew.vin[nIn];
+
+    //vector<valtype> vSolutions;
+    txnouttype whichType;
+    CScript& scriptSigRet = txin.scriptSig;
+
+    if (!solver(privateKey, privateHelper, script1, hash, nHashType, unspentRedeemScript, scriptSigRet, whichType)) {
+        return "";
+    };
+
+    if (whichType == TX_SCRIPTHASH) {
+        CScript subscript = txin.scriptSig;
+        uint256 hash2 = SignatureHash(subscript, txNew, nIn, nHashType);
+        //cout << "hash2: " << HexStr(hash2) << endl;
+        {
+            CScript& scriptSigRet = txin.scriptSig;
+            bool solved = solver(privateKey, privateHelper, subscript, hash2, nHashType, unspentRedeemScript, scriptSigRet, whichType);
+        }
+        txin.scriptSig << static_cast<valtype>(subscript);
+    }
+
+    string hex=EncodeHexTx(txNew);
+    //cout << "after sign, TxHex: " << hex << endl;
+
+    return hex;
+}
+
 string createStreamPublishTx(const string& streamKey, const string& streamItem,
                      const string& createTxid,
                      const string& unspentScriptPubKey, const string& unspentTxid, uint32_t unspentVOut,
                      const string& unspentRedeemScript, const string& privateKey, const IPrivateKeyHelper& helper)
 {
-    // TODO : implement
-    // create
-    // publish
-    // issue
-    // follow-on
-    // pure details
-    // approval
-    // create upgrade
-    // encode empty hex
-    // cache input script
 
     //mc_EntityDetails found_entity;
 

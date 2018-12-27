@@ -2,6 +2,7 @@
 #include <cstring>
 #include <utils/utility.h>
 #include <script/hdacscript.h>
+#include <utils/define.h>
 
 #define MC_AST_ASSET_REF_TYPE_OFFSET        32
 #define MC_AST_ASSET_REF_TYPE_SIZE           4
@@ -254,4 +255,9 @@ int64_t mc_GetABQuantity(void *ptr)
 void mc_SetABQuantity(void *ptr,int64_t quantity)
 {
     mc_PutLE((unsigned char*)ptr+MC_AST_ASSET_QUANTITY_OFFSET,&quantity,MC_AST_ASSET_QUANTITY_SIZE);
+}
+
+void mc_InitABufferDefault(mc_Buffer *buf)
+{
+    buf->Initialize(MC_AST_ASSET_QUANTITY_OFFSET,MC_AST_ASSET_FULLREF_BUF_SIZE,MC_BUF_MODE_DEFAULT);
 }

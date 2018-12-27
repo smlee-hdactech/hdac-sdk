@@ -72,6 +72,7 @@ void testCreateRawSendFrom()
     // unspentRedeemScript : 7th param, from listunspent 1 99999999 '["48R3XwXEYBtbq74WrRzRV4UeWugTPUSZmG1deQ"]', redeemScript => maybe createMultiSig
     // privateKey : 8th param, from dumpprivkey ${addr}, => maybe createkeypair
 
+#if 0
     string rawTxHexForMultisig = createStreamPublishTx("key1", "tested by moony",
                             "a0b59e8c6f2fd144485d19632f62708f88116fb11a46411dd7d1e211ec92ce9a",
                             "a9143e45d3a48882576ad5900978303705e1a6000305871473706b6511feed9499be6fb101e0f59119d3fe15751473706b700800000000000000fffffffffbfe095c75",
@@ -91,6 +92,18 @@ void testCreateRawSendFrom()
                             SamplePrivateKeyHelper()
                            );
     cout << "for single sign : " << rawTxHex << endl;
+#endif
+
+    string rawTxAssetHex = createAssetSendTx("1WCRNaPb3jAjb4GE9t34uLiLtPseA8JKEvdtg5", 10,
+                                             "44fdb8103f4e13d6ef2011d54933f2747b455c613b3cfe4886d187330d50b640", 10,
+                                             "76a9143ab53060d41b5fa662a2d4575a69464b5759839588ac1c73706b7174f23349d51120efd6134e3f10b8fd44ac2600000000000075",
+                                             "030374d736a70c5faf5d16887d2263e812cb896938bedeefd44c128417e2460a", 1,                                             
+                                             "",
+                                             "VHXjccrTPdRXG8asyos5oqvw6mhWtqASkbFsVuBnkpi4WXn2jr8eMwwp",
+                                             SamplePrivateKeyHelper(),
+                                             SampleWalletAddrHelper()
+                                             );
+    cout << "for single sign - asset: " << rawTxAssetHex << endl;
 }
 
 int main()

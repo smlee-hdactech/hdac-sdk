@@ -113,6 +113,8 @@ uint32_t mc_GetABRefType(void *ptr);
 void mc_SetABRefType(void *ptr,uint32_t type);
 int64_t mc_GetABQuantity(void *ptr);
 void mc_SetABQuantity(void *ptr,int64_t quantity);
+struct mc_Buffer;
+void mc_InitABufferDefault(mc_Buffer *buf);
 
 // TODO : m_AssetRefSize is from mc_HdacParams
 static int m_AssetRefSize = MC_AST_SHORT_TXID_SIZE;
