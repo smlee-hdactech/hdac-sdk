@@ -606,6 +606,7 @@ bool solver(const string& privateKey, const IPrivateKeyHelper& helper, const CSc
 string createAssetSendTx(const string& toAddr, double quantity,
                          const string& issueTxid, int multiple,
                          const string& unspentScriptPubKey, const string& unspentTxid, uint32_t unspentVOut,
+                         double unspentQty,
                          const string& unspentRedeemScript, const string& privateKey,
                          const IPrivateKeyHelper& privateHelper, const IWalletAddrHelper& walletHelper)
 {
@@ -677,7 +678,7 @@ string createAssetSendTx(const string& toAddr, double quantity,
         scriptChange=GetScriptForDestination(changeAddr);
     }
 
-    int64_t changeQnt = (int64_t)(990 * multiple - qnt);
+    int64_t changeQnt = (int64_t)(unspentQty * multiple - qnt);
     mc_PutLE((unsigned char*)buf+MC_AST_ASSET_QUANTITY_OFFSET,&changeQnt,MC_AST_ASSET_QUANTITY_SIZE);
 
     buffer->Clear();

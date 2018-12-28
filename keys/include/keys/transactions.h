@@ -27,7 +27,8 @@ std::string createStreamPublishTx(const std::string& streamKey, const std::strin
 
 std::string createAssetSendTx(const std::string& toAddr, double quantity,
                          const std::string& issueTxid, int multiple,
-                         const std::string& unspentScriptPubKey, const std::string& unspentTxid, uint32_t unspentVOut, const std::string &unspentRedeemScript,
+                         const std::string& unspentScriptPubKey, const std::string& unspentTxid, uint32_t unspentVOut,
+                         double unspentQty, const std::string &unspentRedeemScript,
                          const std::string& privateKey, const IPrivateKeyHelper& privateHelper, const IWalletAddrHelper &walletHelper);
 
 void ParseEntityIdentifier(json_spirit::Value entity_identifier,mc_EntityDetails *entity,uint32_t entity_type);
