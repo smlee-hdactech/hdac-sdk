@@ -8,6 +8,7 @@ set(src
     rpcprotocol.cpp
     rpcclient.cpp
     rpcresult.cpp
+    rpcapis.cpp
     )
 
 add_library(${prj_base}_dynamic SHARED ${src})

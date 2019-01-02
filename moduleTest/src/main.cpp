@@ -13,6 +13,7 @@
 #include <json_spirit/json_spirit_reader_template.h>
 #include <json_spirit/json_spirit_writer_template.h>
 #include <keys/transactions.h>
+#include <rpc/rpcapis.h>
 
 using namespace std;
 using namespace json_spirit;
@@ -28,120 +29,10 @@ void testCalcSHA256()
 //    obtainHash("This is test message", compareHash1);
 }
 
-Object getinfo(const RpcClient& client)
-{
-    const bool fWait = false; // TODO : to parameter
-
-    return client.CallRPC("getinfo");
-}
-
 // TODO : make class
-
-//RpcClient client{"127.0.0.1", 4260, "hdacrpc", "1234"};
-//RpcClient client{"13.209.104.165", 4260, "hdacrpc", "1234"};
 
 // TODO : should add the logging function
 // TODO : parameters from config-file.
-Object blockChainParams(const RpcClient& client)
-{
-    //RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
-    return client.CallRPC("getblockchainparams");
-}
-
-Object listunspent(const RpcClient& client, int minConf = 1, int maxConf = 9999999, const vector<string>& addresses = vector<string>{})
-{
-    //RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
-    Array params;
-
-    if (minConf > 1) {
-        params.push_back(minConf);
-    }
-    if (maxConf < 9999999)  {
-        params.clear();
-        params.push_back(minConf);
-        params.push_back(maxConf);
-    }
-    if (!addresses.empty()) {
-        params.clear();
-        params.push_back(minConf);
-        params.push_back(maxConf);
-        Array addressArray;
-        for (const string& addr : addresses)    {
-            addressArray.push_back(addr);
-        }
-        params.push_back(addressArray);
-    }
-    return client.CallRPC("listunspent", params);
-}
-
-Object listunspent(const RpcClient& client, const vector<string>& addresses)
-{
-    return listunspent(client, 1, 9999999, addresses);
-}
-
-Object listunspent(const RpcClient& client, const string& address)
-{
-    return listunspent(client, 1, 9999999, vector<string>{address});
-}
-
-Object lockunspent(const RpcClient& client, bool unlock, string txid, int vout) {
-    //RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
-    Array params;
-    params.push_back(unlock);
-    Array transactions;
-    Object transaction;
-    transaction.push_back(Pair("txid", txid));
-    transaction.push_back(Pair("vout", vout));
-    transactions.push_back(transaction);
-    params.push_back(transactions);
-    return client.CallRPC("lockunspent", params);
-}
-
-Object listlockunspent(const RpcClient& client)
-{
-    //RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
-    return client.CallRPC("listlockunspent");
-}
-
-Object liststreams(const RpcClient& client, const vector<string> &streamNames)
-{
-    //RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
-    Array params;
-    Array streamArray;
-
-    for (const string& stream : streamNames) {
-        streamArray.push_back(stream);
-    }
-    params.push_back(streamArray);
-    return client.CallRPC("liststreams", params);
-}
-
-Object liststreams(const RpcClient& client, const string &streamName = "all")
-{
-    vector<string> streams{streamName};
-    return liststreams(client, streams);
-}
-
-Object listassets(const RpcClient& client, const vector<string> &assetNames)
-{
-    Array params;
-    Array streamArray;
-
-    for (const string& name : assetNames) {
-        streamArray.push_back(name);
-    }
-    params.push_back(streamArray);
-    return client.CallRPC("listassets", params);
-}
-
-Object listassets(const RpcClient& client, const string &name = "")
-{
-    vector<string> names;
-    if (name != "") {
-        names.push_back(name);
-    }
-    return listassets(client, names);
-}
 
 class KeysHelper {
 public:
