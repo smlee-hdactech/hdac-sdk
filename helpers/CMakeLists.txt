@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1)
 
-project(HDAC_ENTITIES
+project(HDAC_HELPERS
     DESCRIPTION "helper classes for building wallet addr. and private key"
     VERSION 0.1.0)
 

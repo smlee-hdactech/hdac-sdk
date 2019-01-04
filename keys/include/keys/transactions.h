@@ -3,8 +3,10 @@
 
 #include <json_spirit/json_spirit.h>
 #include <string>
+#include <memory>
+#include <structs/uint256.h>
+#include "standard.h"
 
-class IWalletAddrHelper;
 class mc_EntityDetails;
 
 #define MC_ASSET_KEY_UNCONFIRMED_GENESIS    1
@@ -17,20 +19,17 @@ class mc_EntityDetails;
 
 
 bool AssetRefDecode(unsigned char *bin, const char* string, const size_t stringLen);
+void ParseEntityIdentifier(json_spirit::Value entity_identifier,mc_EntityDetails *entity,uint32_t entity_type);
 
 class IPrivateKeyHelper;
-std::string createStreamPublishTx(const std::string& streamKey, const std::string& streamItem,
-                                  const std::string &createTxid,
-                                  const std::string &unspentScriptPubKey, const std::string &unspentTxid, uint32_t unspentVOut,
-                                  const std::string &unspentRedeemScript, const std::string &privateKey,
-                                  const IPrivateKeyHelper &helper);
+class CKey;
+CKey keyFromPrivateKey(const std::string& privateKey, const IPrivateKeyHelper& helper);
 
-std::string createAssetSendTx(const std::string& toAddr, double quantity,
-                         const std::string& issueTxid, int multiple,
-                         const std::string& unspentScriptPubKey, const std::string& unspentTxid, uint32_t unspentVOut,
-                         double unspentQty, const std::string &unspentRedeemScript,
-                         const std::string& privateKey, const IPrivateKeyHelper& privateHelper, const IWalletAddrHelper &walletHelper);
+class CScript;
+bool solver(const std::string& privateKey, const IPrivateKeyHelper& helper, const CScript& scriptPubKey,
+            uint256 hash, int nHashType, const std::string& unspentRedeemScript,
+            CScript& scriptSigRet, txnouttype& whichTypeRet);
 
-void ParseEntityIdentifier(json_spirit::Value entity_identifier,mc_EntityDetails *entity,uint32_t entity_type);
+bool ExtractDestinationScriptValid(const CScript& scriptPubKey, CTxDestination& addressRet);
 
 #endif // TRANSACTIONS_H

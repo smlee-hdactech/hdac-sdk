@@ -44,17 +44,7 @@ void obtainHash(const string& input, function<void(unsigned char hash[CSHA256::O
     callback(hash);
 }
 
-//void testCalcSHA256()
-//{
-//    using namespace std::placeholders;
-//    //obtainHash("This is test message", displayHashValue);
-//    // data from https://passwordsgenerator.net/sha256-hash-generator/
-//    auto compareHash = bind(compareHashValue, _1, "DDDBDC2845C9D80DC288710D9B2CF2D6C4F613D0DC4C048A9EA0E8674C2C5E73");
-//    obtainHash("This is test message", compareHash);
-////    auto compareHash1 = bind(compareHashValue, _1, "CDDBDC2845C9D80DC288710D9B2CF2D6C4F613D0DC4C048A9EA0E8674C2C5E73");
-////    obtainHash("This is test message", compareHash1);
-//}
-
+#if 0
 void hashFromFile(const string& filename)
 {
     ifstream is(filename, ifstream::in | ifstream::binary);
@@ -71,3 +61,4 @@ void hashFromFile(const string& filename)
     string toBase64 = EncodeBase64(readStr);
     obtainHash(toBase64, displayHashValue);
 }
+#endif

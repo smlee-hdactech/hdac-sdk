@@ -20,4 +20,6 @@ enum txnouttype
 bool TemplateSolver(const CScript& scriptPubKey, txnouttype& typeRet, std::vector<std::vector<unsigned char> >& vSolutionsRet);
 bool ExtractDestinations(const CScript& scriptPubKey, txnouttype& typeRet, std::vector<CTxDestination>& addressRet, int& nRequiredRet,std::vector<std::vector<unsigned char> >* lpvSolutionsRet = NULL);
 
+typedef std::vector<unsigned char> valtype;
+
 #endif // KEYS_STANDARD_H

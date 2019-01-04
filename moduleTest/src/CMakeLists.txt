@@ -1,13 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
 
-include(FindBoost)
-include(FindOpenSSL)
-include(FindPkgConfig)
-
-find_package(Boost 1.55.0 REQUIRED system thread)
-find_package(OpenSSL REQUIRED)
-pkg_check_modules (SECP256K1 REQUIRED libsecp256k1)
-
 add_executable(hdac_moduleTest main.cpp)
 
 target_include_directories(hdac_moduleTest 
@@ -19,10 +11,12 @@ target_include_directories(hdac_moduleTest
     ${CMAKE_SOURCE_DIR}/rpc/include
     ${CMAKE_SOURCE_DIR}/keys/include
     ${CMAKE_SOURCE_DIR}/script/include
+    ${CMAKE_SOURCE_DIR}/helpers/include
     )
 
 target_link_libraries(hdac_moduleTest
     PUBLIC
+    helpers_dynamic
     keys_dynamic
     script_dynamic
     structs_dynamic

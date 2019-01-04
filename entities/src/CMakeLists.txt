@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.1)
 
 set(prj_base entities)
 
+configure_file(hs_${prj_base}.pc.in hs_${prj_base}.pc @ONLY)
+
 set(src
     asset.cpp
     )
@@ -29,7 +31,7 @@ target_include_directories(${prj_base}_static
     )
 
 set_target_properties(${prj_base}_dynamic PROPERTIES OUTPUT_NAME "hdac_${prj_base}")
-set_target_properties(${prj_base}_static PROPERTIES VERSION 1.2 SOVERSION 1)
+set_target_properties(${prj_base}_dynamic PROPERTIES VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR} SOVERSION ${PROJECT_VERSION_MAJOR})
 
 set_target_properties(${prj_base}_static PROPERTIES OUTPUT_NAME "hdac_${prj_base}")
 
@@ -40,4 +42,5 @@ install(TARGETS ${prj_base}_dynamic ${prj_base}_static
         ARCHIVE DESTINATION lib)
 
 file(GLOB headers ../include/${prj_base}/*.h )
-install(FILES ${headers} DESTINATION include/hdac/${prj_base})
+#install(FILES ${headers} DESTINATION include/hdac/${prj_base})
+install(FILES ${CMAKE_BINARY_DIR}/${prj_base}/src/hs_${prj_base}.pc DESTINATION lib/pkgconfig)

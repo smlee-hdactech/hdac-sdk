@@ -6,7 +6,6 @@
 
 using namespace std;
 
-typedef vector<unsigned char> valtype;
 
 // TODO : MAX_OP_RETURN_RELAY is from maxstdopreturnsize, -datacarriersize
 static unsigned int MAX_OP_RETURN_RELAY = 40;

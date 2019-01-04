@@ -1,8 +1,7 @@
 #include <keys/bitcoinaddress.h>
 #include <iostream>
-#include <utils/utilsfront.h>
 #include <keys/multisig.h>
-#include <keys/transactions.h>
+#include <keys/hs_keys.h>
 
 using namespace std;
 

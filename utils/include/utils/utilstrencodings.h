@@ -37,4 +37,6 @@ inline std::string HexStr(const T& vch, bool fSpaces=false)
     return HexStr(vch.begin(), vch.end(), fSpaces);
 }
 
+int32_t parseHexToInt32Le(const std::string& hexString);
+
 #endif // STRCODECLIB_H

@@ -4,6 +4,7 @@
 #include <utils/random.h>
 #include <secp256k1.h>
 #include <secp256k1_recovery.h>
+#include "eccautoinitreleasehandler.h"
 
 static secp256k1_context* secp256k1_context_sign = NULL;
 
@@ -146,6 +147,8 @@ CPrivKey CKey::GetPrivKey() const {
     return privkey;
 }
 
+#include <memory>
+#include <iostream>
 CPubKey CKey::GetPubKey() const {
     assert(fValid);
     secp256k1_pubkey pubkey;
