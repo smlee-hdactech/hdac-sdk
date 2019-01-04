@@ -301,6 +301,32 @@ inline void Unserialize(Stream& is, T& a, long nType, int nVersion)
 }
 
 /**
+ * string
+ */
+template<typename C>
+unsigned int GetSerializeSize(const std::basic_string<C>& str, int, int)
+{
+    return GetSizeOfCompactSize(str.size()) + str.size() * sizeof(str[0]);
+}
+
+template<typename Stream, typename C>
+void Serialize(Stream& os, const std::basic_string<C>& str, int, int)
+{
+    WriteCompactSize(os, str.size());
+    if (!str.empty())
+        os.write((char*)&str[0], str.size() * sizeof(str[0]));
+}
+
+template<typename Stream, typename C>
+void Unserialize(Stream& is, std::basic_string<C>& str, int, int)
+{
+    unsigned int nSize = ReadCompactSize(is);
+    str.resize(nSize);
+    if (nSize != 0)
+        is.read((char*)&str[0], nSize * sizeof(str[0]));
+}
+
+/**
  * vector
  */
 template<typename T, typename A>

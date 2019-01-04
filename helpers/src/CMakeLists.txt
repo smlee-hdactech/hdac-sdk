@@ -5,7 +5,8 @@ set(prj_base helpers)
 configure_file(hs_${prj_base}.pc.in hs_${prj_base}.pc @ONLY)
 
 set(src
-    hs_helpers.cpp
+    KeysHelperWithRpc.cpp
+    KeysHelperWithFile.cpp
     )
 
 add_library(${prj_base}_dynamic SHARED ${src})
