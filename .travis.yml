@@ -16,10 +16,9 @@ script:
 #get json_spirit
   - git clone https://github.com/smlee-hdactech/json_spirit.git
   - cd json_spirit
-  - mkdir build
-  - cd build
-  - cmake ..
-  - make && sudo make install
+  - cmake -S . -B_build
+  - cmake --build _build
+  - sudo make install -C_build  
   - cd -
 #build
   - cmake -S . -B_build
