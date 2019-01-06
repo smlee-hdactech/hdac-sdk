@@ -22,4 +22,5 @@ add_subdirectory(entities)
 add_subdirectory(primitives)
 add_subdirectory(helpers)
 add_subdirectory(moduleTest)
+add_subdirectory(verifyTest)
 

@@ -1,4 +1,4 @@
-#include "hs_helpers.h"
+#include "KeysHelperWithRpc.h"
 #include <json_spirit/json_spirit.h>
 #include <utils/utilstrencodings.h>
 #include <rpc/rpcresult.h>

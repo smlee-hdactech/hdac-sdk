@@ -5,7 +5,7 @@ addons:
     packages:
     - libboost-system-dev
     - libboost-thread-dev
-script:
+install:
 #get libsecp256k1
   - git clone https://github.com/bitcoin-core/secp256k1.git
   - cd secp256k1
@@ -20,6 +20,7 @@ script:
   - cmake --build _build
   - sudo make install -C_build  
   - cd -
+script:  
 #build
   - cmake -S . -B_build
   - cmake --build _build
