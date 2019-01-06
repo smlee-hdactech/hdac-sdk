@@ -23,12 +23,10 @@ add_library(${prj_base}_static STATIC ${src})
 
 target_link_libraries(${prj_base}_dynamic
     script_dynamic
-    entities_dynamic
     primitives_dynamic
     )
 target_link_libraries(${prj_base}_static
     script_static
-    entities_static
     primitives_static
     )
 

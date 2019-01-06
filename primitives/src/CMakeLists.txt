@@ -13,11 +13,11 @@ add_library(${prj_base}_dynamic SHARED ${src})
 add_library(${prj_base}_static STATIC ${src})
 
 target_link_libraries(${prj_base}_dynamic
-    script_dynamic
+    structs_dynamic
     entities_dynamic
     )
 target_link_libraries(${prj_base}_static
-    script_static
+    structs_static
     entities_static
     )
 
