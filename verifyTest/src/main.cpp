@@ -4,6 +4,8 @@
 #include <utils/utilsfront.h>
 #include <utils/base64.h>
 #include <helpers/hs_helpers.h>
+#include <iostream>
+#include <boost/filesystem.hpp>
 
 using namespace std;
 
@@ -13,7 +15,9 @@ static boost::scoped_ptr<ECCVerifyHandle> globalVerifyHandle;
 
 bool my_verifymessage(string strAddress, string strSign, string strMessage)
 {
-	KeysHelperWithFileAll helper("/home/aiadmin/.hdac/mykcc/params.dat");
+    //cout << get_current_dir_name() << endl;
+
+    KeysHelperWithFileAll helper("params.dat");
 
 	CBitcoinAddress addr(strAddress, helper.addrHelper());
 	if (!addr.IsValid()) {

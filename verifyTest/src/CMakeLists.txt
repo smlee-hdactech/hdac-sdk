@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.1)
 
 add_executable(hdac_vTest main.cpp)
 
+file(COPY params.dat
+    DESTINATION ${PROJECT_BINARY_DIR}/bin)
+
 target_include_directories(hdac_vTest 
     PRIVATE
     ../include/${prj_base}
