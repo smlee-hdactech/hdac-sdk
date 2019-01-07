@@ -10,9 +10,9 @@ class KeysHelperWithRpc {
 public:
     KeysHelperWithRpc(const RpcClient& client);
 
-    IWalletAddrHelper& addrHelper();
+    const IWalletAddrHelper& addrHelper() const;
 
-    IPrivateKeyHelper& privHelper();
+    const IPrivateKeyHelper& privHelper() const;
 
 private:
     std::map<std::string, std::string> _resultMap;

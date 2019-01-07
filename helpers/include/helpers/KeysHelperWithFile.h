@@ -13,9 +13,9 @@ class KeysHelperWithFileAll {
 	public:
 		KeysHelperWithFileAll(const std::string Path);
 
-		IWalletAddrHelper& addrHelper();
+        const IWalletAddrHelper& addrHelper() const;
 
-		IPrivateKeyHelper& privHelper();
+        const IPrivateKeyHelper& privHelper() const;
 
 	private:
 		std::map<std::string, std::string> _resultMap;
@@ -53,9 +53,9 @@ class KeysHelperWithFileMulti {
 	public:
 		KeysHelperWithFileMulti(const std::string Path);
 
-		IWalletAddrHelper& addrHelper();
+        const IWalletAddrHelper& addrHelper() const;
 
-		IPrivateKeyHelper& privHelper();
+        const IPrivateKeyHelper& privHelper() const;
 
 	private:
 		std::map<std::string, std::string> _resultMap;

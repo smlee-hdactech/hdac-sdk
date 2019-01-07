@@ -27,11 +27,11 @@ KeysHelperWithRpc::KeysHelperWithRpc(const RpcClient &client) {
     _privHelper.reset(new PrivateKeyHelper(_resultMap));
 }
 
-IWalletAddrHelper &KeysHelperWithRpc::addrHelper() {
+const IWalletAddrHelper &KeysHelperWithRpc::addrHelper() const {
     return *_addrHelper;
 }
 
-IPrivateKeyHelper &KeysHelperWithRpc::privHelper() {
+const IPrivateKeyHelper &KeysHelperWithRpc::privHelper() const {
     return *_privHelper;
 }
 

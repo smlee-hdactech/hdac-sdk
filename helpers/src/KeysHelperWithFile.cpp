@@ -207,11 +207,11 @@ KeysHelperWithFileMulti::KeysHelperWithFileMulti(const string Path) {
 	_privHelper.reset(new PrivateKeyHelper(_resultMap));
 }
 
-IWalletAddrHelper &KeysHelperWithFileMulti::addrHelper() {
+const IWalletAddrHelper &KeysHelperWithFileMulti::addrHelper() const {
 	return *_addrHelper;
 }
 
-IPrivateKeyHelper &KeysHelperWithFileMulti::privHelper() {
+const IPrivateKeyHelper &KeysHelperWithFileMulti::privHelper() const {
 	return *_privHelper;
 }
 
@@ -242,11 +242,11 @@ KeysHelperWithFileAll::KeysHelperWithFileAll(const string Path) {
 	_privHelper.reset(new PrivateKeyHelper(_resultMap));
 }
 
-IWalletAddrHelper &KeysHelperWithFileAll::addrHelper() {
+const IWalletAddrHelper &KeysHelperWithFileAll::addrHelper() const {
 	return *_addrHelper;
 }
 
-IPrivateKeyHelper &KeysHelperWithFileAll::privHelper() {
+const IPrivateKeyHelper &KeysHelperWithFileAll::privHelper() const {
 	return *_privHelper;
 }
 
