@@ -343,3 +343,58 @@ bool verifymessage(string strAddress, string strSign, string strMessage, const I
 
         return (pubkey.GetID() == keyID);
 }
+
+
+string signmessage(string strAddress, string strMessage, const IPrivateKeyHelper &privateHelper, const IWalletAddrHelper &addrHelper)
+{
+        CKey key;
+        CBitcoinAddress addr(strAddress, addrHelper);
+        if (!addr.IsValid()) {
+                CBitcoinSecret vchSecret(privateHelper);
+                bool fGood = vchSecret.SetString(strAddress);
+
+                if (fGood)
+                {
+                        key = vchSecret.GetKey();
+                        if (!key.IsValid()) {
+                                fGood=false;
+                        } else {
+                                CPubKey pubkey = key.GetPubKey();
+                                assert(key.VerifyPubKey(pubkey));
+
+                        }
+                }
+
+                if(!fGood) {
+			cout << "invalid address or private key, vchsecret error" << endl;
+                }
+        } else {
+
+		return "it is insert address type, but not yet make...";
+		// to make address type, pwalletMain value...
+/*
+                CKeyID keyID;
+                if (!addr.GetKeyID(keyID)) {
+			cout << "address dose not refer to key, get key failed" << endl;
+                }
+
+
+                if (!pwalletMain->GetKey(keyID, key)) {
+                //      throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Private key not available");
+                }
+
+*/
+        }
+
+        CHashWriter ss(SER_GETHASH, 0);
+        ss << strMessageMagic;
+        ss << strMessage;
+
+        vector<unsigned char> vchSig;
+        if (!key.SignCompact(ss.GetHash(), vchSig)) {
+		cout << "sign compact error" << endl;
+        }
+
+    return EncodeBase64(&vchSig[0], vchSig.size());
+}
+
