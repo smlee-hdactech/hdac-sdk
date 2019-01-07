@@ -1,5 +1,6 @@
 #include "hs_keys.h"
 #include <utils/utilstrencodings.h>
+#include <utils/base64.h>
 #include <algorithm>
 #include <cstring>
 #include <entities/asset.h>
@@ -19,6 +20,8 @@
 #include "bitcoinsecret.h"
 
 using namespace std;
+
+const string strMessageMagic = "Hdac Signed Message:\n"; // for verify message
 
 KeyPairs createKeyPairs(const IPrivateKeyHelper &privateHelper, const IWalletAddrHelper &addrHelper)
 {
@@ -305,4 +308,38 @@ string walletAddrFromPubKey(const string& pubkeyStr, const IWalletAddrHelper& ad
     CPubKey pubkey(ParseHex(pubkeyStr));
     CBitcoinAddress addr(pubkey.GetID(), addrHelpler);
     return addr.ToString();
+}
+
+bool verifymessage(string strAddress, string strSign, string strMessage, const IWalletAddrHelper &addrHelper)
+{
+        CBitcoinAddress addr(strAddress, addrHelper);
+        if (!addr.IsValid()) {
+                cout << "addr error" << endl;
+                return false;
+        }
+
+        CKeyID keyID;
+        if (!addr.GetKeyID(keyID)) {
+                cout << "get key id error" << endl;
+                return false;
+        }
+
+        bool fInvalid = false;
+        vector<unsigned char> vchSig = DecodeBase64(strSign.c_str(), &fInvalid);
+
+        if (fInvalid) {
+                cout << "decode base 64 error" << endl;
+                return false;
+        }
+
+        CHashWriter ss(SER_GETHASH, 0);
+        ss << strMessageMagic;
+        ss << strMessage;
+
+        CPubKey pubkey;
+        if (!pubkey.RecoverCompact(ss.GetHash(), vchSig)) {
+                return false;
+        }
+
+        return (pubkey.GetID() == keyID);
 }
