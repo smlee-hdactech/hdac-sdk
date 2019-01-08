@@ -17,6 +17,13 @@ json_spirit::Object liststreams(const RpcClient& client, const std::vector<std::
 json_spirit::Object liststreams(const RpcClient& client, const std::string &streamName = "all");
 json_spirit::Object listassets(const RpcClient& client, const std::vector<std::string> &assetNames);
 json_spirit::Object listassets(const RpcClient& client, const std::string &name = "");
+json_spirit::Object verifymessage(const RpcClient& client,
+			const std::string &strAddress,
+                        const std::string &strSignmessage,
+			const std::string &strText);
+json_spirit::Object signmessage(const RpcClient& client,
+			const std::string &strPrivateKey,
+			const std::string &strText);
 
 bool rpcResult(const json_spirit::Object& reply, std::string &resultStr);
 
