@@ -31,4 +31,8 @@ std::string createAssetSendTx(const std::string& toAddr, double quantity,
 
 std::string walletAddrFromPubKey(const std::string& pubkeyStr, const IWalletAddrHelper& addrHelpler);
 
+bool verifymessage(std::string strAddress, std::string strSign, std::string strMessage, const IWalletAddrHelper &addrHelper);
+std::string signmessage(std::string strAddress, std::string strMessage, 
+						const IPrivateKeyHelper &privateHelper, const IWalletAddrHelper &addrHelper);
+
 #endif // HS_KEYS_H

@@ -1,72 +1,56 @@
+#include <iostream>
 #include <boost/scoped_ptr.hpp>
 #include <keys/key.h>
-#include <keys/bitcoinaddress.h>
-#include <utils/utilsfront.h>
-#include <utils/base64.h>
+#include <keys/hs_keys.h>
 #include <helpers/hs_helpers.h>
-#include <iostream>
-#include <boost/filesystem.hpp>
 
 using namespace std;
 
-const string strMessageMagic = "Hdac Signed Message:\n";
-
 static boost::scoped_ptr<ECCVerifyHandle> globalVerifyHandle;
 
-bool my_verifymessage(string strAddress, string strSign, string strMessage)
-{
-    //cout << get_current_dir_name() << endl;
-
-    KeysHelperWithFileAll helper("params.dat");
-
-	CBitcoinAddress addr(strAddress, helper.addrHelper());
-	if (!addr.IsValid()) {
-		cout << "addr error" << endl;
-		return false;
-	}
-
-	CKeyID keyID;
-	if (!addr.GetKeyID(keyID)) {
-		cout << "get key id error" << endl;
-		return false;
-	}
-
-	bool fInvalid = false;
-	vector<unsigned char> vchSig = DecodeBase64(strSign.c_str(), &fInvalid);
-
-	if (fInvalid) {
-		cout << "decode base 64 error" << endl;
-		return false;
-	}
-
-	CHashWriter ss(SER_GETHASH, 0);
-	ss << strMessageMagic;
-	ss << strMessage;
-
-	CPubKey pubkey;
-	if (!pubkey.RecoverCompact(ss.GetHash(), vchSig)) {
-		return false;
-	}
-
-	return (pubkey.GetID() == keyID);
-}
-
-//int main(int argc, char *argv[])
 int main(void)
 {
+	// strings = address, publickey, privatekey, text
+        string address = "1X2LwU1De6stwo23DNHWTPY5txdVDUiJPopK9K";
+        string pubkey = "0380652428b950fb13c2d3710b3f320ce07cf95d46cda54a8b1a589051471d7050";
+        string privkey = "V7R1AtfQke1QX9rLWRhF3wQj5xJZNV5DZzcZSTUbHz2gkFnZcPEhmAaF";
+	string text = "Hdac Technology, Solution DEV Team, Test Text.";
+
 	// Initialize elliptic curve code
 	ECC_Start();
 	globalVerifyHandle.reset(new ECCVerifyHandle());
 
-	bool res = my_verifymessage(
-			"1R2SGUnMeaWd59Gp9HLd2W3ADpFur1Wfz6wNYw",
-			"IKqVHd0J/e6pkxbxinrZAIlIeajXncwl/wjKdQ0K4k0NZ7kuz29wpI/OJvEmlixmTWt1lw9sgBWRGP+87piYJXc=",
-			"abc");
 
+	// print
+	cout << "address = " << address << endl;
+	cout << "private key = " << privkey << endl;
+	cout << "text = " << text << endl;
+
+	// params set
+	KeysHelperWithFileAll helper("params.dat");
+
+	// sign message
+	string signMsg = signmessage(
+			privkey,
+			text,
+			helper.privHelper(),
+			helper.addrHelper());
+
+	// print signed message
+	cout << "sign message = [" << signMsg << "]" << endl; 
+
+	// verify message
+	bool res = verifymessage(
+			address,
+			signMsg,
+			text,
+			helper.addrHelper());
+
+	// print verify result
 	if (res) {
-		cout << "true" << endl;
+		cout << "verify message result = ["<< "true" << "]" << endl;
 	} else {
-		cout << "false" << endl;
+		cout << "verify message result = ["<< "false" << "]" << endl;
 	}
 
 	return 0;

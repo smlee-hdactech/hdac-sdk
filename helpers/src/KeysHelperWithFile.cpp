@@ -1,5 +1,5 @@
 #include "KeysHelperWithFile.h"
-
+#include <iostream>
 #include <utils/utilstrencodings.h>
 #include <string.h>
 #include <algorithm>
@@ -157,6 +157,8 @@ map<string, string> mapFromFileReadAll(const string& Path)
 
 	ifstream openFile(Path.data());
 	if(!openFile.is_open()){
+		cout << "[" << Path << "] file open error" << endl;
+		return resultItems;
 	}
 
 	while(getline(openFile, line)){
