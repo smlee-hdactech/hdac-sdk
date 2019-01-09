@@ -4,6 +4,8 @@ project(hdac-sdk)
 
 set (CMAKE_CXX_STANDARD 11)
 set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--as-needed ${CMAKE_SHARED_LINKER_FLAGS}")
+
+include(CPack)
 include(FindBoost)
 include(FindOpenSSL)
 include(FindPkgConfig)
