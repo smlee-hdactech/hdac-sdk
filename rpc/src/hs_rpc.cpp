@@ -7,6 +7,33 @@
 using namespace std;
 using namespace json_spirit;
 
+Object sendrawtx(const RpcClient& client, const string& rawTx)
+{
+    Array params;
+    params.push_back(rawTx);
+    return client.CallRPC("sendrawtx", params);
+}
+
+Object importaddress(const RpcClient& client, const string &address, bool rescan)
+{
+    vector<string> addresses;
+    addresses.push_back(address);
+    return importaddress(client, addresses, rescan);
+}
+
+Object importaddress(const RpcClient& client, const vector<string>& addresses, bool rescan)
+{
+    Array params;
+    Array addressArray;
+    for(const string &addr : addresses) {
+        addressArray.push_back(addr);
+    }
+    params.push_back(addressArray);
+    params.push_back("");
+    params.push_back(rescan);
+    return client.CallRPC("importaddress", params);
+}
+
 Object getinfo(const RpcClient& client)
 {
     const bool fWait = false; // TODO : to parameter
@@ -16,13 +43,11 @@ Object getinfo(const RpcClient& client)
 
 Object blockChainParams(const RpcClient& client)
 {
-    //RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
     return client.CallRPC("getblockchainparams");
 }
 
 Object listunspent(const RpcClient& client, int minConf, int maxConf, const vector<string>& addresses)
 {
-    //RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
     Array params;
 
     if (minConf > 1) {
@@ -58,7 +83,6 @@ Object listunspent(const RpcClient& client, const string& address)
 
 Object lockunspent(const RpcClient& client, bool unlock, string txid, int vout)
 {
-    //RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
     Array params;
     params.push_back(unlock);
     Array transactions;
@@ -72,13 +96,11 @@ Object lockunspent(const RpcClient& client, bool unlock, string txid, int vout)
 
 Object listlockunspent(const RpcClient& client)
 {
-    //RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
     return client.CallRPC("listlockunspent");
 }
 
 Object liststreams(const RpcClient& client, const vector<string> &streamNames)
 {
-    //RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234"};
     Array params;
     Array streamArray;
 

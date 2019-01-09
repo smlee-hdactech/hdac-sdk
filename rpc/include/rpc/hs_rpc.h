@@ -18,6 +18,11 @@ json_spirit::Object liststreams(const RpcClient& client, const std::string &stre
 json_spirit::Object listassets(const RpcClient& client, const std::vector<std::string> &assetNames);
 json_spirit::Object listassets(const RpcClient& client, const std::string &name = "");
 
+json_spirit::Object importaddress(const RpcClient& client, const std::string &address, bool rescan = true);
+json_spirit::Object importaddress(const RpcClient& client, const std::vector<std::string>& addresses, bool rescan = true);
+
+json_spirit::Object sendrawtx(const RpcClient& client, const std::string& rawTx);
+
 bool rpcResult(const json_spirit::Object& reply, std::string &resultStr);
 
 #endif // HS_RPC_H
