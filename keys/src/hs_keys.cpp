@@ -312,6 +312,8 @@ string walletAddrFromPubKey(const string& pubkeyStr, const IWalletAddrHelper& ad
 
 bool verifymessage(string strAddress, string strSign, string strMessage, const IWalletAddrHelper &addrHelper)
 {
+	EccAutoInitReleaseHandler eccScoper;
+
         CBitcoinAddress addr(strAddress, addrHelper);
         if (!addr.IsValid()) {
                 cout << "addr error" << endl;
@@ -347,6 +349,8 @@ bool verifymessage(string strAddress, string strSign, string strMessage, const I
 
 string signmessage(string strAddress, string strMessage, const IPrivateKeyHelper &privateHelper, const IWalletAddrHelper &addrHelper)
 {
+	EccAutoInitReleaseHandler eccScoper;
+
         CKey key;
         CBitcoinAddress addr(strAddress, addrHelper);
         if (!addr.IsValid()) {

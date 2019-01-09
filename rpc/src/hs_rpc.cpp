@@ -138,6 +138,37 @@ Object listassets(const RpcClient& client, const string &name)
     return listassets(client, names);
 }
 
+Object signmessage(const RpcClient& client, const string &strPrivateKey,
+			const string &strText)
+{
+    Array params;
+    if (strPrivateKey != "") {
+        params.push_back(strPrivateKey);
+    }
+    if (strText != "") {
+        params.push_back(strText);
+    }
+
+    return client.CallRPC("signmessage", params);
+}
+
+Object verifymessage(const RpcClient& client, const string &strAddress,
+			const string &strSignmessage, const string &strText)
+{
+    Array params;
+    if (strAddress != "") {
+        params.push_back(strAddress);
+    }
+    if (strSignmessage != "") {
+        params.push_back(strSignmessage);
+    }
+    if (strText != "") {
+        params.push_back(strText);
+    }
+
+    return client.CallRPC("verifymessage", params);
+}
+
 bool rpcResult(const Object& reply, string &resultStr)
 {
     int nRet = result(reply, resultStr);
