@@ -7,6 +7,7 @@ configure_file(hs_${prj_base}.pc.in hs_${prj_base}.pc @ONLY)
 set(src
     transaction.cpp
     interpreter.cpp
+    analyzetx.cpp
     )
 
 add_library(${prj_base}_dynamic SHARED ${src})

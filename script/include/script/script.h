@@ -600,4 +600,6 @@ public:
     }
 };
 
+const char* GetOpName(opcodetype opcode);
+
 #endif // SCRIPT_H

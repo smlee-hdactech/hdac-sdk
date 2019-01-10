@@ -291,5 +291,6 @@ struct CMutableTransaction
 };
 
 std::string EncodeHexTx(const CTransaction& tx);
+bool DecodeHexTx(CTransaction& tx, const std::string& strHexTx);
 
 #endif // TRANSACTION_H

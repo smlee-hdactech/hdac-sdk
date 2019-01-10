@@ -159,3 +159,20 @@ string EncodeHexTx(const CTransaction& tx)
     ssTx << tx;
     return HexStr(ssTx.begin(), ssTx.end());
 }
+
+bool DecodeHexTx(CTransaction& tx, const std::string& strHexTx)
+{
+    if (!IsHex(strHexTx))
+        return false;
+
+    vector<unsigned char> txData(ParseHex(strHexTx));
+    CDataStream ssData(txData, SER_NETWORK, PROTOCOL_VERSION);
+    try {
+        ssData >> tx;
+    }
+    catch (const std::exception &) {
+        return false;
+    }
+
+    return true;
+}
