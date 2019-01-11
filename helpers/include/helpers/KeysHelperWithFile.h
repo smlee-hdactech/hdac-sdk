@@ -9,6 +9,8 @@
 #define IS_SPACE(x) (x == ' ' || x == '\n' || x == '\r' || x == '\t' || x == '\v')
 #endif
 
+#define TRIM_SPACE " \t\n\v\r"
+
 class KeysHelperWithFileAll {
 	public:
 		KeysHelperWithFileAll(const std::string Path);

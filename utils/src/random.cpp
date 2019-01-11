@@ -10,6 +10,15 @@
 #include <cstring>
 #include <cstdlib>
 
+#ifdef WIN32
+#include <vector>
+#include <limits>
+#include <set>
+#include "serialize.h"
+#include <ctime>
+#include <cstdio>
+#endif // WIN32 
+
 #ifndef WIN32
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -75,13 +84,13 @@ static void RandAddSeedPerfmon()
         ret = RegQueryValueExA(HKEY_PERFORMANCE_DATA, "Global", NULL, NULL, begin_ptr(vData), &nSize);
         if (ret != ERROR_MORE_DATA || vData.size() >= nMaxSize)
             break;
-        vData.resize(std::max((vData.size() * 3) / 2, nMaxSize)); // Grow size of buffer exponentially
+        vData.resize(max((vData.size() * 3) / 2, nMaxSize)); // Grow size of buffer exponentially
     }
     RegCloseKey(HKEY_PERFORMANCE_DATA);
     if (ret == ERROR_SUCCESS) {
         RAND_add(begin_ptr(vData), nSize, nSize / 100.0);
         OPENSSL_cleanse(begin_ptr(vData), nSize);
-        if(fDebug>1)LogPrint("rand", "%s: %lu bytes\n", __func__, nSize);
+//        if(fDebug>1)LogPrint("rand", "%s: %lu bytes\n", __func__, nSize);
     } else {
         static bool warned = false; // Warn only once
         if (!warned) {
@@ -159,11 +168,11 @@ void GetStrongRandBytes_org(unsigned char* out, int num)
 }
 
 
+
 #define QRNG_DEVICE0	"/dev/qrng_u3_0"
 #define QRNG_DEVICE1	"/dev/qrng_u3_1"
 
 static	int	_QRNG_fd = -1;
-
 
 //
 // EYL QRNG support function
@@ -173,10 +182,12 @@ void QRNG_RAND_bytes(unsigned char* out, int num)
 {
     static time_t lasttime = 0;
 
+#ifndef WIN32
     if (_QRNG_fd == -1)
         _QRNG_fd = open(QRNG_DEVICE0, O_RDONLY);
     if (_QRNG_fd == -1)
         _QRNG_fd = open(QRNG_DEVICE1, O_RDONLY);
+#endif
     if (time(NULL) - lasttime > 30)
     {
         // TODO : change into log
@@ -184,11 +195,15 @@ void QRNG_RAND_bytes(unsigned char* out, int num)
         //std::cout << __func__ << ": QRNG fd=" << _QRNG_fd << std::endl;
     }
 
+#ifndef WIN32
     if (_QRNG_fd == -1)		// QRNG is not available
     {
+#endif
         GetRandBytes_org(out, num);
         return;
+#ifndef WIN32
     }
+#endif
     if (time(NULL) - lasttime > 60) {
         // TODO : change into log
         //std::cout << __func__ << ": QRNG(Quantum Random Number Generator) endbaled and replaces RAND_bytes()." << std::endl;
@@ -196,7 +211,9 @@ void QRNG_RAND_bytes(unsigned char* out, int num)
     }
     lasttime = time(NULL);
 
+#ifndef WIN32
     int nread = read(_QRNG_fd, out, num);
+#endif
     // TODO : change into log
     //std::cout << __func__ << ": QRNG read bytes=" << nread << std::endl;
     LogPrintf("%s: QRNG read bytes=%d\n", __func__, nread);
@@ -223,19 +240,25 @@ void QRNG_GetStrongRandBytes(unsigned char* out, int num)
 {
     static time_t lasttime = 0;
 
+#ifndef WIN32
     if (_QRNG_fd == -1)
         _QRNG_fd = open(QRNG_DEVICE0, O_RDONLY);
     if (_QRNG_fd == -1)
         _QRNG_fd = open(QRNG_DEVICE1, O_RDONLY);
+#endif
     // TODO : change into log
     //std::cout << __func__ << ": QRNG fd=" << _QRNG_fd << std::endl;
     LogPrintf("%s: QRNG fd=%d\n", __func__, _QRNG_fd);
 
+#ifndef WIN32
     if (_QRNG_fd == -1)		// QRNG is not available
     {
+#endif
         GetStrongRandBytes_org(out, num);
         return;
+#ifndef WIN32
     }
+#endif
     if (time(NULL) - lasttime > 3600) {
         // TODO : change into log
         LogPrintf("%s: QRNG(Quantum Random Number Generator) endbaled and replaces GetStrongRandBytes().\n", __func__);
@@ -244,7 +267,9 @@ void QRNG_GetStrongRandBytes(unsigned char* out, int num)
 
     lasttime = time(NULL);
 
+#ifndef WIN32
     int nread = read(_QRNG_fd, out, num);
+#endif
     // TODO : change into log
     LogPrintf("%s: QRNG read=%d\n", __func__, nread);
     //std::cout << __func__ << ": QRNG read=" << nread << std::endl;
