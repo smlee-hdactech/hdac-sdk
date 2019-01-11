@@ -51,6 +51,11 @@ install(TARGETS ${prj_base}_dynamic ${prj_base}_static
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib)
 
-file(GLOB headers ../include/${prj_base}/*.h )
+#file(GLOB headers ../include/${prj_base}/*.h )
+set(export_headers
+    ../include/${prj_base}/hs_primitives.h
+    ../include/${prj_base}/analyzetx.h
+    )
 #install(FILES ${headers} DESTINATION include/hdac/${prj_base})
+install(FILES ${export_headers} DESTINATION include/hdac/${prj_base})
 install(FILES ${CMAKE_BINARY_DIR}/${prj_base}/src/hs_${prj_base}.pc DESTINATION lib/pkgconfig)

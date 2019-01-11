@@ -12,6 +12,7 @@ set(src
     utiltime.cpp
     utility.cpp
     tools.cpp
+    util.cpp
     )
 
 add_library(${prj_base}_dynamic SHARED ${src})

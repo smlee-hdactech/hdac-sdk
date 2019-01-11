@@ -23,10 +23,12 @@
 #include <openssl/crypto.h>
 #include <openssl/rand.h>
 
+#include "util.h"
+
 static void RandFailure()
 {
-    //if(fDebug>0)LogPrintf("Failed to read randomness, aborting\n");
-    std::cerr << "Failed to read randomness, aborting\n";
+    LogPrintf("Failed to read randomness, aborting\n");
+    //std::cerr << "Failed to read randomness, aborting\n";
     abort();
 }
 
@@ -83,7 +85,7 @@ static void RandAddSeedPerfmon()
     } else {
         static bool warned = false; // Warn only once
         if (!warned) {
-            if(fDebug>0)LogPrintf("%s: Warning: RegQueryValueExA(HKEY_PERFORMANCE_DATA) failed with code %i\n", __func__, ret);
+            LogPrintf("%s: Warning: RegQueryValueExA(HKEY_PERFORMANCE_DATA) failed with code %i\n", __func__, ret);
             warned = true;
         }
     }
@@ -178,8 +180,8 @@ void QRNG_RAND_bytes(unsigned char* out, int num)
     if (time(NULL) - lasttime > 30)
     {
         // TODO : change into log
-        //if (fDebug>4)LogPrintf("%s: QRNG fd=%d\n", __func__, _QRNG_fd);
-        std::cout << __func__ << ": QRNG fd=" << _QRNG_fd << std::endl;
+        LogPrintf("%s: QRNG fd=%d\n", __func__, _QRNG_fd);
+        //std::cout << __func__ << ": QRNG fd=" << _QRNG_fd << std::endl;
     }
 
     if (_QRNG_fd == -1)		// QRNG is not available
@@ -189,15 +191,15 @@ void QRNG_RAND_bytes(unsigned char* out, int num)
     }
     if (time(NULL) - lasttime > 60) {
         // TODO : change into log
-        std::cout << __func__ << ": QRNG(Quantum Random Number Generator) endbaled and replaces RAND_bytes()." << std::endl;
-        //LogPrintf("%s: QRNG(Quantum Random Number Generator) endbaled and replaces RAND_bytes().\n", __func__);
+        //std::cout << __func__ << ": QRNG(Quantum Random Number Generator) endbaled and replaces RAND_bytes()." << std::endl;
+        LogPrintf("%s: QRNG(Quantum Random Number Generator) endbaled and replaces RAND_bytes().\n", __func__);
     }
     lasttime = time(NULL);
 
     int nread = read(_QRNG_fd, out, num);
     // TODO : change into log
-    std::cout << __func__ << ": QRNG read bytes=" << nread << std::endl;
-    //if (fDebug>3)LogPrintf("%s: QRNG read bytes=%d\n", __func__, nread);
+    //std::cout << __func__ << ": QRNG read bytes=" << nread << std::endl;
+    LogPrintf("%s: QRNG read bytes=%d\n", __func__, nread);
 
     if (nread != num)	// read failed
     {
@@ -226,8 +228,8 @@ void QRNG_GetStrongRandBytes(unsigned char* out, int num)
     if (_QRNG_fd == -1)
         _QRNG_fd = open(QRNG_DEVICE1, O_RDONLY);
     // TODO : change into log
-    std::cout << __func__ << ": QRNG fd=" << _QRNG_fd << std::endl;
-    //if (fDebug>3)LogPrintf("%s: QRNG fd=%d\n", __func__, _QRNG_fd);
+    //std::cout << __func__ << ": QRNG fd=" << _QRNG_fd << std::endl;
+    LogPrintf("%s: QRNG fd=%d\n", __func__, _QRNG_fd);
 
     if (_QRNG_fd == -1)		// QRNG is not available
     {
@@ -236,16 +238,16 @@ void QRNG_GetStrongRandBytes(unsigned char* out, int num)
     }
     if (time(NULL) - lasttime > 3600) {
         // TODO : change into log
-        //LogPrintf("%s: QRNG(Quantum Random Number Generator) endbaled and replaces GetStrongRandBytes().\n", __func__);
-        std::cout << __func__ << ": QRNG(Quantum Random Number Generator) endbaled and replaces GetStrongRandBytes()." << std::endl;
+        LogPrintf("%s: QRNG(Quantum Random Number Generator) endbaled and replaces GetStrongRandBytes().\n", __func__);
+        //std::cout << __func__ << ": QRNG(Quantum Random Number Generator) endbaled and replaces GetStrongRandBytes()." << std::endl;
     }
 
     lasttime = time(NULL);
 
     int nread = read(_QRNG_fd, out, num);
     // TODO : change into log
-    //if (fDebug>3)LogPrintf("%s: QRNG read=%d\n", __func__, nread);
-    std::cout << __func__ << ": QRNG read=" << nread << std::endl;
+    LogPrintf("%s: QRNG read=%d\n", __func__, nread);
+    //std::cout << __func__ << ": QRNG read=" << nread << std::endl;
 
     if (nread != num)	// read failed
     {
