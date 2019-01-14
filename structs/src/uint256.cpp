@@ -1,4 +1,4 @@
-#include "uint256.h"
+﻿#include "uint256.h"
 #include <utils/utilstrencodings.h>
 #include <cstring>
 

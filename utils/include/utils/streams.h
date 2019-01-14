@@ -1,4 +1,4 @@
-#ifndef STREAMS_H
+﻿#ifndef STREAMS_H
 #define STREAMS_H
 
 #include "allocators.h"

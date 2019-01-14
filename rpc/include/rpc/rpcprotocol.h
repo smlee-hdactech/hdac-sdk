@@ -1,4 +1,4 @@
-#ifndef RPCPROTOCOL_H
+﻿#ifndef RPCPROTOCOL_H
 #define RPCPROTOCOL_H
 
 #include <boost/iostreams/concepts.hpp>

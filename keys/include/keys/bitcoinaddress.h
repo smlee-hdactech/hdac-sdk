@@ -1,4 +1,4 @@
-#ifndef BITCOINADDRESS_H
+﻿#ifndef BITCOINADDRESS_H
 #define BITCOINADDRESS_H
 
 #include <structs/base58.h>

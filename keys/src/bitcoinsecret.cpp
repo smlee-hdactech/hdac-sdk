@@ -1,4 +1,4 @@
-#include "bitcoinsecret.h"
+﻿#include "bitcoinsecret.h"
 
 void CBitcoinSecret::SetKey(const CKey& vchSecret)
 {

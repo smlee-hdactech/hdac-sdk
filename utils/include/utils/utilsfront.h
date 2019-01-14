@@ -1,4 +1,4 @@
-#ifndef UTILSFRONT_H
+﻿#ifndef UTILSFRONT_H
 #define UTILSFRONT_H
 
 #include <cstdint>

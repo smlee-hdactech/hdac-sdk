@@ -1,4 +1,4 @@
-#ifndef UINT256_H
+﻿#ifndef UINT256_H
 #define UINT256_H
 
 #include <stdint.h>

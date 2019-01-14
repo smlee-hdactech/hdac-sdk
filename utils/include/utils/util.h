@@ -1,4 +1,4 @@
-#ifndef UTIL_H
+﻿#ifndef UTIL_H
 #define UTIL_H
 
 #include "tinyformat.h"

@@ -1,4 +1,4 @@
-#ifndef PUBKEY_H
+﻿#ifndef PUBKEY_H
 #define PUBKEY_H
 
 #include <structs/hash.h>

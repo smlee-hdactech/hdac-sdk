@@ -1,4 +1,4 @@
-#include "rpcresult.h"
+﻿#include "rpcresult.h"
 #include <json_spirit/json_spirit.h>
 #include <json_spirit/json_spirit_reader_template.h>
 

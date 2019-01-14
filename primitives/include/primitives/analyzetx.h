@@ -1,4 +1,4 @@
-#ifndef ANALYZETX_H
+﻿#ifndef ANALYZETX_H
 #define ANALYZETX_H
 
 #include <string>

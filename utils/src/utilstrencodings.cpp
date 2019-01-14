@@ -1,4 +1,4 @@
-#include "utilstrencodings.h"
+﻿#include "utilstrencodings.h"
 #include <cstring>
 
 using namespace std;

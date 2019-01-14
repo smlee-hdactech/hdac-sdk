@@ -1,4 +1,4 @@
-#include "bitcoinaddress.h"
+﻿#include "bitcoinaddress.h"
 
 namespace
 {

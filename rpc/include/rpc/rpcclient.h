@@ -1,4 +1,4 @@
-#ifndef RPCCLIENT_H
+﻿#ifndef RPCCLIENT_H
 #define RPCCLIENT_H
 
 #include <string>

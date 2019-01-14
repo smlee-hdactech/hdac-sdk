@@ -1,4 +1,4 @@
-#ifndef HASHES_GLOBAL_H
+﻿#ifndef HASHES_GLOBAL_H
 #define HASHES_GLOBAL_H
 
 #if (defined _WIN32) || (defined _WIN64)

@@ -1,4 +1,4 @@
-// Copyright (c) 2014 The Bitcoin developers
+﻿// Copyright (c) 2014 The Bitcoin developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -13,7 +13,7 @@
 #include "crypto_global.h"
 
 /** A hasher class for HMAC-SHA-512. */
-class CRYPTOSHARED_EXPORT CHMAC_SHA512
+class CHMAC_SHA512
 {
 private:
     CSHA512 outer;

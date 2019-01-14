@@ -1,4 +1,4 @@
-#ifndef HASHES_H
+﻿#ifndef HASHES_H
 #define HASHES_H
 
 #include "hashes_global.h"

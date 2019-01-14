@@ -1,4 +1,4 @@
-#ifndef STRCODECLIB_H
+﻿#ifndef STRCODECLIB_H
 #define STRCODECLIB_H
 
 #include "strcodeclib_global.h"
@@ -9,7 +9,7 @@ std::vector<unsigned char> ParseHex(const char* psz);
 std::vector<unsigned char> ParseHex(const char* psz,bool &fIsHex);
 std::vector<unsigned char> ParseHex(const std::string& str);
 
-STRCODECLIBSHARED_EXPORT signed char HexDigit(char c);
+signed char HexDigit(char c);
 bool IsHex(const std::string& str);
 
 template<typename T>

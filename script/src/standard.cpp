@@ -1,4 +1,4 @@
-#include "standard.h"
+﻿#include "standard.h"
 #include "script.h"
 #include <structs/hash.h>
 

@@ -1,4 +1,4 @@
-#include "rpcprotocol.h"
+﻿#include "rpcprotocol.h"
 
 #include <json_spirit/json_spirit_reader_template.h>
 #include <json_spirit/json_spirit_writer_template.h>

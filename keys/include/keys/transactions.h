@@ -1,4 +1,4 @@
-#ifndef TRANSACTIONS_H
+﻿#ifndef TRANSACTIONS_H
 #define TRANSACTIONS_H
 
 #include <json_spirit/json_spirit.h>

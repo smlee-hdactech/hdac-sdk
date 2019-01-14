@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <rpc/rpcresult.h>
 #include <rpc/rpcclient.h>
 #include <rpc/hs_rpc.h>

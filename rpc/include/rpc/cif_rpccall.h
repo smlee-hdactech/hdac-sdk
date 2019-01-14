@@ -1,4 +1,4 @@
-#ifndef CIF_RPCCALL_H
+﻿#ifndef CIF_RPCCALL_H
 #define CIF_RPCCALL_H
 
 #include "rpccaller_global.h"

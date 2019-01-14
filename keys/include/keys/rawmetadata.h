@@ -1,4 +1,4 @@
-#ifndef RAWMETADATA_H
+﻿#ifndef RAWMETADATA_H
 #define RAWMETADATA_H
 
 #include <json_spirit/json_spirit.h>

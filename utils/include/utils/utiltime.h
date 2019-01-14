@@ -1,4 +1,4 @@
-#ifndef UTILTIME_H
+﻿#ifndef UTILTIME_H
 #define UTILTIME_H
 
 #include <cstdint>

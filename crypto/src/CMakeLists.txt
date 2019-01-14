@@ -14,29 +14,32 @@ set(src
     crypto.cpp
     )
 
+if(UNIX)
 add_library(${prj_base}_dynamic SHARED ${src})
-add_library(${prj_base}_static STATIC ${src})
-
-#link_directories(/usr/local/lib)
-
 target_link_libraries(${prj_base}_dynamic
-    json_spirit
+    ${LIBJSON_SPIRIT_LIBRARY}
     ${SECP256K1_LIBRARIES}
     ${OPENSSL_LIBRARIES}
     Boost::thread
     Boost::system
     )
-target_link_libraries(${prj_base}_static
-    json_sprit
-    ${SECP256K1_LIBRARIES}
-    ${OPENSSL_LIBRARIES}
-    Boost::thread
-    Boost::system
-    )
-
 target_include_directories(${prj_base}_dynamic
     PRIVATE
     ../include/${prj_base}
+    ${JSONSPIRIT_INCLUDE_DIRS}
+    )
+
+set_target_properties(${prj_base}_dynamic PROPERTIES OUTPUT_NAME "hdac_${prj_base}")
+set_target_properties(${prj_base}_dynamic PROPERTIES VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR} SOVERSION ${PROJECT_VERSION_MAJOR})
+endif()
+
+add_library(${prj_base}_static STATIC ${src})
+target_link_libraries(${prj_base}_static
+    ${LIBJSON_SPIRIT_LIBRARY}
+    ${SECP256K1_LIBRARIES}
+    ${OPENSSL_LIBRARIES}
+    Boost::thread
+    Boost::system
     )
 
 target_include_directories(${prj_base}_static
@@ -44,16 +47,18 @@ target_include_directories(${prj_base}_static
     ../include/${prj_base}
     )
 
-set_target_properties(${prj_base}_dynamic PROPERTIES OUTPUT_NAME "hdac_${prj_base}")
-set_target_properties(${prj_base}_dynamic PROPERTIES VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR} SOVERSION ${PROJECT_VERSION_MAJOR})
-
 set_target_properties(${prj_base}_static PROPERTIES OUTPUT_NAME "hdac_${prj_base}")
 
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 
+if(UNIX)
 install(TARGETS ${prj_base}_dynamic ${prj_base}_static
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib)
+else()
+install(TARGETS ${prj_base}_static
+        ARCHIVE DESTINATION lib)        
+endif()        
 
 file(GLOB headers ../include/${prj_base}/*.h )
 message(${headers})

@@ -1,4 +1,4 @@
-#ifndef RANDOM_H
+﻿#ifndef RANDOM_H
 #define RANDOM_H
 
 /**

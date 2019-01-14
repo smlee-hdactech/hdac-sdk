@@ -1,4 +1,4 @@
-#include "multisig.h"
+﻿#include "multisig.h"
 #include <json_spirit/json_spirit.h>
 #include "pubkey.h"
 #include <utils/utilstrencodings.h>

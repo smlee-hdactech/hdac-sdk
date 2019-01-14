@@ -1,4 +1,4 @@
-#ifndef ASSET_H
+﻿#ifndef ASSET_H
 #define ASSET_H
 
 #include <cstdint>

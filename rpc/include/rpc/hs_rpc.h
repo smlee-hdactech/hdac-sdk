@@ -1,4 +1,4 @@
-#ifndef HS_RPC_H
+﻿#ifndef HS_RPC_H
 #define HS_RPC_H
 
 #include <json_spirit/json_spirit.h>

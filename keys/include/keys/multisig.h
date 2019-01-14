@@ -1,4 +1,4 @@
-#ifndef MULTISIG_H
+﻿#ifndef MULTISIG_H
 #define MULTISIG_H
 
 #include <vector>

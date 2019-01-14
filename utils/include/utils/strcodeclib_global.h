@@ -1,4 +1,4 @@
-#ifndef STRCODECLIB_GLOBAL_H
+﻿#ifndef STRCODECLIB_GLOBAL_H
 #define STRCODECLIB_GLOBAL_H
 
 #if (defined _WIN32) || (defined _WIN64)

@@ -1,4 +1,4 @@
-#include "transactions.h"
+﻿#include "transactions.h"
 #include <json_spirit/json_spirit.h>
 #include <set>
 #include "bitcoinaddress.h"

@@ -1,4 +1,4 @@
-#include "asset.h"
+﻿#include "asset.h"
 #include <cstring>
 #include <utils/utility.h>
 #include <script/hdacscript.h>

@@ -1,4 +1,4 @@
-#ifndef KEYS_GLOBAL_H
+﻿#ifndef KEYS_GLOBAL_H
 #define KEYS_GLOBAL_H
 
 #if (defined _WIN32) || (defined _WIN64)

@@ -1,4 +1,4 @@
-#include "hdacscript.h"
+﻿#include "hdacscript.h"
 #include <utils/define.h>
 #include <utils/utility.h>
 #include <cstring>

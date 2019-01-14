@@ -1,4 +1,4 @@
-#ifndef HS_KEYS_H
+﻿#ifndef HS_KEYS_H
 #define HS_KEYS_H
 
 #include <string>

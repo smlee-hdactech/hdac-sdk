@@ -1,4 +1,4 @@
-#ifndef RPCCALLER_GLOBAL_H
+﻿#ifndef RPCCALLER_GLOBAL_H
 #define RPCCALLER_GLOBAL_H
 #if (defined _WIN32) || (defined _WIN64)
     #define Q_DECL_EXPORT __declspec(dllexport)

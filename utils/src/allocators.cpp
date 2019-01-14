@@ -1,4 +1,4 @@
-#include "allocators.h"
+﻿#include "allocators.h"
 
 #ifdef WIN32
 #ifdef _WIN32_WINNT

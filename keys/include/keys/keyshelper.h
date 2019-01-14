@@ -1,4 +1,4 @@
-#ifndef KEYSHELPER_H
+﻿#ifndef KEYSHELPER_H
 #define KEYSHELPER_H
 
 #include <cstdint>

@@ -1,4 +1,4 @@
-#include "standard.h"
+﻿#include "standard.h"
 #include <primitives/transaction.h>
 #include "pubkey.h"
 #include <script/standard.h>
