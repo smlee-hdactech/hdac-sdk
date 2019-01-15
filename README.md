@@ -43,9 +43,9 @@ cmake --build _build
 ### vcpkg 및 관련 package 설치
 ```
 git clone https://github.com/smlee-hdactech/vcpkg.git
+cd vcpkg
 bootstrap-vcpkg.bat
 
-cd vcpkg
 vcpkg install boost-system boost-thread boost-assign boost-variant boost-asio
 vcpkg install openssl
 vcpkg install secp256k1
