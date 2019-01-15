@@ -47,7 +47,6 @@ cd vcpkg
 bootstrap-vcpkg.bat
 
 vcpkg install boost-system boost-thread boost-assign boost-variant boost-asio
-vcpkg install openssl
 vcpkg install secp256k1
 vcpkg install json-spirit
 ```
