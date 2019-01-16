@@ -46,7 +46,7 @@ git clone https://github.com/smlee-hdactech/vcpkg.git
 cd vcpkg
 bootstrap-vcpkg.bat
 
-vcpkg install boost-system boost-thread boost-assign boost-variant boost-asio
+vcpkg install boost-system boost-thread boost-assign boost-variant boost-asio boost-timer
 vcpkg install secp256k1
 vcpkg install json-spirit
 ```
