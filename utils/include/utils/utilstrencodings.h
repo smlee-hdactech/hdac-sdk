@@ -1,7 +1,6 @@
 ﻿#ifndef STRCODECLIB_H
 #define STRCODECLIB_H
 
-#include "strcodeclib_global.h"
 #include <string>
 #include <vector>
 
