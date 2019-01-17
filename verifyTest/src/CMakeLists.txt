@@ -15,8 +15,10 @@ target_include_directories(hdac_vTest
     ${CMAKE_SOURCE_DIR}/keys/include
     ${CMAKE_SOURCE_DIR}/script/include
     ${CMAKE_SOURCE_DIR}/helpers/include
+    ${JSONSPIRIT_INCLUDE_DIRS}
     )
 
+if(UNIX)
 target_link_libraries(hdac_vTest
     PUBLIC
     helpers_dynamic
@@ -29,7 +31,25 @@ target_link_libraries(hdac_vTest
     ${SECP256K1_LIBRARIES}    
     ${OPENSSL_LIBRARIES}
     Boost::thread
-    Boost::system    
+    Boost::system
+    Boost::filesystem
     )
+else()
+target_link_libraries(hdac_vTest
+    PUBLIC
+    helpers_static
+    keys_static
+    script_static
+    structs_static
+    rpc_static
+    utils_static
+    crypto_static
+    ${SECP256K1_LIBRARIES}    
+    ${OPENSSL_LIBRARIES}
+    Boost::thread
+    Boost::system
+    Boost::filesystem
+    )
+endif()
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)

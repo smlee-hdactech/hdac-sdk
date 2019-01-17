@@ -1,4 +1,4 @@
-#include "hs_structs.h"
+﻿#include "hs_structs.h"
 #include <crypto/sha256.h>
 #include <fstream>
 #include <iostream>

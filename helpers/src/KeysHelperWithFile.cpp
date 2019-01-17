@@ -1,4 +1,4 @@
-#include "KeysHelperWithFile.h"
+﻿#include "KeysHelperWithFile.h"
 #include <iostream>
 #include <utils/utilstrencodings.h>
 #include <string.h>

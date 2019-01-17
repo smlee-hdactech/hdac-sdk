@@ -1,4 +1,4 @@
-#ifndef BASE64_H
+﻿#ifndef BASE64_H
 #define BASE64_H
 
 #include <string>
@@ -6,9 +6,9 @@
 // TODO : global headers -> only one.
 #include "strcodeclib_global.h"
 
-STRCODECLIBSHARED_EXPORT std::vector<unsigned char> DecodeBase64(const char* p, bool* pfInvalid = NULL);
-STRCODECLIBSHARED_EXPORT std::string DecodeBase64(const std::string& str);
-STRCODECLIBSHARED_EXPORT std::string EncodeBase64(const unsigned char* pch, size_t len);
-STRCODECLIBSHARED_EXPORT std::string EncodeBase64(const std::string& str);
+std::vector<unsigned char> DecodeBase64(const char* p, bool* pfInvalid = NULL);
+std::string DecodeBase64(const std::string& str);
+std::string EncodeBase64(const unsigned char* pch, size_t len);
+std::string EncodeBase64(const std::string& str);
 
 #endif // BASE64_H

@@ -1,4 +1,4 @@
-#ifndef HS_KEYSHELPERWITHRPC_H
+﻿#ifndef HS_KEYSHELPERWITHRPC_H
 #define HS_KEYSHELPERWITHRPC_H
 
 #include <memory>

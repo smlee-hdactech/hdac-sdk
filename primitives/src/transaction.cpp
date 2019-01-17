@@ -1,4 +1,4 @@
-#include "transaction.h"
+﻿#include "transaction.h"
 #include <structs/uint256.h>
 #include <structs/hash.h>
 #include <utils/tinyformat.h>

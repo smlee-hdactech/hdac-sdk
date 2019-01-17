@@ -1,4 +1,4 @@
-#include "utilparse.h"
+﻿#include "utilparse.h"
 #include <utils/utility.h>
 #include "script.h"
 #include "hdacscript.h"

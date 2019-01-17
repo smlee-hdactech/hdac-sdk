@@ -1,4 +1,4 @@
-#include "hs_keys.h"
+﻿#include "hs_keys.h"
 #include <utils/utilstrencodings.h>
 #include <utils/base64.h>
 #include <algorithm>

@@ -1,4 +1,4 @@
-#ifndef ALLOCATORS_H
+﻿#ifndef ALLOCATORS_H
 #define ALLOCATORS_H
 
 #include <boost/thread/mutex.hpp>

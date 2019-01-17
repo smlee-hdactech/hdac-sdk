@@ -1,4 +1,4 @@
-#include "utility.h"
+﻿#include "utility.h"
 #include "define.h"
 #include <cstring>
 
@@ -153,7 +153,7 @@ int mc_PutVarInt(unsigned char *buf,int max_size,int64_t value)
 
 #ifdef WIN32
 
-// epoch time으로 변환할 상수
+// epoch time?쇰줈 蹂?섑븷 ?곸닔
 #if defined(_MSC_VER) || defined(_MSC_EXTENSIONS)
 #define DELTA_EPOCH_IN_MICROSECS  11644473600000000Ui64
 #else
@@ -176,26 +176,26 @@ int gettimeofday(struct timeval *tv, struct timezone *tz)
 
 	if (NULL != tv)
 	{
-		// system time을 구하기
+		// system time??援ы븯湲?
 		GetSystemTimeAsFileTime(&ft);
 
-		// unsigned 64 bit로 만들기
+		// unsigned 64 bit濡?留뚮뱾湲?
 		tmpres |= ft.dwHighDateTime;
 		tmpres <<= 32;
 		tmpres |= ft.dwLowDateTime;
 
-		// 100nano를 1micro로 변환하기
+		// 100nano瑜?1micro濡?蹂?섑븯湲?
 		tmpres /= 10;
 
-		// epoch time으로 변환하기
+		// epoch time?쇰줈 蹂?섑븯湲?
 		tmpres -= DELTA_EPOCH_IN_MICROSECS;
 
-		// sec와 micorsec으로 맞추기
+		// sec? micorsec?쇰줈 留욎텛湲?
 		tv->tv_sec = (tmpres / 1000000UL);
 		tv->tv_usec = (tmpres % 1000000UL);
 	}
 
-	// timezone 처리
+	// timezone 泥섎━
 	if (NULL != tz)
 	{
 		if (!tzflag)

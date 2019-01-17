@@ -1,4 +1,4 @@
-#ifndef SCRIPT_STANDARD_H
+﻿#ifndef SCRIPT_STANDARD_H
 #define SCRIPT_STANDARD_H
 
 #include <structs/uint256.h>

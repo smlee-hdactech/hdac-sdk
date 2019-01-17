@@ -1,4 +1,4 @@
-#include "rpcclient.h"
+﻿#include "rpcclient.h"
 #include "rpcprotocol.h"
 #include <utils/base64.h>
 #include <utils/tinyformat.h>
@@ -26,7 +26,11 @@ public:
 Object RpcClient::CallRPC(const string& strMethod, const Array& params) const
 {
     asio::io_service io_service;
+#ifdef WIN32
+    ssl::context context(ssl::context::sslv23);
+#else    
     ssl::context context(io_service, ssl::context::sslv23);
+#endif    
     asio::ssl::stream<asio::ip::tcp::socket> sslStream(io_service, context);
     SSLIOStreamDevice<asio::ip::tcp> d(sslStream, _fUseSSL);
     iostreams::stream< SSLIOStreamDevice<asio::ip::tcp> > stream(d);

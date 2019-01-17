@@ -1,4 +1,4 @@
-#include "rawmetadata.h"
+﻿#include "rawmetadata.h"
 #include <entities/asset.h>
 #include <utils/define.h>
 #include <utils/utilstrencodings.h>

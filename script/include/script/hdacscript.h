@@ -1,4 +1,4 @@
-#ifndef HDACSCRIPT_H
+﻿#ifndef HDACSCRIPT_H
 #define HDACSCRIPT_H
 
 #include <cstddef>

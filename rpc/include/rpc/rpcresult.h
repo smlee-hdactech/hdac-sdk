@@ -1,4 +1,4 @@
-#ifndef RPCRESULT_H
+﻿#ifndef RPCRESULT_H
 #define RPCRESULT_H
 
 #include <vector>

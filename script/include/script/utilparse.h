@@ -1,4 +1,4 @@
-#ifndef UTILPARSE_H
+﻿#ifndef UTILPARSE_H
 #define UTILPARSE_H
 
 class mc_Script;

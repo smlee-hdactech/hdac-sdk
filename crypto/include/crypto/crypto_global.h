@@ -1,4 +1,4 @@
-#ifndef CRYPTO_GLOBAL_H
+﻿#ifndef CRYPTO_GLOBAL_H
 #define CRYPTO_GLOBAL_H
 
 #if (defined _WIN32) || (defined _WIN64)

@@ -1,4 +1,4 @@
-// Copyright (c) 2014 The Bitcoin developers
+﻿// Copyright (c) 2014 The Bitcoin developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -11,7 +11,7 @@
 #include "crypto_global.h"
 
 /** A hasher class for SHA-256. */
-class CRYPTOSHARED_EXPORT CSHA256
+class CSHA256
 {
 private:
     uint32_t s[8];

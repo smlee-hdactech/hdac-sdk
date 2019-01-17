@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <utils/utilstrencodings.h>
 #include <structs/hs_structs.h>
 #include <keys/keyshelper.h>

@@ -5,10 +5,7 @@ project(HDAC_PRIMITIVIES_EXAMPLE)
 set(targetName primitivesExample)
 add_executable(${targetName} main.cpp)
 
-find_package(Boost 1.55.0 REQUIRED system thread)
-find_package(OpenSSL REQUIRED)
-pkg_check_modules (SECP256K1 REQUIRED libsecp256k1)
-
+if(UNIX)
 target_link_libraries(${targetName}
     PUBLIC
     primitives_dynamic
@@ -18,10 +15,22 @@ target_link_libraries(${targetName}
     Boost::thread
     Boost::system
     )
+else()
+target_link_libraries(${targetName}
+    PUBLIC
+    primitives_static
+    script_static
+    ${SECP256K1_LIBRARIES}
+    ${OPENSSL_LIBRARIES}
+    Boost::thread
+    Boost::system
+    )
+endif()    
 
 target_include_directories(${targetName}
 	PRIVATE
-        ${CMAKE_SOURCE_DIR}/script/include
-        ${CMAKE_SOURCE_DIR}/primitives/include
-        )
+    ${CMAKE_SOURCE_DIR}/script/include
+    ${CMAKE_SOURCE_DIR}/primitives/include
+    ${JSONSPIRIT_INCLUDE_DIRS}
+    )
 

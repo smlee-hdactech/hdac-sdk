@@ -1,11 +1,11 @@
-#ifndef UTILITY_H
+﻿#ifndef UTILITY_H
 #define UTILITY_H
 
 #include "strcodeclib_global.h"
 #include <cstdint>
 #include "tools.h"
 
-STRCODECLIBSHARED_EXPORT int64_t mc_GetLE(void *src,int size);
+int64_t mc_GetLE(void *src,int size);
 
 typedef struct mc_Buffer
 {

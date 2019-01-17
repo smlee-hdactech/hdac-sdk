@@ -1,4 +1,4 @@
-#include <primitives/analyzetx.h>
+﻿#include <primitives/analyzetx.h>
 #include <json_spirit/json_spirit.h>
 #include <json_spirit/json_spirit_writer_template.h>
 

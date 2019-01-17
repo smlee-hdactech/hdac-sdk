@@ -1,4 +1,4 @@
-#include "analyzetx.h"
+﻿#include "analyzetx.h"
 #include "transaction.h"
 #include <utils/streams.h>
 #include <iostream>

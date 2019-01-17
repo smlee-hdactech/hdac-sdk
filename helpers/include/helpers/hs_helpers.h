@@ -1,4 +1,4 @@
-#ifndef HS_HELPERS_H
+﻿#ifndef HS_HELPERS_H
 #define HS_HELPERS_H
 
 #include "KeysHelperWithRpc.h"

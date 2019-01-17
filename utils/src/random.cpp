@@ -1,4 +1,4 @@
-#include "random.h"
+﻿#include "random.h"
 
 #include <iostream>
 #include <cassert>
@@ -213,16 +213,19 @@ void QRNG_RAND_bytes(unsigned char* out, int num)
 
 #ifndef WIN32
     int nread = read(_QRNG_fd, out, num);
-#endif
+
     // TODO : change into log
     //std::cout << __func__ << ": QRNG read bytes=" << nread << std::endl;
     LogPrintf("%s: QRNG read bytes=%d\n", __func__, nread);
 
     if (nread != num)	// read failed
     {
+#endif        
         _QRNG_fd = -1;
         GetRandBytes_org(out, num);
+#ifndef WIN32                
     }
+#endif
 }
 
 
@@ -269,16 +272,19 @@ void QRNG_GetStrongRandBytes(unsigned char* out, int num)
 
 #ifndef WIN32
     int nread = read(_QRNG_fd, out, num);
-#endif
+
     // TODO : change into log
     LogPrintf("%s: QRNG read=%d\n", __func__, nread);
     //std::cout << __func__ << ": QRNG read=" << nread << std::endl;
 
     if (nread != num)	// read failed
     {
+#endif        
         _QRNG_fd = -1;
         GetStrongRandBytes_org(out, num);
+#ifndef WIN32        
     }
+#endif
 }
 
 

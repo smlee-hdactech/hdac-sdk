@@ -1,4 +1,4 @@
-#ifndef HS_STRUCTS_H
+﻿#ifndef HS_STRUCTS_H
 #define HS_STRUCTS_H
 
 #include <vector>

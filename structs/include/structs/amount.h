@@ -1,4 +1,4 @@
-#ifndef AMOUNT_H
+﻿#ifndef AMOUNT_H
 #define AMOUNT_H
 
 #include <utils/serialize.h>

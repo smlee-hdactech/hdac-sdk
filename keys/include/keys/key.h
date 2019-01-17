@@ -1,4 +1,4 @@
-#ifndef KEYS_H
+﻿#ifndef KEYS_H
 #define KEYS_H
 
 #include "keys_global.h"
@@ -26,7 +26,7 @@
 typedef std::vector<unsigned char, secure_allocator<unsigned char> > CPrivKey;
 
 /** An encapsulated private key. */
-class KEYSSHARED_EXPORT CKey
+class CKey
 {
 private:
     //! Whether this private key is valid. We check for correctness when modifying the key

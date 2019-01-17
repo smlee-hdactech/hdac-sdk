@@ -1,4 +1,4 @@
-#ifndef BASE58_H
+﻿#ifndef BASE58_H
 #define BASE58_H
 
 #include <utils/utilstrencodings.h>
@@ -8,25 +8,25 @@
  * Encode a byte sequence as a base58-encoded string.
  * pbegin and pend cannot be NULL, unless both are.
  */
-STRCODECLIBSHARED_EXPORT std::string EncodeBase58(const unsigned char* pbegin, const unsigned char* pend);
+std::string EncodeBase58(const unsigned char* pbegin, const unsigned char* pend);
 
 /**
  * Encode a byte vector as a base58-encoded string
  */
-STRCODECLIBSHARED_EXPORT std::string EncodeBase58(const std::vector<unsigned char>& vch);
+std::string EncodeBase58(const std::vector<unsigned char>& vch);
 
 /**
  * Decode a base58-encoded string (psz) into a byte vector (vchRet).
  * return true if decoding is successful.
  * psz cannot be NULL.
  */
-STRCODECLIBSHARED_EXPORT bool DecodeBase58(const char* psz, std::vector<unsigned char>& vchRet);
+bool DecodeBase58(const char* psz, std::vector<unsigned char>& vchRet);
 
 /**
  * Decode a base58-encoded string (str) into a byte vector (vchRet).
  * return true if decoding is successful.
  */
-STRCODECLIBSHARED_EXPORT bool DecodeBase58(const std::string& str, std::vector<unsigned char>& vchRet);
+bool DecodeBase58(const std::string& str, std::vector<unsigned char>& vchRet);
 
 /**
  * Encode a byte vector into a base58-encoded string, including checksum
@@ -48,7 +48,7 @@ inline bool DecodeBase58Check(const std::string& str, std::vector<unsigned char>
 /**
  * Base class for all base58-encoded data
  */
-class STRCODECLIBSHARED_EXPORT CBase58Data
+class CBase58Data
 {
 protected:
     //! the version byte(s)

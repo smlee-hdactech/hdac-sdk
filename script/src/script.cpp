@@ -1,4 +1,4 @@
-#include "script.h"
+﻿#include "script.h"
 #include <utils/utilstrencodings.h>
 #include <utils/tinyformat.h>
 

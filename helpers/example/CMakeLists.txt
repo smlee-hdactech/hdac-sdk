@@ -2,13 +2,14 @@ cmake_minimum_required(VERSION 3.1)
 
 project(HDAC_KEYS_EXAMPLE)
 
-set(targetName keysExample)
+set(targetName helpersExample)
 add_executable(${targetName} main.cpp)
 
-find_package(Boost 1.55.0 REQUIRED system thread)
-find_package(OpenSSL REQUIRED)
-pkg_check_modules (SECP256K1 REQUIRED libsecp256k1)
+#find_package(Boost 1.55.0 REQUIRED system thread)
+#find_package(OpenSSL REQUIRED)
+#pkg_check_modules (SECP256K1 REQUIRED libsecp256k1)
 
+if(UNIX)
 target_link_libraries(${targetName}
     PUBLIC
     keys_dynamic
@@ -17,6 +18,16 @@ target_link_libraries(${targetName}
     Boost::thread
     Boost::system
     )
+else()
+target_link_libraries(${targetName}
+    PUBLIC
+    keys_static
+    ${SECP256K1_LIBRARIES}
+    ${OPENSSL_LIBRARIES}
+    Boost::thread
+    Boost::system
+    )
+endif()    
 
 target_include_directories(${targetName}
 	PRIVATE

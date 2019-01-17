@@ -6,3 +6,6 @@ _build/
 *.user
 
 build/
+.vs/
+CMakeSettings.json
+install/

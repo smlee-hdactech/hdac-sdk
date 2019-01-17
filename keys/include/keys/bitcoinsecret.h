@@ -1,4 +1,4 @@
-#ifndef BITCOINSECRET_H
+﻿#ifndef BITCOINSECRET_H
 #define BITCOINSECRET_H
 
 #include <structs/base58.h>

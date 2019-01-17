@@ -1,4 +1,4 @@
-// Copyright (c) 2014 The Bitcoin developers
+﻿// Copyright (c) 2014 The Bitcoin developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -11,7 +11,7 @@
 #include "crypto_global.h"
 
 /** A hasher class for RIPEMD-160. */
-class CRYPTOSHARED_EXPORT CRIPEMD160
+class CRIPEMD160
 {
 private:
     uint32_t s[5];

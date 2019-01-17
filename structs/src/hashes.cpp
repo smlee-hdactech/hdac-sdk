@@ -1,4 +1,4 @@
-#include "hashes.h"
+﻿#include "hashes.h"
 
 #include <iostream>
 #include <iomanip>
