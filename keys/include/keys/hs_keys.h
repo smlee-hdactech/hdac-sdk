@@ -53,7 +53,10 @@ std::string createAssetSendTx(const std::string& toAddr, double quantity,
 
 std::string walletAddrFromPubKey(const std::string& pubkeyStr, const IWalletAddrHelper& addrHelpler);
 
+/// 개인키 또는 지갑주소로 sign 된 메시지를 검증 한다.
 bool verifymessage(std::string strAddress, std::string strSign, std::string strMessage, const IWalletAddrHelper &addrHelper);
+
+/// 개인키를 이용 하여 sign 된 메시지를 만든다.
 std::string signmessage(std::string strAddress, std::string strMessage, 
 						const IPrivateKeyHelper &privateHelper, const IWalletAddrHelper &addrHelper);
 

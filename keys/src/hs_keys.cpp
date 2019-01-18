@@ -347,6 +347,16 @@ string walletAddrFromPubKey(const string& pubkeyStr, const IWalletAddrHelper& ad
     return addr.ToString();
 }
 
+/**
+ *
+ * @brief 개인키 또는 지갑주소로 sign 된 메시지를 검증 한다.
+ * @details 개인키 또는 지갑주소로 sign 된 메시지가 해당 개인키 또는
+ * 지갑주소로 제대로 sign 되었는지 검증 할때 사용 한다.
+ *
+ * @return 해당 개인키 또는 지갑주소로 sign 메시지가 맞다면 true
+ * 아니라면 false
+ *
+ */
 bool verifymessage(string strAddress, string strSign, string strMessage, const IWalletAddrHelper &addrHelper)
 {
 	EccAutoInitReleaseHandler eccScoper;
@@ -383,7 +393,14 @@ bool verifymessage(string strAddress, string strSign, string strMessage, const I
         return (pubkey.GetID() == keyID);
 }
 
-
+/**
+ *
+ * @brief 개인키를 이용하여 sign 된 메시지를 만든다.
+ * @details 개인키를 이용하여 평문으로 된 메시지를 sign 하여 암호화 한다.
+ *
+ * @return base64 로 인코딩 된 sign 된 문자열
+ *
+ */
 string signmessage(string strAddress, string strMessage, const IPrivateKeyHelper &privateHelper, const IWalletAddrHelper &addrHelper)
 {
 	EccAutoInitReleaseHandler eccScoper;
@@ -411,7 +428,7 @@ string signmessage(string strAddress, string strMessage, const IPrivateKeyHelper
                 }
         } else {
 
-		return "it is insert address type, but not yet make...";
+		return "it is insert address type, but not yet make";
 		// to make address type, pwalletMain value...
 /*
                 CKeyID keyID;
