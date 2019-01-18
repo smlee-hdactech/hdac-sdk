@@ -107,13 +107,13 @@ void static inline WriteBE64(unsigned char* ptr, uint64_t x)
     *((uint64_t*)ptr) = htobe64(x);
 #else
     ptr[0] = x >> 56;
-    ptr[1] = x >> 48;
-    ptr[2] = x >> 40;
-    ptr[3] = x >> 32;
-    ptr[4] = x >> 24;
-    ptr[5] = x >> 16;
-    ptr[6] = x >> 8;
-    ptr[7] = x;
+    ptr[1] = (unsigned char)(x >> 48);
+    ptr[2] = (unsigned char)(x >> 40);
+    ptr[3] = (unsigned char)(x >> 32);
+    ptr[4] = (unsigned char)(x >> 24);
+    ptr[5] = (unsigned char)(x >> 16);
+    ptr[6] = (unsigned char)(x >> 8);
+    ptr[7] = (unsigned char)x;
 #endif
 }
 

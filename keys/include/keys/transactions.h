@@ -7,7 +7,7 @@
 #include <structs/uint256.h>
 #include "standard.h"
 
-class mc_EntityDetails;
+struct mc_EntityDetails;
 
 #define MC_ASSET_KEY_UNCONFIRMED_GENESIS    1
 #define MC_ASSET_KEY_VALID                  0

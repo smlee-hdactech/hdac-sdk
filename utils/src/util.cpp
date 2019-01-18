@@ -42,9 +42,18 @@ static void DebugPrintInit()
     // TODO : how to config the location for log file
     //boost::filesystem::path pathDebug = GetDataDir() / "debug.log";
     boost::filesystem::path pathDebug = "debug.log";
-    fileout = fopen(pathDebug.string().c_str(), "a");
-    if (fileout) setbuf(fileout, NULL); // unbuffered
-
+#ifdef WIN32
+	fopen_s(&fileout, pathDebug.string().c_str(), "a");
+#else
+	fileout = fopen(pathDebug.string().c_str(), "a");
+#endif // WIN32
+	if (fileout) {
+#ifdef WIN32
+		setvbuf(fileout, NULL, _IONBF, 0); // unbuffered
+#else
+		setbuf(fileout, NULL); // unbuffered
+#endif
+	}
     mutexDebugLog = new boost::mutex();
 }
 
@@ -118,9 +127,17 @@ int LogPrintStr(const std::string &str)
             // TODO : how to config the location for log file.
             //boost::filesystem::path pathDebug = GetDataDir() / "debug.log";
             boost::filesystem::path pathDebug = "debug.log";
-            if (freopen(pathDebug.string().c_str(),"a",fileout) != NULL)
-                setbuf(fileout, NULL); // unbuffered
-        }
+
+#ifdef WIN32
+			FILE *newfileptr;
+			if (freopen_s(&newfileptr, pathDebug.string().c_str(), "a", fileout) == 0) {
+				setvbuf(fileout, NULL, _IONBF, 0); // unbuffered
+#else
+			if (freopen(pathDebug.string().c_str(), "a", fileout) != NULL) {
+				setbuf(fileout, NULL); // unbuffered
+#endif
+			}
+		}
 
         // Debug print useful for profiling
         if (fLogTimestamps && fStartedNewLine)

@@ -268,7 +268,7 @@ public:
             return std::numeric_limits<int>::max();
         else if (m_value < std::numeric_limits<int>::min())
             return std::numeric_limits<int>::min();
-        return m_value;
+        return (int)m_value;
     }
 
     std::vector<unsigned char> getvch() const
@@ -340,7 +340,7 @@ protected:
     {
         if (n == -1 || (n >= 1 && n <= 16))
         {
-            push_back(n + (OP_1 - 1));
+            push_back((unsigned char)(n + (OP_1 - 1)));
         }
         else if (n == 0)
         {
@@ -408,7 +408,7 @@ public:
         else if (b.size() <= 0xffff)
         {
             insert(end(), OP_PUSHDATA2);
-            unsigned short nSize = b.size();
+            unsigned short nSize = (unsigned short)b.size();
             insert(end(), (unsigned char*)&nSize, (unsigned char*)&nSize + sizeof(nSize));
         }
         else

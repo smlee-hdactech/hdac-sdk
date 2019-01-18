@@ -196,20 +196,20 @@ void WriteCompactSize(Stream& os, uint64_t nSize)
 {
     if (nSize < 253)
     {
-        unsigned char chSize = nSize;
+        unsigned char chSize = (unsigned char)nSize;
         WRITEDATA(os, chSize);
     }
     else if (nSize <= std::numeric_limits<unsigned short>::max())
     {
         unsigned char chSize = 253;
-        unsigned short xSize = nSize;
+        unsigned short xSize = (unsigned short)nSize;
         WRITEDATA(os, chSize);
         WRITEDATA(os, xSize);
     }
     else if (nSize <= std::numeric_limits<unsigned int>::max())
     {
         unsigned char chSize = 254;
-        unsigned int xSize = nSize;
+        unsigned int xSize = (unsigned int)nSize;
         WRITEDATA(os, chSize);
         WRITEDATA(os, xSize);
     }
@@ -408,7 +408,7 @@ void Unserialize_impl(Stream& is, std::vector<T, A>& v, int nType, int nVersion,
 {
     // Limit size per read so bogus size value won't cause out of memory
     v.clear();
-    unsigned int nSize = ReadCompactSize(is);
+    unsigned int nSize = (unsigned int)ReadCompactSize(is);
     unsigned int i = 0;
     while (i < nSize)
     {
@@ -423,7 +423,7 @@ template<typename Stream, typename T, typename A, typename V>
 void Unserialize_impl(Stream& is, std::vector<T, A>& v, int nType, int nVersion, const V&)
 {
     v.clear();
-    unsigned int nSize = ReadCompactSize(is);
+    unsigned int nSize = (unsigned int)ReadCompactSize(is);
     unsigned int i = 0;
     unsigned int nMid = 0;
     while (nMid < nSize)
