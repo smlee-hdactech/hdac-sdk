@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+﻿cmake_minimum_required(VERSION 3.1)
 
 add_executable(hdac_moduleTest main.cpp)
 
@@ -29,8 +29,7 @@ target_link_libraries(hdac_moduleTest
     ${SECP256K1_LIBRARIES}    
     ${OPENSSL_LIBRARIES}
     Boost::thread
-    Boost::system
-    Boost::filesystem
+    Boost::system    
     )
 else()
 target_link_libraries(hdac_moduleTest
@@ -45,8 +44,7 @@ target_link_libraries(hdac_moduleTest
     ${SECP256K1_LIBRARIES}    
     ${OPENSSL_LIBRARIES}
     Boost::thread
-    Boost::system
-    Boost::filesystem
+    Boost::system    
     )
 endif()
 

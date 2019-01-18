@@ -1,4 +1,12 @@
-﻿#include "hs_keys.h"
+﻿/**     
+* @file     hs_keys.cpp
+* @date     2019-1-17
+* @author   HDAC Technology Inc.
+*
+* @brief    hs_keys 소스파일.
+*/
+
+#include "hs_keys.h"
 #include <utils/utilstrencodings.h>
 #include <utils/base64.h>
 #include <algorithm>
@@ -23,6 +31,16 @@ using namespace std;
 
 const string strMessageMagic = "Hdac Signed Message:\n"; // for verify message
 
+/**
+ *
+ * @brief 개인키를 생성한다.
+ * @details 개인키와 함께 공개키 및 이에 따른 공개키 해시와 지갑주소도 함께 구한다.
+ * @param const IPrivateKeyHelper & privateHelper 개인키 처리를 위한 정보 제공 인터페이스
+ * @param const IWalletAddrHelper & addrHelper 지갑주소 처리를 위한 정보 제공 인터페이스
+ *
+ * @return KeyPairs
+ *
+ */
 KeyPairs createKeyPairs(const IPrivateKeyHelper &privateHelper, const IWalletAddrHelper &addrHelper)
 {
     CKey secret;
@@ -50,6 +68,14 @@ KeyPairs createKeyPairs(const IPrivateKeyHelper &privateHelper, const IWalletAdd
 #define MC_AST_ASSET_REF_TYPE_OFFSET        32
 #define MC_AST_ASSET_REF_TYPE_SIZE           4
 
+/**
+ *
+ * @brief 개인키 처리를 위한 정보 제공 인터페이스를 가져온다.
+ * @details 주로 개인키 처리를 위해 내부적으로 사용된다. 
+ *
+ * @return 개인키 처리를 위한 정보 제공 인터페이스
+ *
+ */
 string createAssetSendTx(const string& toAddr, double quantity,
                          const string& issueTxid, int multiple,
                          const string& unspentScriptPubKey, const string& unspentTxid, uint32_t unspentVOut,
@@ -208,6 +234,17 @@ public:
 };
 #endif
 
+/**
+ *
+ * @brief 스트림키 발행을 위한 raw-tx 문자열을 생성한다.
+ * @details 보안을 강화하기 위해, 블록체인 망 내의 노드를 이용하지 않고, 
+ * 표출되지 않은 개인키와 망으로 부터 구한 블록체인의 트랜잭션 정보들로부터
+ * 직접 생성한다.
+ * 
+ *
+ * @return raw-tx 문자열
+ *
+ */
 string createStreamPublishTx(const string& streamKey, const string& streamItem,
                      const string& createTxid,
                      const string& unspentScriptPubKey, const string& unspentTxid, uint32_t unspentVOut,

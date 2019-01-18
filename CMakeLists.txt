@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+﻿cmake_minimum_required(VERSION 3.1)
 
 project(hdac-sdk)
 
@@ -22,7 +22,7 @@ else()
     set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 endif()
 
-find_package(Boost 1.55.0 REQUIRED system thread filesystem date_time)
+find_package(Boost 1.55.0 REQUIRED system thread date_time)
 find_package(OpenSSL REQUIRED)
 
 if(UNIX)

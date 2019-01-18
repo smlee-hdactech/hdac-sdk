@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+﻿cmake_minimum_required(VERSION 3.1)
 
 add_executable(hdac_vTest main.cpp)
 
@@ -32,7 +32,6 @@ target_link_libraries(hdac_vTest
     ${OPENSSL_LIBRARIES}
     Boost::thread
     Boost::system
-    Boost::filesystem
     )
 else()
 target_link_libraries(hdac_vTest
@@ -48,7 +47,6 @@ target_link_libraries(hdac_vTest
     ${OPENSSL_LIBRARIES}
     Boost::thread
     Boost::system
-    Boost::filesystem
     )
 endif()
 

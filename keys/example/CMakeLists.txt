@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+﻿cmake_minimum_required(VERSION 3.1)
 
 project(HDAC_KEYS_EXAMPLE)
 
@@ -13,7 +13,6 @@ target_link_libraries(${targetName}
     ${OPENSSL_LIBRARIES}
     Boost::thread
     Boost::system
-    Boost::filesystem
     )
 else()
 target_link_libraries(${targetName}
@@ -23,7 +22,6 @@ target_link_libraries(${targetName}
     ${OPENSSL_LIBRARIES}
     Boost::thread
     Boost::system
-    Boost::filesystem
     )
 endif()
 

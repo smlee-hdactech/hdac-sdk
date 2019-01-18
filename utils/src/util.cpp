@@ -6,7 +6,7 @@
 #include <string>
 
 #include <boost/thread.hpp>
-#include <boost/filesystem.hpp>
+//#include <boost/filesystem.hpp>
 
 using namespace std;
 
@@ -41,8 +41,10 @@ static void DebugPrintInit()
 
     // TODO : how to config the location for log file
     //boost::filesystem::path pathDebug = GetDataDir() / "debug.log";
-    boost::filesystem::path pathDebug = "debug.log";
-    fileout = fopen(pathDebug.string().c_str(), "a");
+    //boost::filesystem::path pathDebug = "debug.log";
+	//fileout = fopen(pathDebug.string().c_str(), "a");
+	string pathDebug = "debug.log";
+	fileout = fopen(pathDebug.c_str(), "a");
     if (fileout) setbuf(fileout, NULL); // unbuffered
 
     mutexDebugLog = new boost::mutex();
@@ -117,8 +119,10 @@ int LogPrintStr(const std::string &str)
             fReopenDebugLog = false;
             // TODO : how to config the location for log file.
             //boost::filesystem::path pathDebug = GetDataDir() / "debug.log";
-            boost::filesystem::path pathDebug = "debug.log";
-            if (freopen(pathDebug.string().c_str(),"a",fileout) != NULL)
+            //boost::filesystem::path pathDebug = "debug.log";
+			//if (freopen(pathDebug.string().c_str(), "a", fileout) != NULL)
+			string pathDebug = "debug.log";
+			if (freopen(pathDebug.c_str(), "a", fileout) != NULL)
                 setbuf(fileout, NULL); // unbuffered
         }
 
