@@ -22,7 +22,7 @@ vector<unsigned char> hashFromFile(const string& filename)
         return vector<unsigned char>();
     }
     is.seekg(0, ios::end);
-    int size = is.tellg();
+    int size = (int)is.tellg();
     string readStr;
     readStr.resize(size);
     is.seekg(0, ios::beg);

@@ -5,7 +5,6 @@ set(prj_base rpc)
 configure_file(hs_${prj_base}.pc.in hs_${prj_base}.pc @ONLY)
 
 set(src
-    cif_rpccall.cpp
     rpccaller.cpp
     rpcprotocol.cpp
     rpcclient.cpp

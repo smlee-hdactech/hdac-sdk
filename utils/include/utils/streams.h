@@ -428,7 +428,7 @@ protected:
     bool Fill() {
         unsigned int pos = nSrcPos % vchBuf.size();
         unsigned int readNow = vchBuf.size() - pos;
-        unsigned int nAvail = vchBuf.size() - (nSrcPos - nReadPos) - nRewind;
+        unsigned int nAvail = (unsigned int)(vchBuf.size() - (nSrcPos - nReadPos) - nRewind);
         if (nAvail < readNow)
             readNow = nAvail;
         if (readNow == 0)
@@ -444,7 +444,7 @@ protected:
 
 public:
     CBufferedFile(FILE *fileIn, uint64_t nBufSize, uint64_t nRewindIn, int nTypeIn, int nVersionIn) :
-        nSrcPos(0), nReadPos(0), nReadLimit((uint64_t)(-1)), nRewind(nRewindIn), vchBuf(nBufSize, 0)
+        nSrcPos(0), nReadPos(0), nReadLimit((uint64_t)(-1)), nRewind(nRewindIn), vchBuf((unsigned int)nBufSize, 0)
     {
         src = fileIn;
         nType = nTypeIn;
@@ -483,7 +483,7 @@ public:
             if (nNow + pos > vchBuf.size())
                 nNow = vchBuf.size() - pos;
             if (nNow + nReadPos > nSrcPos)
-                nNow = nSrcPos - nReadPos;
+                nNow = (size_t)(nSrcPos - nReadPos);
             memcpy(pch, &vchBuf[pos], nNow);
             nReadPos += nNow;
             pch += nNow;
@@ -512,7 +512,7 @@ public:
     }
 
     bool Seek(uint64_t nPos) {
-        long nLongPos = nPos;
+        long nLongPos = (long)nPos;
         if (nPos != (uint64_t)nLongPos)
             return false;
         if (fseek(src, nLongPos, SEEK_SET))

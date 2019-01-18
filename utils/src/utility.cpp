@@ -191,7 +191,7 @@ int gettimeofday(struct timeval *tv, struct timezone *tz)
 		tmpres -= DELTA_EPOCH_IN_MICROSECS;
 
 		// sec? micorsec?쇰줈 留욎텛湲?
-		tv->tv_sec = (tmpres / 1000000UL);
+		tv->tv_sec = (long)(tmpres / 1000000UL);
 		tv->tv_usec = (tmpres % 1000000UL);
 	}
 
@@ -203,8 +203,17 @@ int gettimeofday(struct timeval *tv, struct timezone *tz)
 			_tzset();
 			tzflag++;
 		}
+#ifdef WIN32
+		long sec;
+		_get_timezone(&sec);
+		tz->tz_minuteswest = sec / 60;
+		int hour;
+		_get_daylight(&hour);
+		tz->tz_dsttime = hour;
+#else
 		tz->tz_minuteswest = _timezone / 60;
 		tz->tz_dsttime = _daylight;
+#endif
 	}
 
 	return 0;

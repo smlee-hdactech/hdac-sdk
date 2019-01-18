@@ -118,8 +118,13 @@ bool AssetRefDecode(unsigned char *bin, const char* string, const size_t stringL
     if (strchr(buffer, '+')) // special check for '+' character which would be accepted by sscanf() below
         return false;
 
+#ifdef WIND32
+    if (sscanf_s(buffer, "%lld-%lld-%d", &blockNum, &txOffset, &txIDPrefixInteger)!=3)
+        return false;
+#else
     if (sscanf(buffer, "%lld-%lld-%d", &blockNum, &txOffset, &txIDPrefixInteger)!=3)
         return false;
+#endif
 
     if ( (txIDPrefixInteger<0) || (txIDPrefixInteger>0xFFFF) )
         return false;
@@ -266,7 +271,13 @@ int ParseAssetKey(const char* asset_key,unsigned char *txid,unsigned char *asset
         }
         if(name)
         {
+			// TODO : need to fix, the size
+			// "MC_AST_ASSET_FULLREF_BUF_SIZE" -> name size
+#ifdef WIN32
+			strcpy_s(name, MC_AST_ASSET_FULLREF_BUF_SIZE, entity.GetName());
+#else
             strcpy(name,entity.GetName());
+#endif
         }
         if(multiple)
         {
@@ -319,11 +330,14 @@ void ParseEntityIdentifier(Value entity_identifier,mc_EntityDetails *entity,uint
                 if(memcmp(buf_a,buf_n,4) == 0)
                 {
                     unsigned char *root_stream_name;
-                    int root_stream_name_size;
-                    // TODO : root_stream_name is from "rootstreamname" param
-                    //root_stream_name=(unsigned char *)mc_gState->m_NetworkParams->GetParam("rootstreamname",&root_stream_name_size);
+					// TODO : root_stream_name is from "rootstreamname" param
+					// int root_stream_name_size;
+                    // root_stream_name=(unsigned char *)mc_gState->m_NetworkParams->GetParam("rootstreamname",&root_stream_name_size);
                     root_stream_name = (unsigned char*)("root");
-                    if( (root_stream_name_size > 1) && (memcmp(buf_a,buf_n,MC_AST_ASSET_REF_SIZE) == 0) )
+                    if(
+						// TODO : if you want to check root stream name size, use it
+						// (root_stream_name_size > 1) &&
+						(memcmp(buf_a,buf_n,MC_AST_ASSET_REF_SIZE) == 0) )
                     {
                         str=strprintf("%s",root_stream_name);
                     }
@@ -561,6 +575,9 @@ bool solver(const string& privateKey, const IPrivateKeyHelper& helper, const CSc
     case TX_MULTISIG:
         scriptSigRet << OP_0; // workaround CHECKMULTISIG bug
         return signN(vSolutions, privateKey, hash, nHashType, helper, scriptSigRet);
+	default :
+		assert(!"transaction type not supported");
     }
+	return false;
 }
 

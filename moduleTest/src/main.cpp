@@ -96,7 +96,7 @@ void testRawTransactionForStreamPublish()
         }
         Array unspents = resultValue.get_array();
         Object selected;
-        for (int i = 0; i < unspents.size(); i++) {
+        for (unsigned int i = 0; i < unspents.size(); i++) {
             Value value = find_value(unspents[i].get_obj(), "assets");
             if (value.type() == array_type && value.get_array().size() == 0) {
                 selected = unspents[i].get_obj();
@@ -192,12 +192,12 @@ void testRawTransactionForAssetSend()
 
         Array unspents = resultValue.get_array();
         Object selected;
-        for (int i = 0; i < unspents.size(); i++) {
+        for (unsigned int i = 0; i < unspents.size(); i++) {
             Value value = find_value(unspents[i].get_obj(), "assets");
             if (value.type() == array_type && value.get_array().size() != 0) {
                 bool found = false;
                 Array assetInfo = value.get_array();
-                for (int i = 0; i < assetInfo.size(); i++) {
+                for (unsigned int i = 0; i < assetInfo.size(); i++) {
                 //for (const Object& assetInfo : value.get_array())   {
                     if (assetInfo[i].type() == obj_type)    {
                         Value name = find_value(assetInfo[i].get_obj(), "name");
