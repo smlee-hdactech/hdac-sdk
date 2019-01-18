@@ -146,8 +146,13 @@ template <unsigned int BITS>
 std::string base_uint<BITS>::GetHex() const
 {
     char psz[sizeof(pn) * 2 + 1];
-    for (unsigned int i = 0; i < sizeof(pn); i++)
-        sprintf(psz + i * 2, "%02x", ((unsigned char*)pn)[sizeof(pn) - i - 1]);
+	for (unsigned int i = 0; i < sizeof(pn); i++) {
+#ifdef WIN32
+		sprintf_s(psz + i * 2, (sizeof(pn) * 2 + 1) - (i * 2), "%02x", ((unsigned char*)pn)[sizeof(pn) - i - 1]);
+#else
+		sprintf(psz + i * 2, "%02x", ((unsigned char*)pn)[sizeof(pn) - i - 1]);
+#endif
+	}
     return std::string(psz, psz + sizeof(pn) * 2);
 }
 
@@ -268,10 +273,10 @@ uint32_t uint256::GetCompact(bool fNegative) const
     int nSize = (bits() + 7) / 8;
     uint32_t nCompact = 0;
     if (nSize <= 3) {
-        nCompact = GetLow64() << 8 * (3 - nSize);
+        nCompact = (uint32_t)(GetLow64() << 8 * (3 - nSize));
     } else {
         uint256 bn = *this >> 8 * (nSize - 3);
-        nCompact = bn.GetLow64();
+        nCompact = (uint32_t)bn.GetLow64();
     }
     // The 0x00800000 bit denotes the sign.
     // Thus, if it is already set, divide the mantissa by 256 and increase the exponent.

@@ -293,7 +293,7 @@ size_t mc_Script::GetParamValue(const unsigned char *ptr,size_t total,size_t off
         return total;
     }
 
-    value_size=mc_GetVarInt(ptr+offset+name_size,total-offset-name_size,-1,&shift);
+    value_size=(int)mc_GetVarInt(ptr+offset+name_size,total-offset-name_size,-1,&shift);
     if(value_size<0)
     {
         return total;
@@ -373,7 +373,7 @@ int mc_Script::SetScript(const unsigned char* src,const size_t bytes,int type)
                 {
                     return MC_ERR_WRONG_SCRIPT;
                 }
-                nSize = mc_GetLE(ptr,1);
+                nSize = (int)mc_GetLE(ptr,1);
                 ptr++;
             }
             else if (opcode == MC_DCT_SCRIPT_OP_PUSHDATA2)
@@ -382,7 +382,7 @@ int mc_Script::SetScript(const unsigned char* src,const size_t bytes,int type)
                 {
                     return MC_ERR_WRONG_SCRIPT;
                 }
-                nSize = mc_GetLE(ptr,2);
+                nSize = (int)mc_GetLE(ptr,2);
                 ptr+=2;
             }
             else if (opcode == MC_DCT_SCRIPT_OP_PUSHDATA4)
@@ -391,7 +391,7 @@ int mc_Script::SetScript(const unsigned char* src,const size_t bytes,int type)
                 {
                     return MC_ERR_WRONG_SCRIPT;
                 }
-                nSize = mc_GetLE(ptr,4);
+                nSize = (int)mc_GetLE(ptr,4);
                 ptr+=4;
             }
 
@@ -621,7 +621,7 @@ int mc_Script::GetBlockSignature(unsigned char* sig,int *sig_size,uint32_t* hash
 
     ptr+=MC_DCT_SCRIPT_IDENTIFIER_LEN+1;
 
-    sig_len=mc_GetLE(ptr,1);
+    sig_len=(int)mc_GetLE(ptr,1);
     ptr++;
 
     if(sig_len>*sig_size)
@@ -642,7 +642,7 @@ int mc_Script::GetBlockSignature(unsigned char* sig,int *sig_size,uint32_t* hash
     *hash_type=(uint32_t)mc_GetLE(ptr,1);
     ptr++;
 
-    key_len=mc_GetLE(ptr,1);
+    key_len=(int)mc_GetLE(ptr,1);
     ptr++;
 
     if(key_len>*key_size)
@@ -847,8 +847,14 @@ int mc_Script::GetAssetDetails(char* name,int* multiple,unsigned char* script,in
         }
     }
 
+	// TODO : need to fix, the size
+	// "MC_AST_ASSET_FULLREF_BUF_SIZE" -> name size
+#ifdef WIN32
+	strcpy_s(name, MC_AST_ASSET_FULLREF_BUF_SIZE, (char*)ptrStart);
+#else
     strcpy(name,(char*)ptrStart);
-    ptr++;
+#endif
+	ptr++;
 
     *script_size=ptrEnd-ptr;
 
@@ -1082,7 +1088,7 @@ uint32_t mc_GetParamFromDetailsScript(const unsigned char *ptr,uint32_t total,ui
         return total;
     }
 
-    value_size=mc_GetVarInt(ptr+offset+name_size,total-offset-name_size,-1,&shift);
+    value_size=(int)mc_GetVarInt(ptr+offset+name_size,total-offset-name_size,-1,&shift);
     if(value_size<0)
     {
         *err=MC_ERR_ERROR_IN_SCRIPT;
@@ -1734,7 +1740,7 @@ int mc_Script::GetCachedScript(int offset, int *next_offset, int* vin, unsigned 
     ptrEnd=ptr+m_lpCoord[m_CurrentElement*2+1];
     ptr+=offset;
 
-    *vin=mc_GetLE(ptr,4);
+    *vin=(int)mc_GetLE(ptr,4);
     if(*vin<0)
     {
         return MC_ERR_ERROR_IN_SCRIPT;
@@ -1844,7 +1850,7 @@ int mc_GetPushDataElement(unsigned char *src,int size,int *op_drop_offset,int *o
             {
                 return MC_ERR_WRONG_SCRIPT;
             }
-            nSize = mc_GetLE(ptr,1);
+            nSize = (int)mc_GetLE(ptr,1);
             ptr++;
         }
         else if (opcode == MC_DCT_SCRIPT_OP_PUSHDATA2)
@@ -1853,7 +1859,7 @@ int mc_GetPushDataElement(unsigned char *src,int size,int *op_drop_offset,int *o
             {
                 return MC_ERR_WRONG_SCRIPT;
             }
-            nSize = mc_GetLE(ptr,2);
+            nSize = (int)mc_GetLE(ptr,2);
             ptr+=2;
         }
         else if (opcode == MC_DCT_SCRIPT_OP_PUSHDATA4)
@@ -1862,7 +1868,7 @@ int mc_GetPushDataElement(unsigned char *src,int size,int *op_drop_offset,int *o
             {
                 return MC_ERR_WRONG_SCRIPT;
             }
-            nSize = mc_GetLE(ptr,4);
+            nSize = (int)mc_GetLE(ptr,4);
             ptr+=4;
         }
 

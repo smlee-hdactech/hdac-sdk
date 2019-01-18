@@ -31,7 +31,11 @@ const char* mc_EntityDetails::GetName()
         value_offset=mc_FindSpecialParamInDetailsScript(m_LedgerRow.m_Script,m_LedgerRow.m_ScriptSize,MC_ENT_SPRM_NAME,&value_size);
         if(value_offset == m_LedgerRow.m_ScriptSize)
         {
-            strcpy((char*)dname_buf+1,"name");
+#ifdef WIN32
+            strcpy_s((char*)dname_buf+1, sizeof(dname_buf) - 1, "name");
+#else
+			strcpy((char*)dname_buf + 1, "name");
+#endif
             dname_buf[0]=0xff;
             value_offset=mc_FindNamedParamInDetailsScript(m_LedgerRow.m_Script,m_LedgerRow.m_ScriptSize,(char*)dname_buf,&value_size);
         }
