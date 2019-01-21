@@ -56,3 +56,31 @@ vcpkg install json-spirit
 cmake -S . -B_build -DCMAKE_TOOLCHAIN_FILE=[vcpkg 설치 위치]\scripts\buildsystems\vcpkg.cmake
 cmake --build _build
 ```
+
+### visual studio 2017에서 빌드하는 경우
+CMakeSettings.json 파일을 아래와 같이 수정해주면 사용할 수 있습니다.
+```
+{
+  "configurations": [
+    {
+      "name": "x86-Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\build\\${name}",
+      "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "[vcpkg 설치 위치]\\scripts\\buildsystems\\vcpkg.cmake"
+        }
+      ]
+    }
+  ]
+}
+```
