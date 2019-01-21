@@ -118,7 +118,7 @@ bool AssetRefDecode(unsigned char *bin, const char* string, const size_t stringL
     if (strchr(buffer, '+')) // special check for '+' character which would be accepted by sscanf() below
         return false;
 
-#ifdef WIND32
+#ifdef WIN32
     if (sscanf_s(buffer, "%lld-%lld-%d", &blockNum, &txOffset, &txIDPrefixInteger)!=3)
         return false;
 #else

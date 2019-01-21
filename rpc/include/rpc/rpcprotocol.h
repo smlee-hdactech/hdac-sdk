@@ -3,10 +3,15 @@
 
 #include <boost/iostreams/concepts.hpp>
 #include <boost/iostreams/stream.hpp>
+
+#include <json_spirit/json_spirit.h>
+
+#ifdef WIN32
+#include <SDKDDKVer.h>
+#endif
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
 
-#include <json_spirit/json_spirit.h>
 
 //! HTTP status codes
 enum HTTPStatusCode
