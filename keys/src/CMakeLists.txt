@@ -59,6 +59,24 @@ set_target_properties(${prj_base}_static PROPERTIES OUTPUT_NAME "hdac_${prj_base
 
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 
+if (WIN32)
+set(cwrapper_src
+    hs_keys_wrapper.cpp
+    )
+add_library(${prj_base}_wrapper SHARED ${cwrapper_src})
+target_include_directories(${prj_base}_wrapper 
+    PRIVATE 
+    ${${prj_base}_includes}
+    )
+target_link_libraries(${prj_base}_wrapper
+	${prj_base}_static)
+install(TARGETS ${prj_base}_wrapper        
+		RUNTIME DESTINATION bin
+        ARCHIVE DESTINATION lib)
+install(TARGETS ${prj_base}_wrapper        
+		RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/dotnet-lib/HdacSdkTest/HdacSdkTest/bin/${CMAKE_BUILD_TYPE})
+endif()
+
 if(UNIX)
 install(TARGETS ${prj_base}_dynamic ${prj_base}_static
         LIBRARY DESTINATION lib
