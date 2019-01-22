@@ -359,7 +359,7 @@ string walletAddrFromPubKey(const string& pubkeyStr, const IWalletAddrHelper& ad
  * 아니라면 false
  *
  */
-bool verifymessage(string strAddress, string strSign, string strMessage, const IWalletAddrHelper &addrHelper)
+bool verifymessage(const string &strAddress, const string &strSign, const string &strMessage, const IWalletAddrHelper &addrHelper)
 {
 	EccAutoInitReleaseHandler eccScoper;
 
@@ -403,7 +403,8 @@ bool verifymessage(string strAddress, string strSign, string strMessage, const I
  * @return base64 로 인코딩 된 sign 된 문자열
  *
  */
-string signmessage(string strAddress, string strMessage, const IPrivateKeyHelper &privateHelper, const IWalletAddrHelper &addrHelper)
+string signmessage(const string &strAddress, const string &strMessage,
+		const IPrivateKeyHelper &privateHelper, const IWalletAddrHelper &addrHelper)
 {
 	EccAutoInitReleaseHandler eccScoper;
 
