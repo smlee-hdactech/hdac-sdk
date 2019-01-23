@@ -1,4 +1,12 @@
-﻿#ifndef HS_KEYSHELPERWITHRPC_H
+﻿/**
+* @file         KeysHelperWithRpc.h
+* @date         2019-01-17
+* @author       HDAC Technology Inc.
+*
+* @brief        KeysHelperWithRpc 헤더 파일 .
+*/
+
+#ifndef HS_KEYSHELPERWITHRPC_H
 #define HS_KEYSHELPERWITHRPC_H
 
 #include <memory>

@@ -23,7 +23,7 @@
  */
 class KeysHelperWithFileAll {
 	public:
-		KeysHelperWithFileAll(const std::string Path);
+		KeysHelperWithFileAll(const std::string &Path);
 
 /**
  *
@@ -79,7 +79,7 @@ class KeysHelperWithFileAll {
 
 class KeysHelperWithFileMulti {
 	public:
-		KeysHelperWithFileMulti(const std::string Path);
+		KeysHelperWithFileMulti(const std::string &Path);
 
         const IWalletAddrHelper& addrHelper() const;
 
