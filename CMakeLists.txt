@@ -43,4 +43,5 @@ add_subdirectory(rpc)
 add_subdirectory(helpers)
 add_subdirectory(moduleTest)
 add_subdirectory(verifyTest)
+add_subdirectory(cBindTest)
 
