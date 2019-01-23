@@ -49,3 +49,4 @@ target_link_libraries(hdac_moduleTest
 endif()
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
+
