@@ -1,4 +1,12 @@
-﻿#include "KeysHelperWithFile.h"
+﻿/**
+* @file         KeysHelperWithRpc.cpp
+* @date         2019-01-17
+* @author       HDAC Technology Inc.
+*
+* @brief        hs_helpers 소스 파일 .
+*/
+
+#include "KeysHelperWithFile.h"
 #include <iostream>
 #include <utils/utilstrencodings.h>
 #include <string.h>
@@ -194,7 +202,18 @@ map<string, string> mapFromFileReadAll(const string& Path)
 	return resultItems;
 }
 
-KeysHelperWithFileMulti::KeysHelperWithFileMulti(const string Path) {
+/**
+ *
+ * @brief 개인키와 지갑주소를 생성하기 위한 정보를 제공 한다.
+ * @details 개인키와 지갑주소를 생성하기 위한 정보를 HDAC 네트워크의
+ * 파라미터 설정 파일을 통해 가져온다.
+ * @param const string & Path HDAC 네트워크의 파라미터 설정 파일의 경로를
+ * 제공 한다.
+ *
+ * @return 없음
+ *
+ */
+KeysHelperWithFileMulti::KeysHelperWithFileMulti(const string &Path) {
 
 	std::vector<string> keys{
 		"address-pubkeyhash-version",
@@ -208,10 +227,26 @@ KeysHelperWithFileMulti::KeysHelperWithFileMulti(const string Path) {
 	_privHelper.reset(new PrivateKeyHelper(_resultMap));
 }
 
+/**
+ *
+ * @brief 지갑주소 처리를 위한 정보 제공 인터페이스를 가져온다.
+ * @details 주로 지갑주소 생성을 위해 내부적으로 사용 된다.
+ *
+ * @return 지갑주소 처리를 위한 정보 제공 인터페이스
+ *
+ */
 const IWalletAddrHelper &KeysHelperWithFileMulti::addrHelper() const {
 	return *_addrHelper;
 }
 
+/**
+ *
+ * @brief 개인키 처리를 위한 정보 제공 인터페이스를 가져온다.
+ * @details 주로 개인키 처리를 위해 내부적으로 사용 된다.
+ *
+ * @return 개인키 처리를 위한 정보 제공 인터페이스
+ *
+ */
 const IPrivateKeyHelper &KeysHelperWithFileMulti::privHelper() const {
 	return *_privHelper;
 }
@@ -236,17 +271,44 @@ int32_t KeysHelperWithFileMulti::PrivateKeyHelper::addrChecksumValue() const  {
 	return parseHexToInt32Le(_resultMap.at("address-checksum-value"));
 }
 
-KeysHelperWithFileAll::KeysHelperWithFileAll(const string Path) {
+/**
+ *
+ * @brief HDAC 네트워크의 모든 파라미터 설정 정보를 제공 한다.
+ * @details HDAC 네트워크의 파라미터 설정 파일을 통해 HDAC 네트워크의
+ * 모든 파라미터 설정 정보를 가져온다.
+ * @param const string & Path HDAC 네트워크의 파라미터 설정 파일의 경로를
+ * 제공 한다.
+ *
+ * @return 없음
+ *
+ */
+KeysHelperWithFileAll::KeysHelperWithFileAll(const string &Path) {
 
 	_resultMap = mapFromFileReadAll(Path);
 	_addrHelper.reset(new WalletAddrHelper(_resultMap));
 	_privHelper.reset(new PrivateKeyHelper(_resultMap));
 }
 
+/**
+ *
+ * @brief 지갑주소 처리를 위한 정보 제공 인터페이스를 가져온다.
+ * @details 주로 지갑주소 생성을 위해 내부적으로 사용 된다.
+ *
+ * @return 지갑주소 처리를 위한 정보 제공 인터페이스
+ *
+ */
 const IWalletAddrHelper &KeysHelperWithFileAll::addrHelper() const {
 	return *_addrHelper;
 }
 
+/**
+ *
+ * @brief 개인키 처리를 위한 정보 제공 인터페이스를 가져온다.
+ * @details 주로 개인키 처리를 위해 내부적으로 사용 된다.
+ *
+ * @return 개인키 처리를 위한 정보 제공 인터페이스
+ *
+ */
 const IPrivateKeyHelper &KeysHelperWithFileAll::privHelper() const {
 	return *_privHelper;
 }
