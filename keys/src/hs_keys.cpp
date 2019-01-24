@@ -73,6 +73,21 @@ KeyPairs createKeyPairs(const IPrivateKeyHelper &privateHelper, const IWalletAdd
  *
  * @brief 개인키 처리를 위한 정보 제공 인터페이스를 가져온다.
  * @details 주로 개인키 처리를 위해 내부적으로 사용된다. 
+ * @details UTXO에 대한 정보는 listunspent RPC 명령을 통해 가져온다.
+ * @details 발행한 자산에 대한 정보는 listassets RPC 명령을 통해 가져온다.
+ * @details 개인키는 createKeyPairs 함수나 RPC 명령을 통해 가져온다.
+ * @param toAddr	보낼 지갑 주소
+ * @param quantity	보낼 자산량
+ * @param issueTxid		발행한 트랜잭션 ID
+ * @param multiple		자산에 대한 multiple 값
+ * @param unspentScriptPubKey	UTXO에 대한 scriptPubKey
+ * @param unspentTxid			UTXO에 대한 트랜잭션 ID
+ * @param unspentVOut			UTXO의 인덱스
+ * @param unspentQty			UTXO의 양
+ * @param unspentRedeemScript	UTXO의 redeem script (muti-sig 용으로 주로 사용)
+ * @param privateKey			보내는 지갑에 대한 개인키
+ * @param privateHelper			개인키 처리를 위한 정보 제공 인터페이스
+ * @param walletHelper			지갑주소 처리를 위한 정보 제공 인터페이스
  *
  * @return 개인키 처리를 위한 정보 제공 인터페이스
  *
@@ -239,6 +254,19 @@ public:
  *
  * @brief 스트림키 발행을 위한 raw-tx 문자열을 생성한다.
  * @details 보안을 강화하기 위해, 블록체인 망 내의 노드를 이용하지 않고, 표출되지 않은 개인키와 망으로 부터 구한 블록체인의 트랜잭션 정보들로부터 직접 생성한다.
+ * @details  주로 개인키 처리를 위해 내부적으로 사용된다.
+ * @details  UTXO에 대한 정보는 listunspent RPC 명령을 통해 가져온다.
+ * @details  생성한 스트림에 대한 정보는 liststreams RPC 명령을 통해 가져온다.
+ * @details  개인키는 createKeyPairs 함수나 RPC 명령을 통해 가져온다.
+ * @param streamKey	스트림에 대한 키
+ * @param streamItem	키에 대한 값
+ * @param createTxid		스트림 생성 트랜잭션 ID
+ * @param unspentScriptPubKey	UTXO에 대한 scriptPubKey
+ * @param unspentTxid			UTXO에 대한 트랜잭션 ID
+ * @param unspentVOut			UTXO의 인덱스
+ * @param unspentRedeemScript	UTXO의 redeem script (muti-sig 용으로 주로 사용)
+ * @param privateKey			보내는 지갑에 대한 개인키
+ * @param privateHelper			개인키 처리를 위한 정보 제공 인터페이스
  *
  * @return raw-tx 문자열
  *
@@ -338,6 +366,15 @@ string createStreamPublishTx(const string& streamKey, const string& streamItem,
     return hex;
 }
 
+/**
+ *
+ * @brief 공개키로부터 지갑주소를 문자열로 얻는다.
+ * @details 문자열로 표기된 공개키와 주소를 생성하기 위한 prefix값과 checksum을 통해서 지갑주소를 구해낸다.
+ * @param pubkeyStr 문자열로 표기된 공개키
+ * @param addrHelper 지갑주소 처리를 위한 정보 제공 인터페이스
+ * @return 문자열로 표기된 지갑주소
+ *
+ */
 string walletAddrFromPubKey(const string& pubkeyStr, const IWalletAddrHelper& addrHelpler)
 {
     CPubKey pubkey(ParseHex(pubkeyStr));
