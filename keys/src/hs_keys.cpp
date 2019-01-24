@@ -386,7 +386,11 @@ string walletAddrFromPubKey(const string& pubkeyStr, const IWalletAddrHelper& ad
  *
  * @brief 개인키 또는 지갑주소로 sign 된 메시지를 검증 한다.
  * @details 개인키 또는 지갑주소로 sign 된 메시지가 해당 개인키 또는 지갑주소로 제대로 sign 되었는지 검증 할때 사용 한다.
- *
+ * @param strAddress sign 할 때 사용 된 지갑주소
+ * @param strSign sign 되어진 문자열
+ * @param strMessage 원본 문자열
+ * @param addrHelper 지갑주소 처리를 위한 정보 제공 인터페이스
+ * 
  * @return 해당 개인키 또는 지갑주소로 sign 메시지가 맞다면 true 아니라면 false
  *
  */
@@ -430,7 +434,11 @@ bool verifymessage(const string &strAddress, const string &strSign, const string
  *
  * @brief 개인키를 이용하여 sign 된 메시지를 만든다.
  * @details 개인키를 이용하여 평문으로 된 메시지를 sign 하여 암호화 한다.
- *
+ * @param strAddress sign 할려고 하는 개인키 값
+ * @param strMessage sign 할려고 하는 원본 문자열
+ * @param privateHelper 개인키 처리를 위한 정보 제공 인터페이스
+ * @param addrHelper 지갑주소 처리를 위한 정보 제공 인터페이스
+ * 
  * @return base64 로 인코딩 된 sign 된 문자열
  *
  */
