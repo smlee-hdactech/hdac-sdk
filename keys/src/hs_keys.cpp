@@ -6,7 +6,6 @@
 * @brief    hs_keys 소스파일.
 */
 
-
 #include "hs_keys.h"
 #include <utils/utilstrencodings.h>
 #include <utils/base64.h>
@@ -37,8 +36,8 @@ const string strMessageMagic = "Hdac Signed Message:\n"; // for verify message
  *
  * @brief 개인키를 생성한다.
  * @details 개인키와 함께 공개키 및 이에 따른 공개키 해시와 지갑주소도 함께 구한다.
- * @param const IPrivateKeyHelper & privateHelper 개인키 처리를 위한 정보 제공 인터페이스
- * @param const IWalletAddrHelper & addrHelper 지갑주소 처리를 위한 정보 제공 인터페이스
+ * @param privateHelper 개인키 처리를 위한 정보 제공 인터페이스
+ * @param addrHelper 지갑주소 처리를 위한 정보 제공 인터페이스
  *
  * @return KeyPairs
  *
@@ -239,10 +238,7 @@ public:
 /**
  *
  * @brief 스트림키 발행을 위한 raw-tx 문자열을 생성한다.
- * @details 보안을 강화하기 위해, 블록체인 망 내의 노드를 이용하지 않고, 
- * 표출되지 않은 개인키와 망으로 부터 구한 블록체인의 트랜잭션 정보들로부터
- * 직접 생성한다.
- * 
+ * @details 보안을 강화하기 위해, 블록체인 망 내의 노드를 이용하지 않고, 표출되지 않은 개인키와 망으로 부터 구한 블록체인의 트랜잭션 정보들로부터 직접 생성한다.
  *
  * @return raw-tx 문자열
  *
@@ -352,11 +348,9 @@ string walletAddrFromPubKey(const string& pubkeyStr, const IWalletAddrHelper& ad
 /**
  *
  * @brief 개인키 또는 지갑주소로 sign 된 메시지를 검증 한다.
- * @details 개인키 또는 지갑주소로 sign 된 메시지가 해당 개인키 또는
- * 지갑주소로 제대로 sign 되었는지 검증 할때 사용 한다.
+ * @details 개인키 또는 지갑주소로 sign 된 메시지가 해당 개인키 또는 지갑주소로 제대로 sign 되었는지 검증 할때 사용 한다.
  *
- * @return 해당 개인키 또는 지갑주소로 sign 메시지가 맞다면 true
- * 아니라면 false
+ * @return 해당 개인키 또는 지갑주소로 sign 메시지가 맞다면 true 아니라면 false
  *
  */
 bool verifymessage(const string &strAddress, const string &strSign, const string &strMessage, const IWalletAddrHelper &addrHelper)

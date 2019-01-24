@@ -1,12 +1,4 @@
-﻿/**     
-* @file     hs_keys.h
-* @date     2019-1-17
-* @author   HDAC Technology Inc.
-*
-* @brief    hs_keys 헤더 파일.
-*/
-
-#ifndef HS_KEYS_H
+﻿#ifndef HS_KEYS_H
 #define HS_KEYS_H
 
 #include <string>
@@ -39,26 +31,26 @@ class IPrivateKeyHelper;
 
 /// 스트림키 발행을 위한 raw-tx 문자열을 생성한다.
 std::string createStreamPublishTx(const std::string& streamKey, const std::string& streamItem,
-                                  const std::string &createTxid,
-                                  const std::string &unspentScriptPubKey, const std::string &unspentTxid, uint32_t unspentVOut,
-                                  const std::string &unspentRedeemScript, const std::string &privateKey,
-                                  const IPrivateKeyHelper &helper);
+		const std::string &createTxid,
+		const std::string &unspentScriptPubKey, const std::string &unspentTxid, uint32_t unspentVOut,
+		const std::string &unspentRedeemScript, const std::string &privateKey,
+		const IPrivateKeyHelper &helper);
 
 /// 개인키 처리를 위한 정보 제공 인터페이스를 가져온다.
 std::string createAssetSendTx(const std::string& toAddr, double quantity,
-                         const std::string& issueTxid, int multiple,
-                         const std::string& unspentScriptPubKey, const std::string& unspentTxid, uint32_t unspentVOut,
-                         double unspentQty, const std::string &unspentRedeemScript,
-                         const std::string& privateKey, const IPrivateKeyHelper& privateHelper, const IWalletAddrHelper &walletHelper);
+		const std::string& issueTxid, int multiple,
+		const std::string& unspentScriptPubKey, const std::string& unspentTxid, uint32_t unspentVOut,
+		double unspentQty, const std::string &unspentRedeemScript,
+		const std::string& privateKey, const IPrivateKeyHelper& privateHelper, const IWalletAddrHelper &walletHelper);
 
 std::string walletAddrFromPubKey(const std::string& pubkeyStr, const IWalletAddrHelper& addrHelpler);
 
 /// 개인키 또는 지갑주소로 sign 된 메시지를 검증 한다.
 bool verifymessage(const std::string &strAddress, const std::string &strSign,
-					const std::string &strMessage, const IWalletAddrHelper &addrHelper);
+		const std::string &strMessage, const IWalletAddrHelper &addrHelper);
 
 /// 개인키를 이용 하여 sign 된 메시지를 만든다.
 std::string signmessage(const std::string &strAddress, const std::string &strMessage, 
-						const IPrivateKeyHelper &privateHelper, const IWalletAddrHelper &addrHelper);
+		const IPrivateKeyHelper &privateHelper, const IWalletAddrHelper &addrHelper);
 
 #endif // HS_KEYS_H
