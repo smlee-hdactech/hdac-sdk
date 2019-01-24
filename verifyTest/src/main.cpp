@@ -38,7 +38,7 @@ void testLocalSigntoLocalVerify(void)
 	cout << "text [" << text << "]" << endl;
 
 	// sign message
-	string signMsg = signmessage(
+	string signMsg = SignMessage(
 			keyPairs.privateKey,
 			text,
 			helper.privHelper(),
@@ -48,7 +48,7 @@ void testLocalSigntoLocalVerify(void)
 	cout << "sign message = [" << signMsg << "]" << endl; 
 
 	// verify message
-	bool res = verifymessage(
+	bool res = VerifyMessage(
 			keyPairs.walletAddr,
 			signMsg,
 			text,
@@ -79,7 +79,7 @@ void testLocalSigntoRpcVerify(void)
 	cout << "text [" << text << "]" << endl;
 
 	// sign message
-	string signMsg = signmessage(
+	string signMsg = SignMessage(
 			keyPairs.privateKey,
 			text,
 			helper.privHelper(),
@@ -126,7 +126,7 @@ void testRpcSigntoLocalVerify(void)
 	cout << "sign message = [" << signMsg << "]" << endl; 
 
 	// verify message
-	bool res = verifymessage(
+	bool res = VerifyMessage(
 			keyPairs.walletAddr,
 			signMsg,
 			text,

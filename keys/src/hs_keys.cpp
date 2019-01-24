@@ -394,7 +394,7 @@ string walletAddrFromPubKey(const string& pubkeyStr, const IWalletAddrHelper& ad
  * @return 해당 개인키 또는 지갑주소로 sign 메시지가 맞다면 true 아니라면 false
  *
  */
-bool verifymessage(const string &strAddress, const string &strSign, const string &strMessage, const IWalletAddrHelper &addrHelper)
+bool VerifyMessage(const string &strAddress, const string &strSign, const string &strMessage, const IWalletAddrHelper &addrHelper)
 {
 	EccAutoInitReleaseHandler eccScoper;
 
@@ -442,7 +442,7 @@ bool verifymessage(const string &strAddress, const string &strSign, const string
  * @return base64 로 인코딩 된 sign 된 문자열
  *
  */
-string signmessage(const string &strAddress, const string &strMessage,
+string SignMessage(const string &strAddress, const string &strMessage,
 		const IPrivateKeyHelper &privateHelper, const IWalletAddrHelper &addrHelper)
 {
 	EccAutoInitReleaseHandler eccScoper;
