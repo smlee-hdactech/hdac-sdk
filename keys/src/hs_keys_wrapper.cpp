@@ -7,10 +7,15 @@
 #include "keyshelper.h"
 #include <utils/utilstrencodings.h>
 #include "hs_keys_wrapper.h"
+#ifdef _WIN32
 #include <combaseapi.h>
+#else
+#include <string.h>
+#endif
 
 using namespace std;
 
+#ifdef _WIN32
 char * create_stream_publish_tx_shp(const char* streamKey, const char* streamItem, const char* createTxid,
 	const char* unspentScriptPubKey, const char* unspentTxid, uint32_t unspentVOut,
 	const char* unspentRedeemScript, const char* privateKey, struct PrivateKeyHelpInfo *helper) {
@@ -29,6 +34,7 @@ char * create_stream_publish_tx_shp(const char* streamKey, const char* streamIte
 	// Return pszReturn.
 	return pszReturn;
 }
+#endif
 
 char * create_stream_publish_tx(const char* streamKey, const char* streamItem, const char* createTxid,
 	const char* unspentScriptPubKey, const char* unspentTxid, uint32_t unspentVOut,
@@ -57,7 +63,11 @@ char * create_stream_publish_tx(const char* streamKey, const char* streamItem, c
 		unspentVOut, unspentRedeemScript, privateKey, privHelper);
 	//cout << result << ", " << result.size() << endl;
 	char *retVal = static_cast<char*>(malloc(result.size() + 1));
+#ifdef _WIN32	
 	strcpy_s(retVal, result.size()+1, result.c_str());
+#else
+	strcpy(retVal, result.c_str());
+#endif	
 	//char *retVal = new char[100];
 	//sprintf(retVal, "just test");
 	return retVal;
