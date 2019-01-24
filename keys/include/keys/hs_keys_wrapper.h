@@ -24,9 +24,11 @@ struct PrivateKeyHelpInfo {
 extern "C" {
 #endif
 
+#ifdef _WIN32
 	keys_wrapper_EXPORT char* create_stream_publish_tx_shp(const char* streamKey, const char* streamItem, const char* createTxid,
 		const char* unspentScriptPubKey, const char* unspentTxid, uint32_t unspentVOut,
 		const char* unspentRedeemScript, const char* privateKey, struct PrivateKeyHelpInfo *helper);
+#endif		
 	keys_wrapper_EXPORT char* create_stream_publish_tx(const char* streamKey, const char* streamItem, const char* createTxid,
 		const char* unspentScriptPubKey, const char* unspentTxid, uint32_t unspentVOut,
 		const char* unspentRedeemScript, const char* privateKey, struct PrivateKeyHelpInfo *helper);

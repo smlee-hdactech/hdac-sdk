@@ -43,7 +43,6 @@ add_subdirectory(rpc)
 add_subdirectory(helpers)
 add_subdirectory(moduleTest)
 add_subdirectory(verifyTest)
-if(WIN32)
 add_subdirectory(cBindTest)
-endif()
+
 
