@@ -15,11 +15,7 @@
 #  define keys_wrapper_EXPORT DECL_IMPORT
 #endif
 
-#ifdef _WIN32
-#include <cstdio>
-#else
 #include <stdio.h>
-#endif
 
 typedef struct keypairs {
 	char privatekey[100];
