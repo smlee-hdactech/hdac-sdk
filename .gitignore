@@ -27,3 +27,4 @@ dotnet-lib/HdacSdkTest/HdacSdkTest/bin/Release/HdacSdkTest.exe
 dotnet-lib/HdacSdkTest/HdacSdkTest/bin/Release/HdacSdk.pdb
 dotnet-lib/HdacSdkTest/HdacSdkTest/bin/Release/keys_wrapper.dll
 dotnet-lib/HdacSdkTest/HdacSdkTest/obj/
+dotnet-lib/HdacSdkTest/HdacSdkTest/bin/

@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HdacSdk;
+using Bitnet.Client;
+using System.Net;
+using Newtonsoft.Json.Linq;
 
 namespace HdacSdkTest
 {
@@ -11,17 +14,58 @@ namespace HdacSdkTest
     {
         static void Main(string[] args)
         {
+            BitnetClient client = new BitnetClient("http://13.125.145.98:4260");
+            client.Credentials = new NetworkCredential("hdacrpc", "1234");
+            var p1 = client.GetBlockchainParams();
+
             Keys.PrivateKeyHelpInfo info = new Keys.PrivateKeyHelpInfo();
-            info.addrChecksum = "cb507245";
-            info.privateKeyPrefix = "8075fa23";
+            info.addrChecksum = p1["address-checksum-value"].ToString();
+            info.privateKeyPrefix = p1["private-key-version"].ToString();
+
+            // wallet address "1WCRNaPb3jAjb4GE9t34uLiLtPseA8JKEvdtg5" is from the private key, "V6X4NaaDQSTgXdAcCzUrSxWqAuFcd53TRXRqmSafUYEbY5DgGMitPEzk"
+            var unspents = client.ListUnspent("1WCRNaPb3jAjb4GE9t34uLiLtPseA8JKEvdtg5");
+            JToken selected = null;
+            foreach(var unspent in unspents)
+            {
+                if (unspent["assets"].Count() == 0)
+                {
+                    selected = unspent;
+                }                
+            }
+
+            if (selected == null)
+            {
+                Console.WriteLine("unspent not founc");
+                return;
+            }
+            
+            string scriptPubKey = selected["scriptPubKey"].ToString();
+            string txid = selected["txid"].ToString();
+            uint vout = UInt32.Parse(selected["vout"].ToString());
+
+            string createTxid = null;
+            String streamName = "stream9";
+            var streamInfos = client.ListStreams(streamName);
+            foreach (var stream in streamInfos)
+            {
+                if (stream["name"].ToString() == streamName)
+                {
+                    createTxid = stream["createtxid"].ToString();
+                }
+            }
+            
+            if (createTxid == null)
+            {
+                Console.WriteLine("createTxid not found");
+                return;
+            }
 
             String checkRet = Keys.create_stream_publish_tx_shp("key1", "tested by moony",
-                "a0b59e8c6f2fd144485d19632f62708f88116fb11a46411dd7d1e211ec92ce9a",
-                "a9143e45d3a48882576ad5900978303705e1a6000305871473706b6511feed9499be6fb101e0f59119d3fe15751473706b700800000000000000fffffffffbfe095c75",
-                "db84077722b74c9c9a799cf58d6c7a265f214f003b5ef15cae368a8add8d33f8", 0,
-                "5221027e75736b41474547b7e2443d7235f4030cbb378093bbd2e98ea36ded6d703c2b21038d7724f227aab828d771eb6ab697f333e615d39b585944d99737ce7b7ae650fd52ae",
-                "VHXjccrTPdRXG8asyos5oqvw6mhWtqASkbFsVuBnkpi4WXn2jr8eMwwp", ref info);
-
+                createTxid,
+                scriptPubKey,
+                txid, vout,
+                "",
+                "V6X4NaaDQSTgXdAcCzUrSxWqAuFcd53TRXRqmSafUYEbY5DgGMitPEzk", ref info);
             Console.WriteLine("raw-tx: {0}", checkRet);
         }
     }
