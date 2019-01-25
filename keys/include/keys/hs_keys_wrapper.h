@@ -15,8 +15,27 @@
 #  define keys_wrapper_EXPORT DECL_IMPORT
 #endif
 
+#ifdef _WIN32
+#include <cstdio>
+#else
+#include <stdio.h>
+#endif
+
+typedef struct keypairs {
+	char privatekey[100];
+	char pubkey[100];
+	char pubkeyhash[100];
+	char walletaddr[100];
+} keypairs_type_t;
+
 struct PrivateKeyHelpInfo {
 	char privateKeyPrefix[10];
+	char addrChecksum[10];
+};
+
+struct WalletAddrHelpInfo {
+	char pubKeyAddrPrefix[10];
+	char scriptAddrPrefix[10];
 	char addrChecksum[10];
 };
 
@@ -25,19 +44,45 @@ extern "C" {
 #endif
 
 #ifdef _WIN32
+
 	keys_wrapper_EXPORT char* create_stream_publish_tx_shp(const char* streamKey, const char* streamItem, const char* createTxid,
 		const char* unspentScriptPubKey, const char* unspentTxid, uint32_t unspentVOut,
 		const char* unspentRedeemScript, const char* privateKey, struct PrivateKeyHelpInfo *helper);
+
+	keys_wrapper_EXPORT KeyPairs_type_t *create_key_pairs_shp(struct PrivateKeyHelpInfo *privatehelper,
+			struct WalletAddrHelpInfo *addrhelper);
+
+	keys_wrapper_EXPORT char *create_asset_send_tx_shp(const char *toAddr, double quantity, const char *issueTxid, int multiple,
+			const char *unspentScriptPubKey, const char *unspentTxid, uint32_t unspentVout,
+			double unspentQty, const char * unspentRedeemScript, const char *privateKey,
+			struct PrivateKeyHelpInfo *privatehelper, struct WalletAddrHelpInfo *addrhelper);
+
+	keys_wrapper_EXPORT char *sign_message_shp(const char *strAddress, const char *strMessage,
+			struct PrivateKeyHelpInfo *privatehelper, struct WalletAddrHelpInfo *addrhelper);
+
+	keys_wrapper_EXPORT int verify_message_shp(const char *strAddress, const char *strSign,
+			const char *strMessage, struct WalletAddrHelpInfo *addrhelper);
+
 #endif		
+
+/// createStreamPublishTx 함수를 c에서 사용 하기 위해 wrapping 한 함수.
 	keys_wrapper_EXPORT char* create_stream_publish_tx(const char* streamKey, const char* streamItem, const char* createTxid,
-		const char* unspentScriptPubKey, const char* unspentTxid, uint32_t unspentVOut,
-		const char* unspentRedeemScript, const char* privateKey, struct PrivateKeyHelpInfo *helper);
-#if 0
-	keys_wrapper_EXPORT void create_stream_publish_tx1(const char* streamKey, const char* streamItem, const char* createTxid,
-		const char* unspentScriptPubKey, const char* unspentTxid, uint32_t unspentVOut,
-		const char* unspentRedeemScript, const char* privateKey, const char* privateKeyPrefix, const char* addrChecksum);
-	keys_wrapper_EXPORT void test_char_param(const char* streamKey);
-#endif
+			const char* unspentScriptPubKey, const char* unspentTxid, uint32_t unspentVOut,
+			const char* unspentRedeemScript, const char* privateKey, struct PrivateKeyHelpInfo *helper);
+/// createKeyPairs 함수를 c에서 사용 하기 위해 wrapping 한 함수.
+	keys_wrapper_EXPORT keypairs_type_t *create_key_pairs(struct PrivateKeyHelpInfo *privatehelper,
+			struct WalletAddrHelpInfo *addrhelper);
+/// createAssetSendTx 함수를 c에서 사용 하기 위해 wrapping 한 함수.
+	keys_wrapper_EXPORT char *create_asset_send_tx(const char *toAddr, double quantity, const char *issueTxid, int multiple,
+			const char *unspentScriptPubKey, const char *unspentTxid, uint32_t unspentVout,
+			double unspentQty, const char * unspentRedeemScript, const char *privateKey,
+			struct PrivateKeyHelpInfo *privatehelper, struct WalletAddrHelpInfo *addrhelper);
+/// SignMessage 함수를 c에서 사용하기 위해 wrapping 한 함수.
+	keys_wrapper_EXPORT char *sign_message(const char *strAddress, const char *strMessage,
+			struct PrivateKeyHelpInfo *privatehelper, struct WalletAddrHelpInfo *addrhelper);
+/// VerifyMessage 함수를 c에서 사용하기 위해 wrapping 한 함수.
+	keys_wrapper_EXPORT int verify_message(const char *strAddress, const char *strSign,
+			const char *strMessage, struct WalletAddrHelpInfo *addrhelper);
 
 #ifdef __cplusplus
 }
