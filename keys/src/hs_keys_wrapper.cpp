@@ -251,3 +251,20 @@ int verify_message(const char *strAddress, const char *strSign, const char *strM
 
 	return result;
 }
+
+#ifdef _WIN32
+
+void test_return_mashal(struct TestStruct * retVal)
+{
+	//struct TestStruct* retVal;
+
+	//retVal = (struct TestStruct*)::CoTaskMemAlloc(sizeof(struct TestStruct));
+
+	sprintf_s(retVal->stringData1, sizeof(retVal->stringData1), "just test stringData1");
+	retVal->ulongData = 100;
+	sprintf_s(retVal->stringData2, sizeof(retVal->stringData2), "just test stringData2");
+	retVal->intData = 500;
+
+	//return retVal;
+}
+#endif

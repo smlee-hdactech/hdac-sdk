@@ -21,5 +21,22 @@ namespace HdacSdk
             [MarshalAs(UnmanagedType.LPStr)]String unspentTxid, uint unspentVOut,
             [MarshalAs(UnmanagedType.LPStr)]String unspentRedeemScript, [MarshalAs(UnmanagedType.LPStr)]String privateKey,
             ref PrivateKeyHelpInfo info);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct TestStruct
+        {
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+            public String stringData1;
+            public readonly UInt64 ulongData;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 200)]
+            public String stringData2;
+            public readonly Int32 intData;
+        }
+
+        [DllImport("keys_wrapper.dll", CallingConvention = CallingConvention.Cdecl)]
+        extern public static void test_return_mashal(ref TestStruct result);
+        //[return: MarshalAs(UnmanagedType.LPStruct)]
+        //extern public static TestStruct test_return_mashal();
     }
 }

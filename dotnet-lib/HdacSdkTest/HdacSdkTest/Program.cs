@@ -14,6 +14,12 @@ namespace HdacSdkTest
     {
         static void Main(string[] args)
         {
+            Keys.TestStruct result = new Keys.TestStruct();
+            Keys.test_return_mashal(ref result);
+            Console.WriteLine("result : {0}, {1}", result.ulongData, result.intData);
+            Console.WriteLine("result string : {0}, {1}", result.stringData1, result.stringData2);
+            return;
+
             BitnetClient client = new BitnetClient("http://13.125.145.98:4260");
             client.Credentials = new NetworkCredential("hdacrpc", "1234");
             var p1 = client.GetBlockchainParams();

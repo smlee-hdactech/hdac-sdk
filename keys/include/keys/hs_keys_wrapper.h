@@ -35,6 +35,14 @@ struct WalletAddrHelpInfo {
 	char addrChecksum[10];
 };
 
+struct TestStruct {
+	char stringData1[100];
+	uint64_t ulongData;
+
+	char stringData2[200];
+	int32_t intData;
+};
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -44,6 +52,8 @@ extern "C" {
 	keys_wrapper_EXPORT char* create_stream_publish_tx_shp(const char* streamKey, const char* streamItem, const char* createTxid,
 		const char* unspentScriptPubKey, const char* unspentTxid, uint32_t unspentVOut,
 		const char* unspentRedeemScript, const char* privateKey, struct PrivateKeyHelpInfo *helper);
+
+	keys_wrapper_EXPORT void test_return_mashal(struct TestStruct* result);
 
 	keys_wrapper_EXPORT keypairs_type_t *create_key_pairs_shp(struct PrivateKeyHelpInfo *privatehelper,
 			struct WalletAddrHelpInfo *addrhelper);
@@ -57,8 +67,7 @@ extern "C" {
 			struct PrivateKeyHelpInfo *privatehelper, struct WalletAddrHelpInfo *addrhelper);
 
 	keys_wrapper_EXPORT int verify_message_shp(const char *strAddress, const char *strSign,
-			const char *strMessage, struct WalletAddrHelpInfo *addrhelper);
-
+			const char *strMessage, struct WalletAddrHelpInfo *addrhelper);	
 #endif		
 
 /// createStreamPublishTx 함수를 c에서 사용 하기 위해 wrapping 한 함수.
