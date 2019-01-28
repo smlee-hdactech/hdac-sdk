@@ -45,7 +45,7 @@ extern "C" {
 		const char* unspentScriptPubKey, const char* unspentTxid, uint32_t unspentVOut,
 		const char* unspentRedeemScript, const char* privateKey, struct PrivateKeyHelpInfo *helper);
 
-	keys_wrapper_EXPORT KeyPairs_type_t *create_key_pairs_shp(struct PrivateKeyHelpInfo *privatehelper,
+	keys_wrapper_EXPORT keypairs_type_t *create_key_pairs_shp(struct PrivateKeyHelpInfo *privatehelper,
 			struct WalletAddrHelpInfo *addrhelper);
 
 	keys_wrapper_EXPORT char *create_asset_send_tx_shp(const char *toAddr, double quantity, const char *issueTxid, int multiple,
