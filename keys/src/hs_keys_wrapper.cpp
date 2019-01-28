@@ -131,8 +131,8 @@ char * create_stream_publish_tx(const char* streamKey, const char* streamItem, c
  * @return KeyPairs
  *
  */
-keypairs_type_t *create_key_pairs(struct PrivateKeyHelpInfo *privatehelper,
-			  		struct WalletAddrHelpInfo *addrhelper)
+keypairs_type_t *create_key_pairs(const struct PrivateKeyHelpInfo *privatehelper,
+			  		const struct WalletAddrHelpInfo *addrhelper)
 {
 	PrivateKeyHelperConstant privHelper(privatehelper->privateKeyPrefix, privatehelper->addrChecksum);
 	WalletAddrHelperConstant addrHelper(addrhelper->pubKeyAddrPrefix, addrhelper->scriptAddrPrefix, addrhelper->addrChecksum);
@@ -254,17 +254,15 @@ int verify_message(const char *strAddress, const char *strSign, const char *strM
 
 #ifdef _WIN32
 
-void test_return_mashal(struct TestStruct * retVal)
+void create_key_pairs_shp(const PrivateKeyHelpInfo * privatehelper, const WalletAddrHelpInfo * addrhelper, keypairs_type_t * out)
 {
-	//struct TestStruct* retVal;
+	keypairs_type_t *keyPairs = create_key_pairs(privatehelper, addrhelper);
 
-	//retVal = (struct TestStruct*)::CoTaskMemAlloc(sizeof(struct TestStruct));
+	strcpy_s(out->privatekey, sizeof(out->privatekey), keyPairs->privatekey);
+	strcpy_s(out->pubkey, sizeof(out->pubkey), keyPairs->pubkey);
+	strcpy_s(out->pubkeyhash, sizeof(out->pubkeyhash), keyPairs->pubkeyhash);
+	strcpy_s(out->walletaddr, sizeof(out->walletaddr), keyPairs->walletaddr);
 
-	sprintf_s(retVal->stringData1, sizeof(retVal->stringData1), "just test stringData1");
-	retVal->ulongData = 100;
-	sprintf_s(retVal->stringData2, sizeof(retVal->stringData2), "just test stringData2");
-	retVal->intData = 500;
-
-	//return retVal;
+	free(keyPairs);
 }
 #endif

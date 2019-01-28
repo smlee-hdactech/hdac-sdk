@@ -53,10 +53,8 @@ extern "C" {
 		const char* unspentScriptPubKey, const char* unspentTxid, uint32_t unspentVOut,
 		const char* unspentRedeemScript, const char* privateKey, struct PrivateKeyHelpInfo *helper);
 
-	keys_wrapper_EXPORT void test_return_mashal(struct TestStruct* result);
-
-	keys_wrapper_EXPORT keypairs_type_t *create_key_pairs_shp(struct PrivateKeyHelpInfo *privatehelper,
-			struct WalletAddrHelpInfo *addrhelper);
+	keys_wrapper_EXPORT void create_key_pairs_shp(const struct PrivateKeyHelpInfo *privatehelper,
+			const struct WalletAddrHelpInfo *addrhelper, keypairs_type_t *out);
 
 	keys_wrapper_EXPORT char *create_asset_send_tx_shp(const char *toAddr, double quantity, const char *issueTxid, int multiple,
 			const char *unspentScriptPubKey, const char *unspentTxid, uint32_t unspentVout,
@@ -75,8 +73,8 @@ extern "C" {
 			const char* unspentScriptPubKey, const char* unspentTxid, uint32_t unspentVOut,
 			const char* unspentRedeemScript, const char* privateKey, struct PrivateKeyHelpInfo *helper);
 /// createKeyPairs 함수를 c에서 사용 하기 위해 wrapping 한 함수.
-	keys_wrapper_EXPORT keypairs_type_t *create_key_pairs(struct PrivateKeyHelpInfo *privatehelper,
-			struct WalletAddrHelpInfo *addrhelper);
+	keys_wrapper_EXPORT keypairs_type_t *create_key_pairs(const struct PrivateKeyHelpInfo *privatehelper,
+			const struct WalletAddrHelpInfo *addrhelper);
 /// createAssetSendTx 함수를 c에서 사용 하기 위해 wrapping 한 함수.
 	keys_wrapper_EXPORT char *create_asset_send_tx(const char *toAddr, double quantity, const char *issueTxid, int multiple,
 			const char *unspentScriptPubKey, const char *unspentTxid, uint32_t unspentVout,

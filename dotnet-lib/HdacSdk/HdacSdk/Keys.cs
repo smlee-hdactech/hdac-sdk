@@ -34,9 +34,35 @@ namespace HdacSdk
             public readonly Int32 intData;
         }
 
+        [StructLayout(LayoutKind.Sequential)]
+        public struct Keypairs
+        {
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+            public String privateKey;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+            public String pubKey;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+            public String pubKeyHash;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+            public String walletAddr;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct WalletAddrHelpInfo
+        {
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10)]
+            public String pubKeyAddrPrefix;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10)]
+            public String scriptAddrPrefix;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10)]
+            public String addrChecksum;
+        }
+
         [DllImport("keys_wrapper.dll", CallingConvention = CallingConvention.Cdecl)]
-        extern public static void test_return_mashal(ref TestStruct result);
-        //[return: MarshalAs(UnmanagedType.LPStruct)]
-        //extern public static TestStruct test_return_mashal();
+        extern public static void create_key_pairs_shp(ref PrivateKeyHelpInfo privatehelper,
+			ref WalletAddrHelpInfo addrhelper, ref Keypairs result);
     }
 }
