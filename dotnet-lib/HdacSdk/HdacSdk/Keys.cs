@@ -62,6 +62,23 @@ namespace HdacSdk
         }
 
         [DllImport("keys_wrapper.dll", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.LPStr)]
+        extern public static string create_asset_send_tx_shp([MarshalAs(UnmanagedType.LPStr)]String toAddr, double quantity,
+                [MarshalAs(UnmanagedType.LPStr)]String issueTxid, int multiple, [MarshalAs(UnmanagedType.LPStr)]String unspentScriptPubKey,
+                [MarshalAs(UnmanagedType.LPStr)]String unspentTxid, uint unspentVout, double unspentQty, [MarshalAs(UnmanagedType.LPStr)]String unspentRedeemScript,
+                [MarshalAs(UnmanagedType.LPStr)]String privateKey,
+                ref PrivateKeyHelpInfo privatehelper, ref WalletAddrHelpInfo addrhelper);
+
+        [DllImport("keys_wrapper.dll", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.LPStr)]
+        extern public static string sign_message_shp([MarshalAs(UnmanagedType.LPStr)]String strAddress, [MarshalAs(UnmanagedType.LPStr)]String strMessage,
+                ref PrivateKeyHelpInfo privatehelper, ref WalletAddrHelpInfo addrhelper);
+
+        [DllImport("keys_wrapper.dll", CallingConvention = CallingConvention.Cdecl)]
+        extern public static int verify_message_shp([MarshalAs(UnmanagedType.LPStr)]String strAddress, [MarshalAs(UnmanagedType.LPStr)]String strSign,
+                [MarshalAs(UnmanagedType.LPStr)]String strMessage, ref WalletAddrHelpInfo addrhelper);
+
+        [DllImport("keys_wrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         extern public static void create_key_pairs_shp(ref PrivateKeyHelpInfo privatehelper,
 			ref WalletAddrHelpInfo addrhelper, ref Keypairs result);
     }

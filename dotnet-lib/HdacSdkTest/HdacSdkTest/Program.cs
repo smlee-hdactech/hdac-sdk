@@ -86,6 +86,39 @@ namespace HdacSdkTest
 
             Console.WriteLine("\n2. Test for publishing stream");
             Console.WriteLine("raw-tx: {0}", checkRet);
+
+            
+            checkRet = Keys.create_asset_send_tx_shp("1WCRNaPb3jAjb4GE9t34uLiLtPseA8JKEvdtg5", 10,
+                                             "44fdb8103f4e13d6ef2011d54933f2747b455c613b3cfe4886d187330d50b640", 10,
+                                             "76a9143ab53060d41b5fa662a2d4575a69464b5759839588ac1c73706b7174f23349d51120efd6134e3f10b8fd44ac2600000000000075",
+                                             "030374d736a70c5faf5d16887d2263e812cb896938bedeefd44c128417e2460a", 1,
+                                             990.0,
+                                             "",
+                                             "VHXjccrTPdRXG8asyos5oqvw6mhWtqASkbFsVuBnkpi4WXn2jr8eMwwp",
+                                             ref info,
+                                             ref walletInfo
+                                             );
+            Console.WriteLine("\n3. Test for create asset send tx");
+            Console.WriteLine("raw-tx: {0}", checkRet);
+            
+            int Ret = Keys.verify_message_shp(
+                        "18wD7MBodeTYRAvN5bRuWYB11jwHdkGVCBLSnB",
+                        "IJKPyPUFEgnlrcixdqbfgAks89Gi29uzGAyMUYICz8VAWEs6VlOpjzregZ2WrcarZoNtXD7aLC2S6VWJ8XowH9c=",
+                        "Hdac Technology, Solution Dev Team, Test Text.",
+                        ref walletInfo);
+            Console.WriteLine("\n4. Test for verify message");
+            Console.Write("true(1) or false(0) [");
+            Console.Write(Ret);
+            Console.WriteLine("]");
+            
+            checkRet = Keys.sign_message_shp(
+                        "VHXjccrTPdRXG8asyos5oqvw6mhWtqASkbFsVuBnkpi4WXn2jr8eMwwp",
+                        "Hdac Technology, Solution Dev Team, Test Text.",
+                        ref info, ref walletInfo);
+            Console.WriteLine("\n5. Test for sign message");
+            Console.Write("[");
+            Console.Write(checkRet);
+            Console.WriteLine("]");
         }
     }
 }
