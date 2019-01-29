@@ -292,6 +292,15 @@ void testAnalyzeTx(const string& txStr)
 	cout << result << endl;
 }
 
+void testAnalyzeMultisig()
+{
+	string testStr = "0100000001eeaf0c4c355f14b84266a1f5fa6341f8e93b0e48917b8813eb76928a39c6bc2e000000006b483045022100bd876d60cca7c02007f2852ba6dcaad78bfa21a6f46cde9bd1826e3ec6381b420220241c8f7b1ae8bb6147c8d7df5b9aab0f47a257c2f5ad44309aa410dc19cf050201210287b7aeb453d64da31c20c316a7ec11b484327b3881b13d5f3818ff34ff821d6effffffff02000000000000000035a9144671c47a9d20c240a291661520d4af51df08fb0b871c73706b712f2a1e55743c2cf767b55a1cf30af3a90a000000000000007500000000000000001976a914d806940ddc6d27dab4c2de6f1d6aca0aff20d0c688ac00000000";
+	auto jsonResult = analyzeTx(testStr);
+	auto result = write_string(Value(jsonResult), true);
+	cout << "multisig result: " << endl;
+	cout << result << endl;
+}
+
 int main()
 {
     cout << "1. test sha256 of \"This is test message\"" << endl;
@@ -326,6 +335,9 @@ int main()
 
 	cout << "8. test analyze" << endl;
 	testAnalyzeTx(assetSendTx);
+
+	cout << "9. multisig anlaysis" << endl;
+	testAnalyzeMultisig();
 
     return 0;
 }
