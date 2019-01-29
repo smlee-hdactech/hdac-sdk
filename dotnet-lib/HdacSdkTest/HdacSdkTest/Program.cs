@@ -12,13 +12,41 @@ namespace HdacSdkTest
 {
     class Program
     {
+
+	private static void TestSignVerifyMessage(string privatekey, string walletaddr, 
+                    Keys.PrivateKeyHelpInfo info, Keys.WalletAddrHelpInfo walletInfo,
+                    BitnetClient client) {
+
+            string checkRet = Keys.sign_message_shp(
+                        privatekey,
+                        "Hdac Technology, Solution Dev Team, Test Text.",
+                        ref info, ref walletInfo);
+            Console.WriteLine("\n4. Test for sign message");
+            Console.WriteLine("["+ checkRet + "]");
+            var s1 = client.SignMessage(privatekey,
+                        "Hdac Technology, Solution Dev Team, Test Text.");
+            Console.WriteLine("RPC signmessage result : {0}", s1);
+
+            int Ret = Keys.verify_message_shp(
+            walletaddr,
+            checkRet,
+            "Hdac Technology, Solution Dev Team, Test Text.",
+            ref walletInfo);
+            Console.WriteLine("\n5. Test for verify message");
+            Console.WriteLine("true(1) or false(0) : [" + Ret + "]");
+            var v1 = client.VerifyMessage(walletaddr,
+            checkRet,
+            "Hdac Technology, Solution Dev Team, Test Text.");
+            Console.WriteLine("RPC verifymessage result : {0}", v1);
+
+        }
+
         static void Main(string[] args)
         {
             //Keys.TestStruct result = new Keys.TestStruct();
             //Keys.test_return_mashal(ref result);
             //Console.WriteLine("result : {0}, {1}", result.ulongData, result.intData);
             //Console.WriteLine("result string : {0}, {1}", result.stringData1, result.stringData2);
-            
 
             BitnetClient client = new BitnetClient("http://13.125.145.98:4260");
             client.Credentials = new NetworkCredential("hdacrpc", "1234");
@@ -87,7 +115,6 @@ namespace HdacSdkTest
             Console.WriteLine("\n2. Test for publishing stream");
             Console.WriteLine("raw-tx: {0}", checkRet);
 
-            
             checkRet = Keys.create_asset_send_tx_shp("1WCRNaPb3jAjb4GE9t34uLiLtPseA8JKEvdtg5", 10,
                                              "44fdb8103f4e13d6ef2011d54933f2747b455c613b3cfe4886d187330d50b640", 10,
                                              "76a9143ab53060d41b5fa662a2d4575a69464b5759839588ac1c73706b7174f23349d51120efd6134e3f10b8fd44ac2600000000000075",
@@ -101,24 +128,10 @@ namespace HdacSdkTest
             Console.WriteLine("\n3. Test for create asset send tx");
             Console.WriteLine("raw-tx: {0}", checkRet);
             
-            int Ret = Keys.verify_message_shp(
-                        "18wD7MBodeTYRAvN5bRuWYB11jwHdkGVCBLSnB",
-                        "IJKPyPUFEgnlrcixdqbfgAks89Gi29uzGAyMUYICz8VAWEs6VlOpjzregZ2WrcarZoNtXD7aLC2S6VWJ8XowH9c=",
-                        "Hdac Technology, Solution Dev Team, Test Text.",
-                        ref walletInfo);
-            Console.WriteLine("\n4. Test for verify message");
-            Console.Write("true(1) or false(0) [");
-            Console.Write(Ret);
-            Console.WriteLine("]");
-            
-            checkRet = Keys.sign_message_shp(
-                        "VHXjccrTPdRXG8asyos5oqvw6mhWtqASkbFsVuBnkpi4WXn2jr8eMwwp",
-                        "Hdac Technology, Solution Dev Team, Test Text.",
-                        ref info, ref walletInfo);
-            Console.WriteLine("\n5. Test for sign message");
-            Console.Write("[");
-            Console.Write(checkRet);
-            Console.WriteLine("]");
+		TestSignVerifyMessage(keypairs.privateKey, keypairs.walletAddr, info, walletInfo, client);
+
+		Console.WriteLine("end");
+
         }
     }
 }
