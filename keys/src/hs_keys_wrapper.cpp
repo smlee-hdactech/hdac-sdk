@@ -83,6 +83,55 @@ char * create_stream_publish_tx_shp(const char* streamKey, const char* streamIte
 	// Return pszReturn.
 	return pszReturn;
 }
+
+char *create_asset_send_tx_shp(const char *toAddr, double quantity, const char *issueTxid, int multiple,
+	const char *unspentScriptPubKey, const char *unspentTxid, uint32_t unspentVout,
+	double unspentQty, const char * unspentRedeemScript, const char *privateKey,
+	struct PrivateKeyHelpInfo *privatehelper, struct WalletAddrHelpInfo *addrhelper)
+{
+	char * strTx = create_asset_send_tx(toAddr, quantity, issueTxid, multiple,
+		unspentScriptPubKey, unspentTxid, unspentVout, unspentQty, unspentRedeemScript, privateKey,
+		privatehelper, addrhelper);
+
+	unsigned long ulSize = strlen(strTx) + sizeof(char);
+	char* pszReturn = NULL;
+
+	pszReturn = (char*)::CoTaskMemAlloc(ulSize);
+	// Copy the contents of szSampleString
+	// to the memory pointed to by pszReturn.
+	strcpy_s(pszReturn, ulSize, strTx);
+
+	delete[] strTx;
+	// Return pszReturn.
+	return pszReturn;
+}
+
+char *sign_message_shp(const char *strAddress, const char *strMessage,
+	struct PrivateKeyHelpInfo *privatehelper, struct WalletAddrHelpInfo *addrhelper)
+{
+	char * strSignmsg = sign_message(strAddress, strMessage, privatehelper, addrhelper);
+
+	unsigned long ulSize = strlen(strSignmsg) + sizeof(char);
+	char* pszReturn = NULL;
+
+	pszReturn = (char*)::CoTaskMemAlloc(ulSize);
+	// Copy the contents of szSampleString
+	// to the memory pointed to by pszReturn.
+	strcpy_s(pszReturn, ulSize, strSignmsg);
+
+	delete[] strSignmsg;
+	// Return pszReturn.
+	return pszReturn;
+}
+
+int verify_message_shp(const char *strAddress, const char *strSign,
+	const char *strMessage, struct WalletAddrHelpInfo *addrhelper)
+{
+	int verify = verify_message(strAddress, strSign, strMessage, addrhelper);
+
+	return verify;
+}
+
 #endif
 
 /**
