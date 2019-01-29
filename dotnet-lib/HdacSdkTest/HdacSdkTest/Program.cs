@@ -17,16 +17,20 @@ namespace HdacSdkTest
                     Keys.PrivateKeyHelpInfo info, Keys.WalletAddrHelpInfo walletInfo,
                     BitnetClient client) {
 
+            // local sign message
             string checkRet = Keys.sign_message_shp(
                         privatekey,
                         "Hdac Technology, Solution Dev Team, Test Text.",
                         ref info, ref walletInfo);
             Console.WriteLine("\n4. Test for sign message");
             Console.WriteLine("["+ checkRet + "]");
+
+            // rpc sign message
             var s1 = client.SignMessage(privatekey,
                         "Hdac Technology, Solution Dev Team, Test Text.");
             Console.WriteLine("RPC signmessage result : {0}", s1);
 
+            // local verify message
             int Ret = Keys.verify_message_shp(
             walletaddr,
             checkRet,
@@ -34,6 +38,8 @@ namespace HdacSdkTest
             ref walletInfo);
             Console.WriteLine("\n5. Test for verify message");
             Console.WriteLine("true(1) or false(0) : [" + Ret + "]");
+
+            // rpc verify message
             var v1 = client.VerifyMessage(walletaddr,
             checkRet,
             "Hdac Technology, Solution Dev Team, Test Text.");
