@@ -7,6 +7,7 @@
 #include <rpc/rpcclient.h>
 #include <rpc/hs_rpc.h>
 #include <helpers/hs_helpers.h>
+#include <primitives/hs_primitives.h>
 
 #include <json_spirit/json_spirit_reader_template.h>
 #include <json_spirit/json_spirit_writer_template.h>
@@ -158,7 +159,7 @@ void testRawTransactionForStreamPublish()
     cout << "raw transaction: " << txHex << endl;
 }
 
-void testRawTransactionForAssetSend()
+string testRawTransactionForAssetSend()
 {
     vector<tuple<string, string>> addrNPrivates = {
         make_tuple("1WCRNaPb3jAjb4GE9t34uLiLtPseA8JKEvdtg5", "V6X4NaaDQSTgXdAcCzUrSxWqAuFcd53TRXRqmSafUYEbY5DgGMitPEzk"),
@@ -174,7 +175,7 @@ void testRawTransactionForAssetSend()
     RpcClient client{"13.125.145.98", 4260, "hdacrpc", "1234", "kcc"};
     string resultStr;
     if (!rpcResult(listunspent(client, walletAddr), resultStr))  {
-        return;
+        throw "cannot call listunspent";
     }
 
     Value resultValue;
@@ -225,11 +226,11 @@ void testRawTransactionForAssetSend()
     }
 
     if (!rpcResult(lockunspent(client, false, txid, vout), resultStr))  {
-        return;
+		throw "cannot call lockunspent";
     }
 
     if (!rpcResult(listlockunspent(client), resultStr))  {
-        return;
+		throw "cannot call listlockunspent";;
     }
 
     //Value resultValue;
@@ -248,11 +249,11 @@ void testRawTransactionForAssetSend()
     }
 
     if (!rpcResult(lockunspent(client, true, txid, vout), resultStr))  {
-        return;
+		throw "cannot call listlockunspent";
     }
 
     if (!rpcResult(listassets(client, assetName), resultStr))  {
-        return;
+        throw "cannot call listassets";
     }
 
     string issueTxid;
@@ -275,12 +276,20 @@ void testRawTransactionForAssetSend()
                 KeysHelperWithRpc(client).privHelper(),
                 KeysHelperWithRpc(client).addrHelper());
     cout << "raw transaction: " << txHex << endl;
+	return txHex;
 }
 
 void testHashFromFile()
 {
     auto result = hashFromFile("video1.mp4");
     cout << "file hash: " << HexStr(result) << endl;
+}
+
+void testAnalyzeTx(const string& txStr)
+{
+	auto jsonResult = analyzeTx(txStr);
+	auto result = write_string(Value(jsonResult), true);
+	cout << result << endl;
 }
 
 int main()
@@ -308,11 +317,15 @@ int main()
     }
 
     cout << "7. asset send test" << endl;
+	string assetSendTx;
     try {
-        testRawTransactionForAssetSend();
+		assetSendTx = testRawTransactionForAssetSend();
     } catch(std::exception &e) {
         cout << e.what() << endl;
     }
+
+	cout << "8. test analyze" << endl;
+	testAnalyzeTx(assetSendTx);
 
     return 0;
 }

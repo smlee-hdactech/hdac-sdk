@@ -106,6 +106,15 @@ Object analyzeVout(const CTxOut& vout)
     return parsedObj;
 }
 
+/**
+ *
+ * @brief raw 트랜잭션 문자열을 분석한다.
+ * @details raw 트랜잭션의 hex값으로 표시된 값을 파싱하여 세부값들을 JSON 객체로 만든다.
+ * @param txHex raw 트랜잭션의 hex값으로 표시된 값
+ *
+ * @return 분석된 JSON 객체
+ *
+ */
 Object analyzeTx(const string& txHex)
 {    
     CTransaction tx;

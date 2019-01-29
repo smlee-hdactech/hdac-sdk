@@ -11,6 +11,7 @@ target_include_directories(hdac_moduleTest
     ${CMAKE_SOURCE_DIR}/rpc/include
     ${CMAKE_SOURCE_DIR}/keys/include
     ${CMAKE_SOURCE_DIR}/script/include
+	${CMAKE_SOURCE_DIR}/primitives/include
     ${CMAKE_SOURCE_DIR}/helpers/include
     ${JSONSPIRIT_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
