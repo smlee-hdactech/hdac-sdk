@@ -3,7 +3,7 @@
 
 #include <string>
 #include <memory>
-
+#include "bitcoinaddress.h"
 /**
  *
  * @brief 개인키 정보

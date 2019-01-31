@@ -58,7 +58,7 @@ inline std::string ValueString(const std::vector<unsigned char>& vch)
 }
 
 
-std::string analyzeScript(const CScript& script)
+std::string analyzeScript(const CScript& script, function<string(const vector<unsigned char>&, bool)> convertAddr = nullptr)
 {
     opcodetype opcode;
     std::vector<unsigned char> vch;
@@ -75,10 +75,22 @@ std::string analyzeScript(const CScript& script)
             str += "[error]";
             return str;
         }
-        if (0 <= opcode && opcode <= OP_PUSHDATA4)
-            str += strprintf("%02x %s", vch.size(), ValueString(vch));
-        else
-            str += strprintf("%s(%02x)", GetOpName(opcode), opcode);
+		if (0 <= opcode && opcode <= OP_PUSHDATA4) {
+			if (vch.size() == 20) {
+				if (convertAddr) {
+					str += strprintf("%02x %s(%s)", vch.size(), convertAddr(vch, script.IsPayToScriptHash()), ValueString(vch));
+				}
+				else {
+					str += strprintf("%02x %s", vch.size(), ValueString(vch));
+				}
+			}
+			else {
+				str += strprintf("%02x %s", vch.size(), ValueString(vch));
+			}
+		}
+		else {
+			str += strprintf("%s(%02x)", GetOpName(opcode), opcode);
+		}
     }
 
     return str;
@@ -95,14 +107,15 @@ Object analyzeVin(const CTxIn& vin)
     return parsedObj;
 }
 
-Object analyzeVout(const CTxOut& vout)
+Object analyzeVout(const CTxOut& vout, function<string(const vector<unsigned char>&, bool)> convertAddr = nullptr)
 {
     ostringstream stm;
     stm << setfill('0') << setw(16) << hex << vout.nValue;
 
     Object parsedObj;
     parsedObj.push_back(Pair("nValue", stm.str()));
-    parsedObj.push_back(Pair("scriptPubKey", analyzeScript(vout.scriptPubKey)));
+    parsedObj.push_back(Pair("scriptPubKey", analyzeScript(vout.scriptPubKey, convertAddr)));
+	parsedObj.push_back(Pair("isScriptHash", vout.scriptPubKey.IsPayToScriptHash()));
     return parsedObj;
 }
 
@@ -115,7 +128,7 @@ Object analyzeVout(const CTxOut& vout)
  * @return 분석된 JSON 객체
  *
  */
-Object analyzeTx(const string& txHex)
+Object analyzeTx(const string& txHex, function<string(const vector<unsigned char>&, bool)> convertAddr)
 {    
     CTransaction tx;
     vector<unsigned char> txData(ParseHex(txHex));
@@ -140,7 +153,7 @@ Object analyzeTx(const string& txHex)
     parsedObj.push_back(Pair("vout-count", strprintf("%02x", tx.vout.size())));
 
     for (unsigned int i = 0; i < tx.vout.size(); i++) {
-        parsedObj.push_back(Pair(strprintf("vout[%d]", i), analyzeVout(tx.vout[i])));
+        parsedObj.push_back(Pair(strprintf("vout[%d]", i), analyzeVout(tx.vout[i], convertAddr)));
     }
 
     parsedObj.push_back(Pair("nLockTime", strprintf("%08x", tx.nLockTime)));

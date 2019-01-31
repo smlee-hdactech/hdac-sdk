@@ -36,13 +36,15 @@ public:
 
 void testPubkeyToAddr()
 {
-    CPubKey pubkey(ParseHex("027e75736b41474547b7e2443d7235f4030cbb378093bbd2e98ea36ded6d703c2b"));
+    //CPubKey pubkey(ParseHex("027e75736b41474547b7e2443d7235f4030cbb378093bbd2e98ea36ded6d703c2b"));
+	CPubKey pubkey(ParseHex("0287b7aeb453d64da31c20c316a7ec11b484327b3881b13d5f3818ff34ff821d6e"));
     cout << "pubKey: " << HexStr(pubkey) << endl;
 
     //cout << hex << checksum << endl;
     CBitcoinAddress addr(pubkey.GetID(), SampleWalletAddrHelper());
+	cout << "id: " << pubkey.GetID().ToString() << endl;
 
-    cout << "address : " << addr.ToString() << endl;
+    cout << "address: " << addr.ToString() << endl;
 }
 
 void testMultisigScript()

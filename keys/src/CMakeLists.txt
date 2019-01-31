@@ -98,6 +98,7 @@ endif()
 set(export_headers
     ../include/${prj_base}/hs_keys.h
     ../include/${prj_base}/keyshelper.h
+	../include/${prj_base}/bitcoinaddress.h
     )
 #install(FILES ${headers} DESTINATION include/hdac/${prj_base})
 install(FILES ${export_headers} DESTINATION include/hdac/${prj_base})

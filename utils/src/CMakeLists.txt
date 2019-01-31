@@ -52,7 +52,8 @@ install(TARGETS ${prj_base}_static
 endif()        
 
 file(GLOB headers ../include/${prj_base}/*.h )
-set(export_headers ../include/${prj_base}/utilstrencodings.h)
+set(export_headers ../include/${prj_base}/utilstrencodings.h
+	../include/${prj_base}/zero_after_free_allocator.h)
 #install(FILES ${headers} DESTINATION include/hdac/${prj_base})
 install(FILES ${export_headers} DESTINATION include/hdac/${prj_base})
 install(FILES ${CMAKE_BINARY_DIR}/${prj_base}/src/hs_${prj_base}.pc DESTINATION lib/pkgconfig)

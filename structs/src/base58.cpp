@@ -3,6 +3,7 @@
 #include <cstring>
 #include "hash.h"
 #include <utils/utility.h>
+#include <openssl/crypto.h> // for OPENSSL_cleanse()
 
 /** All alphanumeric characters except for "0", "I", "O", and "l" */
 static const char* pszBase58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";

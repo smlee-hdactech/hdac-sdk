@@ -2,7 +2,8 @@
 #define BASE58_H
 
 #include <utils/utilstrencodings.h>
-#include <utils/allocators.h>
+//#include <utils/allocators.h>
+#include <utils/zero_after_free_allocator.h>
 #include <vector>
 /**
  * Encode a byte sequence as a base58-encoded string.
@@ -54,7 +55,7 @@ protected:
     //! the version byte(s)
     std::vector<unsigned char> vchVersion;
 
-    //! the actually encoded data
+    //! the actually encoded data	
     typedef std::vector<unsigned char, zero_after_free_allocator<unsigned char> > vector_uchar;
     vector_uchar vchData;
 
