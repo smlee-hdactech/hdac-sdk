@@ -319,71 +319,11 @@ void testAnalyzeMultisig()
 	};
 
 	Object jsonResult = analyzeTx(testStr, convertAddr);
-	auto voutCount = stoi(find_value(jsonResult, "vout-count").get_str());
 
-#if 0
-	//cout << "vout-count" << voutCount << endl;
-	for (int i = 0; i < voutCount; i++) {
-		ostringstream stm;
-		stm << "vout[" << i << "]";
-		auto voutObj = find_value(jsonResult, stm.str()).get_obj();
-		//cout << stm.str() << ": " << write_string(Value(voutObj)) << endl;
-		auto scriptPubKey = find_value(voutObj, "scriptPubKey").get_str();
-		auto isScriptHash = find_value(voutObj, "isScriptHash").get_bool();
-		//cout << "scriptPubKey" << ": " << scriptPubKey << endl;
-		istringstream iStm(scriptPubKey);
-		ostringstream oStm;
-		string parsed;
-		iStm >> parsed;
-		//cout << "parsed: ";
-		while (!iStm.eof()) {
-			iStm >> parsed;
-			
-			if (parsed.size() == 40) {	// hexa byte size = 20
-				auto pubKeyHash = ParseHex(parsed);
-				//reverse(pubKeyHash.begin(), pubKeyHash.end());
-				if (isScriptHash) {
-					CBitcoinAddress addrH(CScriptID(uint160(pubKeyHash)), helper.addrHelper());
-					if (addrH.IsValid()) {
-						//cout << addrH.ToString() << endl;
-						oStm << addrH.ToString();
-					}
-				}
-				else {
-					CBitcoinAddress addr(CKeyID(uint160(pubKeyHash)), helper.addrHelper());
-					if (addr.IsValid()) {
-						//cout << addr.ToString() << endl;
-						oStm << addr.ToString();
-					}
-				}
-				oStm << "(" << parsed << ")";
-			}
-			else {
-				oStm << parsed;
-			}
-			oStm << " ";
-			//cout << parsed;
-		}
-		//cout << endl;
-		cout << "oStm: " << oStm.str() << endl;
-	}
-	Mapped_obj obj;
-	obj_to_map(jsonResult, obj);
-	obj["vout[0]"] = Value("test0");
-	obj["vout[1]"] = Value("test1");
-	Object resultObj;
-	map_to_obj(obj, resultObj);
-	//obj[]
-#endif
 	auto result = write_string(Value(jsonResult), true);
 	cout << "multisig result: " << endl;
 	cout << result << endl;
 
-#if 0
-	auto resultChanged = write_string(Value(resultObj), true);
-	cout << "resultChanged result: " << endl;
-	cout << resultChanged << endl;
-#endif
 }
 
 int main()
