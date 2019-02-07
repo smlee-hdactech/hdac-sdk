@@ -85,7 +85,18 @@ std::string analyzeScript(const CScript& script, function<string(const vector<un
 				}
 			}
 			else {
-				str += strprintf("%02x %s", vch.size(), ValueString(vch));
+				if (opcode == 0 && vch.size() == 0) {
+					str += strprintf("%s(%02x)", GetOpName(opcode), opcode);
+				}
+				else {					
+					if (vch[0] >= OP_1 && vch[1] <= OP_16) {
+						CScript scr(vch.begin(), vch.end());
+						str += analyzeScript(scr);
+					}
+					else {
+						str += strprintf("%02x %s", vch.size(), ValueString(vch));
+					}
+				}
 			}
 		}
 		else {
