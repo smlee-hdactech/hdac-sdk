@@ -69,6 +69,46 @@ KeyPairs createKeyPairs(const IPrivateKeyHelper &privateHelper, const IWalletAdd
 #define MC_AST_ASSET_REF_TYPE_OFFSET        32
 #define MC_AST_ASSET_REF_TYPE_SIZE           4
 
+void initAssetMetadataBuffer(const string& issueTxid, unsigned char buf[MC_AST_ASSET_FULLREF_BUF_SIZE])
+{
+	auto hexTxid = ParseHex(issueTxid);
+	std::reverse(hexTxid.begin(), hexTxid.end());
+		
+	memset(buf, 0, MC_AST_ASSET_FULLREF_BUF_SIZE);
+	memcpy(buf + MC_AST_SHORT_TXID_OFFSET, hexTxid.data() + MC_AST_SHORT_TXID_OFFSET, MC_AST_SHORT_TXID_SIZE);
+
+	uint32_t type = MC_AST_ASSET_REF_TYPE_SHORT_TXID;
+	mc_PutLE((unsigned char*)buf + MC_AST_ASSET_REF_TYPE_OFFSET, &type, MC_AST_ASSET_REF_TYPE_SIZE);
+}
+
+void appendAssetSend(int64_t quantity, unsigned char initializedBuf[MC_AST_ASSET_FULLREF_BUF_SIZE], CScript &destinedScript)
+{	
+	mc_PutLE((unsigned char*)initializedBuf + MC_AST_ASSET_QUANTITY_OFFSET, &quantity, MC_AST_ASSET_QUANTITY_SIZE);
+
+	mc_Buffer buffer;
+	mc_InitABufferDefault(&buffer);	
+	buffer.Add(initializedBuf);
+
+	mc_Script dropScript;
+	dropScript.SetAssetQuantities(&buffer, MC_SCR_ASSET_SCRIPT_TYPE_TRANSFER);
+
+	//CScript scriptSend = GetScriptForDestination(addressRet);
+
+	size_t elem_size;
+	const unsigned char *elem;
+
+	for (int element = 0; element < dropScript.GetNumElements(); element++)
+	{
+		elem = dropScript.GetData(element, &elem_size);
+		if (elem) {
+			destinedScript << vector<unsigned char>(elem, elem + elem_size) << OP_DROP;
+		}
+		else {
+			throw to_string(RPC_INTERNAL_ERROR) + ": Invalid script";
+		}
+	}
+}
+
 /**
  *
  * @brief 개인키 처리를 위한 정보 제공 인터페이스를 가져온다.
@@ -99,65 +139,21 @@ string createAssetSendTx(const string& toAddr, double quantity,
                          const string& unspentRedeemScript, const string& privateKey,
                          const IPrivateKeyHelper& privateHelper, const IWalletAddrHelper& walletHelper)
 {
-    auto hexTxid = ParseHex(issueTxid);
-    std::reverse(hexTxid.begin(), hexTxid.end());
+	unsigned char buf[MC_AST_ASSET_FULLREF_BUF_SIZE];
 
-    unsigned char buf[MC_AST_ASSET_FULLREF_BUF_SIZE];
-    memset(buf, 0, MC_AST_ASSET_FULLREF_BUF_SIZE);
-    memcpy(buf+MC_AST_SHORT_TXID_OFFSET, hexTxid.data()+MC_AST_SHORT_TXID_OFFSET, MC_AST_SHORT_TXID_SIZE);
+	initAssetMetadataBuffer(issueTxid, buf);
 
-    uint32_t type = MC_AST_ASSET_REF_TYPE_SHORT_TXID;
-    mc_PutLE((unsigned char*)buf+MC_AST_ASSET_REF_TYPE_OFFSET,&type,MC_AST_ASSET_REF_TYPE_SIZE);
-
-    int64_t qnt = (int64_t)(quantity * multiple + 0.499999);
-    mc_PutLE((unsigned char*)buf+MC_AST_ASSET_QUANTITY_OFFSET,&qnt,MC_AST_ASSET_QUANTITY_SIZE);
-
-    std::unique_ptr<mc_Buffer> buffer(new mc_Buffer);
-    mc_InitABufferDefault(buffer.get());
-    buffer->Clear();
-    buffer->Add(buf);
-
-    std::unique_ptr<mc_Script> dropScript(new mc_Script);
-    dropScript->Clear();
-
-    dropScript->SetAssetQuantities(buffer.get(), MC_SCR_ASSET_SCRIPT_TYPE_TRANSFER);
-
-    CBitcoinAddress toWalletAddress(toAddr, walletHelper);
-    CTxDestination addressRet = toWalletAddress.Get();
-
-    CScript scriptSend=GetScriptForDestination(addressRet);
-    //CKeyID keyIdAddrRet = boost::get<CKeyID>(addressRet);
-    //cout << "toAddr key: " << keyIdAddrRet.ToString() << endl;
-
-    //CScript scriptPubKey=GetScriptForDestination(addressRet);
-
-    size_t elem_size;
-    const unsigned char *elem;
-
-    for(int element=0;element < dropScript->GetNumElements();element++)
-    {
-        elem = dropScript->GetData(element,&elem_size);
-        if(elem)    {
-            //scriptPubKey << vector<unsigned char>(elem, elem + elem_size) << OP_DROP;
-            scriptSend << vector<unsigned char>(elem, elem + elem_size) << OP_DROP;
-        }
-        else    {
-            throw to_string(RPC_INTERNAL_ERROR) + ": Invalid script";
-        }
-    }
-
-
-#if 0
-    std::unique_ptr<mc_Buffer> change_amounts(new mc_Buffer);
-    change_amounts->Initialize(MC_AST_ASSET_QUANTITY_OFFSET,MC_AST_ASSET_FULLREF_BUF_SIZE+sizeof(int),MC_BUF_MODE_MAP);
-    change_amounts->Clear();
-#endif
+	int64_t qnt = (int64_t)(quantity * multiple + 0.499999);
+	CBitcoinAddress toWalletAddress(toAddr, walletHelper);
+	CTxDestination addressRet = toWalletAddress.Get();
+	CScript scriptSend = GetScriptForDestination(addressRet);
+	appendAssetSend(qnt, buf, scriptSend);
 
     // TODO : need to handle multiple scriptPubKeys
     CMutableTransaction txNew;
 
-    CTxOut txout2(0, scriptSend);
-    txNew.vout.push_back(txout2);
+    //CTxOut txout2(0, scriptSend);
+    txNew.vout.push_back(CTxOut(0, scriptSend));
 
     CKey keyFromPriv = keyFromPrivateKey(privateKey, privateHelper);
     CScript scriptChange;
@@ -167,42 +163,23 @@ string createAssetSendTx(const string& toAddr, double quantity,
         scriptChange=GetScriptForDestination(changeAddr);
     }
 
-    int64_t changeQnt = (int64_t)(unspentQty * multiple - qnt);
-    mc_PutLE((unsigned char*)buf+MC_AST_ASSET_QUANTITY_OFFSET,&changeQnt,MC_AST_ASSET_QUANTITY_SIZE);
+	int64_t changeQnt = (int64_t)(unspentQty * multiple - qnt);
+	appendAssetSend(changeQnt, buf, scriptChange);
 
-    buffer->Clear();
-    buffer->Add(buf);
-
-    dropScript->Clear();
-    dropScript->SetAssetQuantities(buffer.get(), MC_SCR_ASSET_SCRIPT_TYPE_TRANSFER);
-
-    for(int element=0;element < dropScript->GetNumElements();element++)
-    {
-        elem = dropScript->GetData(element,&elem_size);
-        if(elem)    {
-            //scriptPubKey << vector<unsigned char>(elem, elem + elem_size) << OP_DROP;
-            scriptChange << vector<unsigned char>(elem, elem + elem_size) << OP_DROP;
-        }
-        else    {
-            // TODO : this is not related to rpc
-            throw to_string(RPC_INTERNAL_ERROR) + ": Invalid script";
-        }
-    }
-
-    CTxOut txout3(0, scriptChange);
-    txNew.vout.push_back(txout3);
+    txNew.vout.push_back(CTxOut(0, scriptChange));
 
     auto pubkeyScript = ParseHex(unspentScriptPubKey);
-    CTxOut txOut1(0, CScript(pubkeyScript.begin(), pubkeyScript.end()));
-    const CScript& script1 = txOut1.scriptPubKey;
+	CScript script1(pubkeyScript.begin(), pubkeyScript.end());
 
     txNew.vin.push_back(CTxIn(uint256(unspentTxid), unspentVOut));
 
+	//makeSigScript(script1, txNew, )
+	// 입력이 여러개일 수 있다. 우선은 하나만 대응한다.
     int nIn = 0;
     int nHashType = SIGHASH_ALL;
 
     uint256 hash = SignatureHash(script1, txNew, nIn, nHashType);
-    cout << "hash: " << HexStr(hash) << endl;
+    //cout << "hash: " << HexStr(hash) << endl;
 
     CTxIn& txin = txNew.vin[nIn];
 
@@ -219,10 +196,11 @@ string createAssetSendTx(const string& toAddr, double quantity,
         uint256 hash2 = SignatureHash(subscript, txNew, nIn, nHashType);
         //cout << "hash2: " << HexStr(hash2) << endl;
         {
-            CScript& scriptSigRet = txin.scriptSig;
+            //CScript& scriptSigRet = txin.scriptSig;
             bool solved = solver(privateKey, privateHelper, subscript, hash2, nHashType, unspentRedeemScript, scriptSigRet, whichType);
         }
-        txin.scriptSig << static_cast<valtype>(subscript);
+        //txin.scriptSig << static_cast<valtype>(subscript);
+		scriptSigRet << static_cast<valtype>(subscript);
     }
 
     string hex=EncodeHexTx(txNew);
@@ -250,6 +228,39 @@ public:
 };
 #endif
 
+void appendStreamIdentifier(const string& createTxid, CScript& scriptOpReturn)
+{
+	mc_Script detailsScript;
+	//detailsScript.Clear();
+
+	auto hexTxid = ParseHex(createTxid);
+	std::reverse(hexTxid.begin(), hexTxid.end());
+	detailsScript.SetEntity(hexTxid.data() + MC_AST_SHORT_TXID_OFFSET);
+	size_t bytes;
+	const unsigned char *script;
+	script = detailsScript.GetData(0, &bytes);
+	scriptOpReturn << vector<unsigned char>(script, script + bytes) << OP_DROP;	
+}
+
+void appendStreamItemKey(const string& streamKey, CScript& scriptOpReturn)
+{
+	vector<unsigned char> vKey(streamKey.begin(), streamKey.end());
+	mc_Script detailsScript;
+	
+	if (detailsScript.SetItemKey(&vKey[0], vKey.size()) == MC_ERR_NOERROR)
+	{
+		const unsigned char *script;
+		size_t bytes;
+		script = detailsScript.GetData(0, &bytes);
+		scriptOpReturn << vector<unsigned char>(script, script + bytes) << OP_DROP;
+	}
+}
+
+void appendStreamItemValue(const string& streamValue, CScript& scriptOpReturn)
+{
+	vector<unsigned char> vValue(streamValue.begin(), streamValue.end());
+	scriptOpReturn << OP_RETURN << vValue;
+}
 /**
  *
  * @brief 스트림키 발행을 위한 raw-tx 문자열을 생성한다.
@@ -259,7 +270,7 @@ public:
  * @details  생성한 스트림에 대한 정보는 liststreams RPC 명령을 통해 가져온다.
  * @details  개인키는 createKeyPairs 함수나 RPC 명령을 통해 가져온다.
  * @param streamKey	스트림에 대한 키
- * @param streamItem	키에 대한 값
+ * @param streamValue	키에 대한 값
  * @param createTxid		스트림 생성 트랜잭션 ID
  * @param unspentScriptPubKey	UTXO에 대한 scriptPubKey
  * @param unspentTxid			UTXO에 대한 트랜잭션 ID
@@ -271,41 +282,21 @@ public:
  * @return raw-tx 문자열
  *
  */
-string createStreamPublishTx(const string& streamKey, const string& streamItem,
+string createStreamPublishTx(const string& streamKey, const string& streamValue,
                      const string& createTxid,
                      const string& unspentScriptPubKey, const string& unspentTxid, uint32_t unspentVOut,
                      const string& unspentRedeemScript, const string& privateKey, const IPrivateKeyHelper& helper)
 {
-
-    //mc_EntityDetails found_entity;
-
-    // from CScript scriptOpReturn=ParseRawMetadata(data,0x01FF,&entity,&found_entity);
     vector <pair<CScript, CAmount> > vecSend;
     CScript scriptOpReturn;
-    const unsigned char *script;
+    
     std::unique_ptr<mc_Script> detailsScript(new mc_Script);
     detailsScript->Clear();
     // from liststreams ${streamName}
-    auto hexTxid = ParseHex(createTxid);
 
-    std::reverse(hexTxid.begin(), hexTxid.end());
-    //detailsScript->SetEntity(entity.GetTxID()+MC_AST_SHORT_TXID_OFFSET);
-    detailsScript->SetEntity(hexTxid.data()+MC_AST_SHORT_TXID_OFFSET);
-    size_t bytes;
-    script = detailsScript->GetData(0,&bytes);
-    scriptOpReturn << vector<unsigned char>(script, script + bytes) << OP_DROP;
-
-    vector<unsigned char> vKey(streamKey.begin(), streamKey.end());
-    vector<unsigned char> vValue(streamItem.begin(), streamItem.end());
-
-    detailsScript->Clear();
-    if(detailsScript->SetItemKey(&vKey[0],vKey.size()) == MC_ERR_NOERROR)
-    {
-        script = detailsScript->GetData(0,&bytes);
-        scriptOpReturn << vector<unsigned char>(script, script + bytes) << OP_DROP;
-    }
-
-    scriptOpReturn << OP_RETURN << vValue;
+	appendStreamIdentifier(createTxid, scriptOpReturn);
+	appendStreamItemKey(streamKey, scriptOpReturn);
+	appendStreamItemValue(streamValue, scriptOpReturn);
     vecSend.push_back(make_pair(scriptOpReturn, 0));
 
     CMutableTransaction txNew;
@@ -316,8 +307,9 @@ string createStreamPublishTx(const string& streamKey, const string& streamItem,
 
     auto pubkeyScript = ParseHex(unspentScriptPubKey);
 
-    CTxOut txOut1(0, CScript(pubkeyScript.begin(), pubkeyScript.end()));
-    const CScript& script1 = txOut1.scriptPubKey;
+    //CTxOut txOut1(0, CScript(pubkeyScript.begin(), pubkeyScript.end()));
+    //const CScript& script1 = txOut1.scriptPubKey;
+	CScript script1(pubkeyScript.begin(), pubkeyScript.end());
 
     // TODO : check, where from destination
     CTxDestination addressRet;
@@ -328,8 +320,8 @@ string createStreamPublishTx(const string& streamKey, const string& streamItem,
 #endif
 
     CScript scriptChange=GetScriptForDestination(addressRet);
-    CTxOut txout2(0, scriptChange);
-    txNew.vout.push_back(txout2);
+    //CTxOut txout2(0, scriptChange);
+    txNew.vout.push_back(CTxOut(0, scriptChange));
 
     txNew.vin.push_back(CTxIn(uint256(unspentTxid), unspentVOut));
 
@@ -354,10 +346,11 @@ string createStreamPublishTx(const string& streamKey, const string& streamItem,
         uint256 hash2 = SignatureHash(subscript, txNew, nIn, nHashType);
         //cout << "hash2: " << HexStr(hash2) << endl;
         {
-            CScript& scriptSigRet = txin.scriptSig;
+            //CScript& scriptSigRet = txin.scriptSig;
             bool solved = solver(privateKey, helper, subscript, hash2, nHashType, unspentRedeemScript, scriptSigRet, whichType);
         }
-        txin.scriptSig << static_cast<valtype>(subscript);
+        //txin.scriptSig << static_cast<valtype>(subscript);
+		scriptSigRet << static_cast<valtype>(subscript);
     }
 
     string hex=EncodeHexTx(txNew);

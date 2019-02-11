@@ -233,8 +233,22 @@ private:
 
 			_unspentTxid = find_value(selected, "txid").get_str();
 			_unspentVoutIdx = find_value(selected, "vout").get_int();
-			_unspentScriptPubKey = find_value(selected, "scriptPubKey").get_str();
-			_unspentRedeemScript = find_value(selected, "redeemScript").get_str();
+			Value scriptPubKeyValue = find_value(selected, "scriptPubKey");
+			if (scriptPubKeyValue.type() != str_type) {
+				_unspentScriptPubKey = "";
+			}
+			else {
+				_unspentScriptPubKey = scriptPubKeyValue.get_str();
+			}
+			Value redeemScriptValue = find_value(selected, "redeemScript");
+			if (redeemScriptValue.type() != str_type) {
+				_unspentRedeemScript = "";
+			}
+			else {
+				_unspentRedeemScript = redeemScriptValue.get_str();
+			}
+			//_unspentScriptPubKey = find_value(selected, "scriptPubKey").get_str();
+			//_unspentRedeemScript = find_value(selected, "redeemScript").get_str();
 			cout << "txid = " << _unspentTxid << endl;
 			cout << "vout = " << _unspentVoutIdx << endl;
 			cout << "scriptPubKey = " << _unspentScriptPubKey << endl;
@@ -477,7 +491,7 @@ int main()
 
     cout << "5. pubkey test" << endl;
     testPubkeyToAddrAfterGettingParams();
-
+#endif
     cout << "6. stream publish test" << endl;
     try {
         testRawTransactionForStreamPublish();
@@ -492,13 +506,13 @@ int main()
     } catch(std::exception &e) {
         cout << e.what() << endl;
     }
-	   
+#if 0	   
 	cout << "8. test analyze" << endl;
 	testAnalyzeTx(assetSendTx);
 
 	cout << "9. multisig anlaysis" << endl;
 	testAnalyzeMultisig();
-#endif
+
 	cout << "10. asset send to multisig addr test" << endl;
 	//string assetSendTx;
 	string assetSendTx1;
@@ -516,10 +530,8 @@ int main()
 	cout << "12. multisig anlaysis" << endl;
 	testAnalyzeFromMultisig();
 
-#if 0
 	cout << "13. check multisig addr" << endl;
 	checkMultisigAddr();
-#endif
 
 	cout << "14. completed multisig anlaysis" << endl;
 	testAnalyzeFromMultisigCompleted();
@@ -534,6 +546,6 @@ int main()
 	}
 	cout << "16. test analyze for No. 15" << endl;
 	testAnalyzeTx(assetSendTx2);
-
+#endif
     return 0;
 }

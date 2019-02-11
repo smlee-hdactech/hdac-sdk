@@ -545,8 +545,8 @@ bool solver(const string& privateKey, const IPrivateKeyHelper& helper, const CSc
 
             CKey keyFromPriv = keyFromPrivateKey(privateKey, helper);
             auto checkKeyID = keyFromPriv.GetPubKey().GetID();
-            cout << "from script: " << HexStr(keyID) << endl;
-            cout << "from private key: " << HexStr(checkKeyID) << endl;
+            //cout << "from script: " << HexStr(keyID) << endl;
+            //cout << "from private key: " << HexStr(checkKeyID) << endl;
             if (keyFromPriv.GetPubKey().GetID() != keyID) {
                 return false;
             }

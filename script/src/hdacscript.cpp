@@ -173,6 +173,7 @@ int mc_Script::SetElement(int element)
     return MC_ERR_NOERROR;
 }
 
+// element : script 내의 element index
 const unsigned char*  mc_Script::GetData(int element, size_t* bytes)
 {
     if(element >= m_NumElements)
