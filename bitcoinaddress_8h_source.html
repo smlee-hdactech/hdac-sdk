@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.11"/>
+<title>hdac SDK: keys/include/keys/bitcoinaddress.h 소스 파일</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { init_search(); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">hdac SDK
+   </div>
+   <div id="projectbrief">SDK for hdac blockchain development</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 다음에 의해 생성됨 :  Doxygen 1.8.11 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'검색');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>메인&#160;페이지</span></a></li>
+      <li><a href="pages.html"><span>관련된&#160;페이지</span></a></li>
+      <li><a href="namespaces.html"><span>네임스페이스</span></a></li>
+      <li><a href="annotated.html"><span>클래스</span></a></li>
+      <li class="current"><a href="files.html"><span>파일들</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="검색" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>파일&#160;목록</span></a></li>
+      <li><a href="globals.html"><span>파일&#160;멤버</span></a></li>
+    </ul>
+  </div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_920bbc8cdbd402dd0ef4452b97d4b215.html">keys</a></li><li class="navelem"><a class="el" href="dir_451687ece1428d47f3668f9eb75751c9.html">include</a></li><li class="navelem"><a class="el" href="dir_2f53815d0290b423eb2e6978ceb01c55.html">keys</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">bitcoinaddress.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef BITCOINADDRESS_H</span></div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define BITCOINADDRESS_H</span></div><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;</div><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;structs/base58.h&gt;</span></div><div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;pubkey.h&quot;</span></div><div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;script/standard.h&gt;</span></div><div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;utils/utility.h&gt;</span></div><div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;keyshelper.h&quot;</span></div><div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;</div><div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="class_c_bitcoin_address.html">   16</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_c_bitcoin_address.html">CBitcoinAddress</a> : <span class="keyword">public</span> <a class="code" href="class_c_base58_data.html">CBase58Data</a> {</div><div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">public</span>:</div><div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="comment">//bool Set(const CKeyID &amp;id, const std::vector&lt;unsigned char&gt; &amp;pubkeyPrefix);</span></div><div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keywordtype">bool</span> Set(<span class="keyword">const</span> <a class="code" href="class_c_key_i_d.html">CKeyID</a> &amp;<span class="keywordtype">id</span>);</div><div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordtype">bool</span> Set(<span class="keyword">const</span> <a class="code" href="class_c_key_i_d.html">CKeyID</a> &amp;<span class="keywordtype">id</span>,<span class="keyword">const</span> std::vector&lt;unsigned char&gt;&amp; <a class="code" href="class_c_base58_data.html#a110c1008f399053098a1bdf63408e923">vchVersion</a>);</div><div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordtype">bool</span> Set(<span class="keyword">const</span> <a class="code" href="class_c_script_i_d.html">CScriptID</a> &amp;<span class="keywordtype">id</span>);</div><div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordtype">bool</span> Set(<span class="keyword">const</span> CTxDestination &amp;dest);</div><div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordtype">bool</span> IsValid() <span class="keyword">const</span>;</div><div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="comment">//bool IsValid(const CChainParams &amp;params) const;</span></div><div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">bool</span> IsValid(<span class="keyword">const</span> std::vector&lt;unsigned char&gt;&amp; pubkeyPrefix,</div><div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;                 <span class="keyword">const</span> std::vector&lt;unsigned char&gt;&amp; scriptPrefix) <span class="keyword">const</span>;</div><div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div><div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <a class="code" href="class_c_bitcoin_address.html">CBitcoinAddress</a>(<span class="keyword">const</span> <a class="code" href="class_i_wallet_addr_helper.html">IWalletAddrHelper</a> &amp;helper) :</div><div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <a class="code" href="class_c_base58_data.html">CBase58Data</a>(helper.addrChecksumValue()),</div><div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        _pubkeyPrefix(helper.pubkeyAddrPrefix()),</div><div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        _scriptPrefix(helper.scriptAddrPrefix()) {}</div><div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div><div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <a class="code" href="class_c_bitcoin_address.html">CBitcoinAddress</a>(<span class="keyword">const</span> CTxDestination &amp;dest,</div><div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="keyword">const</span> <a class="code" href="class_i_wallet_addr_helper.html">IWalletAddrHelper</a> &amp;helper) :</div><div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <a class="code" href="class_c_bitcoin_address.html">CBitcoinAddress</a>(helper) {</div><div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        Set(dest);</div><div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    }</div><div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div><div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="class_c_bitcoin_address.html">CBitcoinAddress</a>(<span class="keyword">const</span> std::string&amp; strAddress,</div><div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                    <span class="keyword">const</span> <a class="code" href="class_i_wallet_addr_helper.html">IWalletAddrHelper</a> &amp;helper) :</div><div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <a class="code" href="class_c_bitcoin_address.html">CBitcoinAddress</a>(helper) {</div><div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        SetString(strAddress, helper.pubkeyAddrPrefix().size());</div><div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    }</div><div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div><div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <a class="code" href="class_c_bitcoin_address.html">CBitcoinAddress</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* pszAddress,</div><div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                    <span class="keyword">const</span> <a class="code" href="class_i_wallet_addr_helper.html">IWalletAddrHelper</a> &amp;helper) :</div><div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        CBitcoinAddress(helper) {</div><div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        SetString(pszAddress);</div><div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    }</div><div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div><div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    CTxDestination Get() <span class="keyword">const</span>;</div><div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordtype">bool</span> GetKeyID(<a class="code" href="class_c_key_i_d.html">CKeyID</a> &amp;keyID) <span class="keyword">const</span>;</div><div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordtype">bool</span> GetScriptID(<a class="code" href="class_c_script_i_d.html">CScriptID</a> &amp;scriptID) <span class="keyword">const</span>;</div><div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordtype">bool</span> IsScript() <span class="keyword">const</span>;</div><div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div><div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">const</span> std::vector&lt;unsigned char&gt; _pubkeyPrefix;</div><div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">const</span> std::vector&lt;unsigned char&gt; _scriptPrefix;</div><div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;};</div><div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div><div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#endif // BITCOINADDRESS_H</span></div><div class="ttc" id="class_i_wallet_addr_helper_html"><div class="ttname"><a href="class_i_wallet_addr_helper.html">IWalletAddrHelper</a></div><div class="ttdef"><b>Definition:</b> keyshelper.h:26</div></div>
+<div class="ttc" id="class_c_bitcoin_address_html"><div class="ttname"><a href="class_c_bitcoin_address.html">CBitcoinAddress</a></div><div class="ttdef"><b>Definition:</b> bitcoinaddress.h:16</div></div>
+<div class="ttc" id="class_c_base58_data_html"><div class="ttname"><a href="class_c_base58_data.html">CBase58Data</a></div><div class="ttdef"><b>Definition:</b> base58.h:52</div></div>
+<div class="ttc" id="class_c_key_i_d_html"><div class="ttname"><a href="class_c_key_i_d.html">CKeyID</a></div><div class="ttdef"><b>Definition:</b> standard.h:8</div></div>
+<div class="ttc" id="class_c_script_i_d_html"><div class="ttname"><a href="class_c_script_i_d.html">CScriptID</a></div><div class="ttdef"><b>Definition:</b> standard.h:17</div></div>
+<div class="ttc" id="class_c_base58_data_html_a110c1008f399053098a1bdf63408e923"><div class="ttname"><a href="class_c_base58_data.html#a110c1008f399053098a1bdf63408e923">CBase58Data::vchVersion</a></div><div class="ttdeci">std::vector&lt; unsigned char &gt; vchVersion</div><div class="ttdoc">the version byte(s) </div><div class="ttdef"><b>Definition:</b> base58.h:56</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+다음에 의해 생성됨 :  &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.11
+</small></address>
+</body>
+</html>

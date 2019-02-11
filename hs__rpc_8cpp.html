@@ -1,0 +1,815 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.11"/>
+<title>hdac SDK: rpc/src/hs_rpc.cpp 파일 참조</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { init_search(); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">hdac SDK
+   </div>
+   <div id="projectbrief">SDK for hdac blockchain development</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 다음에 의해 생성됨 :  Doxygen 1.8.11 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'검색');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>메인&#160;페이지</span></a></li>
+      <li><a href="pages.html"><span>관련된&#160;페이지</span></a></li>
+      <li><a href="namespaces.html"><span>네임스페이스</span></a></li>
+      <li><a href="annotated.html"><span>클래스</span></a></li>
+      <li class="current"><a href="files.html"><span>파일들</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="검색" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>파일&#160;목록</span></a></li>
+      <li><a href="globals.html"><span>파일&#160;멤버</span></a></li>
+    </ul>
+  </div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_6accb9af1bfb8f10ad99793a8a92ad6f.html">rpc</a></li><li class="navelem"><a class="el" href="dir_13985e9e7b3c942a342598fd3a90cef8.html">src</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#func-members">함수</a>  </div>
+  <div class="headertitle">
+<div class="title">hs_rpc.cpp 파일 참조</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>hs_rpc 소스 코드 파일.  
+<a href="#details">더 자세히 ...</a></p>
+<div class="textblock"><code>#include &quot;hs_rpc.h&quot;</code><br />
+<code>#include &quot;rpcclient.h&quot;</code><br />
+<code>#include &lt;vector&gt;</code><br />
+<code>#include &lt;string&gt;</code><br />
+<code>#include &quot;rpccaller.h&quot;</code><br />
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+함수</h2></td></tr>
+<tr class="memitem:aeb29a19cad920d3ae0ce2530c3c65463"><td class="memItemLeft" align="right" valign="top">Object&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hs__rpc_8cpp.html#aeb29a19cad920d3ae0ce2530c3c65463">sendrawtx</a> (const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;client, const string &amp;rawTx)</td></tr>
+<tr class="memdesc:aeb29a19cad920d3ae0ce2530c3c65463"><td class="mdescLeft">&#160;</td><td class="mdescRight">RPC 명령어를 통하여 createrawtx 를 통하여 만들어진 rawtransaction 을 전송 한다.  <a href="#aeb29a19cad920d3ae0ce2530c3c65463">더 자세히 ...</a><br /></td></tr>
+<tr class="separator:aeb29a19cad920d3ae0ce2530c3c65463"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71d241957a2270931e05641106043032"><td class="memItemLeft" align="right" valign="top">Object&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hs__rpc_8cpp.html#a71d241957a2270931e05641106043032">importaddress</a> (const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;client, const string &amp;address, bool rescan)</td></tr>
+<tr class="memdesc:a71d241957a2270931e05641106043032"><td class="mdescLeft">&#160;</td><td class="mdescRight">RPC 명령어를 통하여 특정 주소의 정보를 가져 온다.  <a href="#a71d241957a2270931e05641106043032">더 자세히 ...</a><br /></td></tr>
+<tr class="separator:a71d241957a2270931e05641106043032"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e875f464a52b238182f516f0b4cd81f"><td class="memItemLeft" align="right" valign="top">Object&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hs__rpc_8cpp.html#a9e875f464a52b238182f516f0b4cd81f">importaddress</a> (const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;client, const vector&lt; string &gt; &amp;addresses, bool rescan)</td></tr>
+<tr class="memdesc:a9e875f464a52b238182f516f0b4cd81f"><td class="mdescLeft">&#160;</td><td class="mdescRight">RPC 명령어를 통하여 특정 주소의 정보를 가져 온다.  <a href="#a9e875f464a52b238182f516f0b4cd81f">더 자세히 ...</a><br /></td></tr>
+<tr class="separator:a9e875f464a52b238182f516f0b4cd81f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57e33cb810508eb577d66b83f7d55dae"><td class="memItemLeft" align="right" valign="top">Object&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hs__rpc_8cpp.html#a57e33cb810508eb577d66b83f7d55dae">getinfo</a> (const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;client)</td></tr>
+<tr class="memdesc:a57e33cb810508eb577d66b83f7d55dae"><td class="mdescLeft">&#160;</td><td class="mdescRight">RPC 명령어를 통하여 HDAC 네트워크의 기본 정보를 가져 온다.  <a href="#a57e33cb810508eb577d66b83f7d55dae">더 자세히 ...</a><br /></td></tr>
+<tr class="separator:a57e33cb810508eb577d66b83f7d55dae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9d7e3addaa6992d4c64362911e9ee0a"><td class="memItemLeft" align="right" valign="top">Object&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hs__rpc_8cpp.html#aa9d7e3addaa6992d4c64362911e9ee0a">blockChainParams</a> (const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;client)</td></tr>
+<tr class="memdesc:aa9d7e3addaa6992d4c64362911e9ee0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">RPC 명령어를 통하여 HDAC 네트워크의 파라미터 설정 정보를 가져 온다.  <a href="#aa9d7e3addaa6992d4c64362911e9ee0a">더 자세히 ...</a><br /></td></tr>
+<tr class="separator:aa9d7e3addaa6992d4c64362911e9ee0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2be3f20333fa8fbb25f056c6ec66f17e"><td class="memItemLeft" align="right" valign="top">Object&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hs__rpc_8cpp.html#a2be3f20333fa8fbb25f056c6ec66f17e">listunspent</a> (const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;client, int minConf, int maxConf, const vector&lt; string &gt; &amp;addresses)</td></tr>
+<tr class="memdesc:a2be3f20333fa8fbb25f056c6ec66f17e"><td class="mdescLeft">&#160;</td><td class="mdescRight">RPC 명령어를 통하여 아직 보내지 못한 transaction 들의 정보를 가져 온다.  <a href="#a2be3f20333fa8fbb25f056c6ec66f17e">더 자세히 ...</a><br /></td></tr>
+<tr class="separator:a2be3f20333fa8fbb25f056c6ec66f17e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6dc36fd76f5db30bbd07f5ee6649d697"><td class="memItemLeft" align="right" valign="top">Object&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hs__rpc_8cpp.html#a6dc36fd76f5db30bbd07f5ee6649d697">listunspent</a> (const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;client, const vector&lt; string &gt; &amp;addresses)</td></tr>
+<tr class="memdesc:a6dc36fd76f5db30bbd07f5ee6649d697"><td class="mdescLeft">&#160;</td><td class="mdescRight">RPC 명령어를 통하여 아직 보내지 못한 transaction 들의 정보를 가져 온다.  <a href="#a6dc36fd76f5db30bbd07f5ee6649d697">더 자세히 ...</a><br /></td></tr>
+<tr class="separator:a6dc36fd76f5db30bbd07f5ee6649d697"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2969c9f8efe1d16ac5cd680a5ca115e5"><td class="memItemLeft" align="right" valign="top">Object&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hs__rpc_8cpp.html#a2969c9f8efe1d16ac5cd680a5ca115e5">listunspent</a> (const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;client, const string &amp;address)</td></tr>
+<tr class="memdesc:a2969c9f8efe1d16ac5cd680a5ca115e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">RPC 명령어를 통하여 아직 보내지 못한 transaction 들의 정보를 가져 온다.  <a href="#a2969c9f8efe1d16ac5cd680a5ca115e5">더 자세히 ...</a><br /></td></tr>
+<tr class="separator:a2969c9f8efe1d16ac5cd680a5ca115e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a194acc4e29c14b2d6165276b5063a801"><td class="memItemLeft" align="right" valign="top">Object&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hs__rpc_8cpp.html#a194acc4e29c14b2d6165276b5063a801">lockunspent</a> (const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;client, bool unlock, string txid, int vout)</td></tr>
+<tr class="memdesc:a194acc4e29c14b2d6165276b5063a801"><td class="mdescLeft">&#160;</td><td class="mdescRight">RPC 명령어를 통하여 아직 보내지 못한 transaction 을 잠금 하거나 또는 잠금 해제 할 수 있게 한다.  <a href="#a194acc4e29c14b2d6165276b5063a801">더 자세히 ...</a><br /></td></tr>
+<tr class="separator:a194acc4e29c14b2d6165276b5063a801"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3608883f29994e1fb43b6f029d189088"><td class="memItemLeft" align="right" valign="top">Object&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hs__rpc_8cpp.html#a3608883f29994e1fb43b6f029d189088">listlockunspent</a> (const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;client)</td></tr>
+<tr class="memdesc:a3608883f29994e1fb43b6f029d189088"><td class="mdescLeft">&#160;</td><td class="mdescRight">RPC 명령어를 통하여 아직 보내지 못한 transaction 들 중에 잠겨 있는 transaction 들의 정보를 가져 온다.  <a href="#a3608883f29994e1fb43b6f029d189088">더 자세히 ...</a><br /></td></tr>
+<tr class="separator:a3608883f29994e1fb43b6f029d189088"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a316cd5441ebdee9113055be287dc0f63"><td class="memItemLeft" align="right" valign="top">Object&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hs__rpc_8cpp.html#a316cd5441ebdee9113055be287dc0f63">liststreams</a> (const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;client, const vector&lt; string &gt; &amp;streamNames)</td></tr>
+<tr class="memdesc:a316cd5441ebdee9113055be287dc0f63"><td class="mdescLeft">&#160;</td><td class="mdescRight">RPC 명령어를 통하여 생성 된 stream 들의 정보를 가져 온다.  <a href="#a316cd5441ebdee9113055be287dc0f63">더 자세히 ...</a><br /></td></tr>
+<tr class="separator:a316cd5441ebdee9113055be287dc0f63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7095d24a6481d71ea409d13e7e2db439"><td class="memItemLeft" align="right" valign="top">Object&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hs__rpc_8cpp.html#a7095d24a6481d71ea409d13e7e2db439">liststreams</a> (const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;client, const string &amp;streamName)</td></tr>
+<tr class="memdesc:a7095d24a6481d71ea409d13e7e2db439"><td class="mdescLeft">&#160;</td><td class="mdescRight">RPC 명령어를 통하여 생성 된 stream 들의 정보를 가져 온다.  <a href="#a7095d24a6481d71ea409d13e7e2db439">더 자세히 ...</a><br /></td></tr>
+<tr class="separator:a7095d24a6481d71ea409d13e7e2db439"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad34345fbdd818cbb92331e2257ee39b1"><td class="memItemLeft" align="right" valign="top">Object&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hs__rpc_8cpp.html#ad34345fbdd818cbb92331e2257ee39b1">listassets</a> (const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;client, const vector&lt; string &gt; &amp;assetNames)</td></tr>
+<tr class="memdesc:ad34345fbdd818cbb92331e2257ee39b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">RPC 명령어를 통하여 정의 된 asset 들의 정보를 가져 온다.  <a href="#ad34345fbdd818cbb92331e2257ee39b1">더 자세히 ...</a><br /></td></tr>
+<tr class="separator:ad34345fbdd818cbb92331e2257ee39b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05694f15a697e2fca70af90034512096"><td class="memItemLeft" align="right" valign="top">Object&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hs__rpc_8cpp.html#a05694f15a697e2fca70af90034512096">listassets</a> (const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;client, const string &amp;name)</td></tr>
+<tr class="memdesc:a05694f15a697e2fca70af90034512096"><td class="mdescLeft">&#160;</td><td class="mdescRight">RPC 명령어를 통하여 정의 된 asset 들의 정보를 가져 온다.  <a href="#a05694f15a697e2fca70af90034512096">더 자세히 ...</a><br /></td></tr>
+<tr class="separator:a05694f15a697e2fca70af90034512096"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3fa1a4f5c1af091b7ad63b89e2cd0ac"><td class="memItemLeft" align="right" valign="top">Object&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hs__rpc_8cpp.html#ae3fa1a4f5c1af091b7ad63b89e2cd0ac">signmessage</a> (const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;client, const string &amp;strPrivateKey, const string &amp;strText)</td></tr>
+<tr class="memdesc:ae3fa1a4f5c1af091b7ad63b89e2cd0ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">RPC 명령어를 통하여 개인키를 이용 하여 sign 된 메시지를 만든다.  <a href="#ae3fa1a4f5c1af091b7ad63b89e2cd0ac">더 자세히 ...</a><br /></td></tr>
+<tr class="separator:ae3fa1a4f5c1af091b7ad63b89e2cd0ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26b955c094566e7d130ab73b50b5d930"><td class="memItemLeft" align="right" valign="top">Object&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hs__rpc_8cpp.html#a26b955c094566e7d130ab73b50b5d930">verifymessage</a> (const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;client, const string &amp;strAddress, const string &amp;strSignmessage, const string &amp;strText)</td></tr>
+<tr class="memdesc:a26b955c094566e7d130ab73b50b5d930"><td class="mdescLeft">&#160;</td><td class="mdescRight">RPC 명령어를 통하여 sign 된 메시지를 검증 한다.  <a href="#a26b955c094566e7d130ab73b50b5d930">더 자세히 ...</a><br /></td></tr>
+<tr class="separator:a26b955c094566e7d130ab73b50b5d930"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaff8994b92b4f72b460b140662fe028a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hs__rpc_8cpp.html#aaff8994b92b4f72b460b140662fe028a">rpcResult</a> (const Object &amp;reply, string &amp;resultStr)</td></tr>
+<tr class="memdesc:aaff8994b92b4f72b460b140662fe028a"><td class="mdescLeft">&#160;</td><td class="mdescRight">json 형태의 RPC 명령어 결과를 string 형으로 변환 시켜 준다.  <a href="#aaff8994b92b4f72b460b140662fe028a">더 자세히 ...</a><br /></td></tr>
+<tr class="separator:aaff8994b92b4f72b460b140662fe028a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">상세한 설명</h2>
+<div class="textblock"><p>hs_rpc 소스 코드 파일. </p>
+<dl class="section date"><dt>날짜</dt><dd>2019-01-17 </dd></dl>
+<dl class="section author"><dt>작성자</dt><dd>HDAC Technology Inc. </dd></dl>
+</div><h2 class="groupheader">함수 문서화</h2>
+<a class="anchor" id="aa9d7e3addaa6992d4c64362911e9ee0a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Object blockChainParams </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;&#160;</td>
+          <td class="paramname"><em>client</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>RPC 명령어를 통하여 HDAC 네트워크의 파라미터 설정 정보를 가져 온다. </p>
+<p>HDAC 네트워크의 지갑 주소 체크섬, 체인 이름, rpc port 등의 파라미터 설정 정보를 가져 온다. </p><dl class="params"><dt>매개변수</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">client</td><td>HDAC 네트워크 접속 정보를 제공한다.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>반환값</dt><dd>blockchainparams RPC 명령어의 결과 값, (지갑 주소 체크섬, 체인 이름, rpc port 등의 HDAC 네트워크의 파라미터 설정 정보) </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a57e33cb810508eb577d66b83f7d55dae"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Object getinfo </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;&#160;</td>
+          <td class="paramname"><em>client</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>RPC 명령어를 통하여 HDAC 네트워크의 기본 정보를 가져 온다. </p>
+<p>HDAC 네트워크의 버전, 블럭 높이, 체인 이름 등의 기본 정보를 가져 온다. </p><dl class="params"><dt>매개변수</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">client</td><td>HDAC 네트워크 접속 정보를 제공한다.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>반환값</dt><dd>getinfo RPC 명령어의 결과 값, (버전, 블럭 높이, 체인 이름등의 HDAC 네트워크의 기본 정보) </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a71d241957a2270931e05641106043032"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Object importaddress </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;&#160;</td>
+          <td class="paramname"><em>client</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const string &amp;&#160;</td>
+          <td class="paramname"><em>address</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>rescan</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>RPC 명령어를 통하여 특정 주소의 정보를 가져 온다. </p>
+<p>rescan 을 통하여 특정 주소의 정보를 가져 온다. </p><dl class="params"><dt>매개변수</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">client</td><td>HDAC 네트워크 접속 정보를 제공한다. </td></tr>
+    <tr><td class="paramname">address</td><td>정보를 가져올 특정 주소 문자열 </td></tr>
+    <tr><td class="paramname">rescan</td><td>특정 지갑주소의 정보를 가져올 때, rescan을 수행 할 것인지 아닌지에 대한 여부 (default = true)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>반환값</dt><dd>importaddress RPC 명령어의 결과 값, (없음) </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a9e875f464a52b238182f516f0b4cd81f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Object importaddress </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;&#160;</td>
+          <td class="paramname"><em>client</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const vector&lt; string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>addresses</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>rescan</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>RPC 명령어를 통하여 특정 주소의 정보를 가져 온다. </p>
+<p>rescan 을 통하여 특정 주소의 정보를 가져 온다. </p><dl class="params"><dt>매개변수</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">client</td><td>HDAC 네트워크 접속 정보를 제공한다. </td></tr>
+    <tr><td class="paramname">addresses</td><td>정보를 가져올 특정 주소 문자열 </td></tr>
+    <tr><td class="paramname">rescan</td><td>특정 지갑주소의 정보를 가져올 때, rescan을 수행 할 것인지 아닌지에 대한 여부 (default = true)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>반환값</dt><dd>importaddress RPC 명령어의 결과 값, (없음) </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ad34345fbdd818cbb92331e2257ee39b1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Object listassets </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;&#160;</td>
+          <td class="paramname"><em>client</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const vector&lt; string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>assetNames</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>RPC 명령어를 통하여 정의 된 asset 들의 정보를 가져 온다. </p>
+<p>정의 되어진 asset 들의 정보를 가져 온다. </p><dl class="params"><dt>매개변수</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">client</td><td>HDAC 네트워크 접속 정보를 제공한다. </td></tr>
+    <tr><td class="paramname">assetNames</td><td>특정 asset 들의 정보를 가져올 때 사용 한다.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>반환값</dt><dd>listassets RPC 명령어의 결과 값, (생성되어진 asset 정보) </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a05694f15a697e2fca70af90034512096"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Object listassets </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;&#160;</td>
+          <td class="paramname"><em>client</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>RPC 명령어를 통하여 정의 된 asset 들의 정보를 가져 온다. </p>
+<p>정의 되어진 asset 들의 정보를 가져 온다. </p><dl class="params"><dt>매개변수</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">client</td><td>HDAC 네트워크 접속 정보를 제공한다. </td></tr>
+    <tr><td class="paramname">name</td><td>특정 asset 들의 정보를 가져 올 때 사용 한다.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>반환값</dt><dd>listassets RPC 명령어의 결과 값, (생성되어진 asset 정보) </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a3608883f29994e1fb43b6f029d189088"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Object listlockunspent </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;&#160;</td>
+          <td class="paramname"><em>client</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>RPC 명령어를 통하여 아직 보내지 못한 transaction 들 중에 잠겨 있는 transaction 들의 정보를 가져 온다. </p>
+<p>RPC 명령어를 통하여 아직 보내지 못한 transaction 중에 잠겨 있는 transaction 들의 정보를 가져 온다.</p>
+<p>아직 보내지 못한 transaction 들 중에 전송 되지 못하도록 잠겨 있는 transaction 들의 정버를 가져 온다. </p><dl class="params"><dt>매개변수</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">client</td><td>HDAC 네트워크 접속 정보를 제공한다.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>반환값</dt><dd>listlockunspent RPC 명령어의 결과 값, (잠금 되어진 transaction 들의 ID 와 vout 값) </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a316cd5441ebdee9113055be287dc0f63"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Object liststreams </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;&#160;</td>
+          <td class="paramname"><em>client</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const vector&lt; string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>streamNames</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>RPC 명령어를 통하여 생성 된 stream 들의 정보를 가져 온다. </p>
+<p>생성 되어진 stream 들의 정보를 가져 온다. </p><dl class="params"><dt>매개변수</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">client</td><td>HDAC 네트워크 접속 정보를 제공한다. </td></tr>
+    <tr><td class="paramname">streamNames</td><td>특정 stream 의 정보를 가져올 때 사용 한다.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>반환값</dt><dd>liststreams RPC 명령어의 결과 값, (생성되어진 stream 정보) </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a7095d24a6481d71ea409d13e7e2db439"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Object liststreams </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;&#160;</td>
+          <td class="paramname"><em>client</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const string &amp;&#160;</td>
+          <td class="paramname"><em>streamName</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>RPC 명령어를 통하여 생성 된 stream 들의 정보를 가져 온다. </p>
+<p>생성 되어진 stream 들의 정보를 가져 온다. </p><dl class="params"><dt>매개변수</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">client</td><td>HDAC 네트워크 접속 정보를 제공한다. </td></tr>
+    <tr><td class="paramname">streamName</td><td>특정 stream 의 정보를 가져 올 때 사용 한다.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>반환값</dt><dd>liststreams RPC 명령어의 결과 값, (생성되어진 stream 정보) </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a2be3f20333fa8fbb25f056c6ec66f17e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Object listunspent </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;&#160;</td>
+          <td class="paramname"><em>client</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>minConf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>maxConf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const vector&lt; string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>addresses</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>RPC 명령어를 통하여 아직 보내지 못한 transaction 들의 정보를 가져 온다. </p>
+<p>HDAC 네트워크의 지갑 주소 체크섬, 체인 이름, rpc port 등의 파라미터 설정 정보를 가져 온다. </p><dl class="params"><dt>매개변수</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">client</td><td>HDAC 네트워크 접속 정보를 제공한다. </td></tr>
+    <tr><td class="paramname">minConf</td><td>최소 컨펌 수(filter 역할, 범위 시작) </td></tr>
+    <tr><td class="paramname">maxConf</td><td>최대 컨펌 수(filter 역할, 범위 끝) </td></tr>
+    <tr><td class="paramname">addresses</td><td>조회하고자 하는 특정 지갑 주소들</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>반환값</dt><dd>listunspent RPC 명령어의 결과 값, (특정 지갑에 보내지 못한 transaction 리스트) </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a6dc36fd76f5db30bbd07f5ee6649d697"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Object listunspent </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;&#160;</td>
+          <td class="paramname"><em>client</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const vector&lt; string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>addresses</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>RPC 명령어를 통하여 아직 보내지 못한 transaction 들의 정보를 가져 온다. </p>
+<p>특정 지갑주소들에서 생성하여 아직 보내지 못한 transaction 들의 정보를 가져 온다. </p><dl class="params"><dt>매개변수</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">client</td><td>HDAC 네트워크 접속 정보를 제공한다. </td></tr>
+    <tr><td class="paramname">addresses</td><td>조회하고자 하는 특정 지갑 주소들</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>반환값</dt><dd>listunspent RPC 명령어의 결과 값, (특정 지갑에 보내지 못한 transaction 리스트) </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a2969c9f8efe1d16ac5cd680a5ca115e5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Object listunspent </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;&#160;</td>
+          <td class="paramname"><em>client</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const string &amp;&#160;</td>
+          <td class="paramname"><em>address</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>RPC 명령어를 통하여 아직 보내지 못한 transaction 들의 정보를 가져 온다. </p>
+<p>특정 지갑주소들에서 생성하여 아직 보내지 못한 transaction 들의 정보를 가져 온다. </p><dl class="params"><dt>매개변수</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">client</td><td>HDAC 네트워크 접속 정보를 제공한다. </td></tr>
+    <tr><td class="paramname">address</td><td>조회하고자 하는 특정 지갑 주소들</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>반환값</dt><dd>listunspent RPC 명령어의 결과 값, (특정 지갑에 보내지 못한 transaction 리스트) </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a194acc4e29c14b2d6165276b5063a801"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Object lockunspent </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;&#160;</td>
+          <td class="paramname"><em>client</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>unlock</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>txid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>vout</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>RPC 명령어를 통하여 아직 보내지 못한 transaction 을 잠금 하거나 또는 잠금 해제 할 수 있게 한다. </p>
+<p>아직 보내지 못한 transaction 에 대하여 보내지 못 하도록 잠금 하거나 또는 잠겨 있는 transaction 의 잠금을 해제 할 수 있게 한다. </p><dl class="params"><dt>매개변수</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">client</td><td>HDAC 네트워크 접속 정보를 제공한다. </td></tr>
+    <tr><td class="paramname">unlock</td><td>잠금 할 껀지, 잠금 해제 할 껀지 여부 </td></tr>
+    <tr><td class="paramname">txid</td><td>잠금 또는 잠금 해제 할 transaction 의 ID </td></tr>
+    <tr><td class="paramname">vout</td><td>잠금 또는 잠금 해제 하고자 하는 transaction 의 vout 양</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>반환값</dt><dd>lockunspent RPC 명령어의 결과 값, (잠금 또는 잠금 해제 성공 여부, true, false) </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aaff8994b92b4f72b460b140662fe028a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool rpcResult </td>
+          <td>(</td>
+          <td class="paramtype">const Object &amp;&#160;</td>
+          <td class="paramname"><em>reply</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string &amp;&#160;</td>
+          <td class="paramname"><em>resultStr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>json 형태의 RPC 명령어 결과를 string 형으로 변환 시켜 준다. </p>
+<p>json 형태로 반환되는 RPC 명령어 결과 값들을 string 형으로 변환 시켜 준다. </p><dl class="params"><dt>매개변수</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">reply</td><td>RPC 명령어로 반환 된 json 형태의 결과 값 </td></tr>
+    <tr><td class="paramname">resultStr</td><td>string 형으로 변환 된 결과 값</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>반환값</dt><dd>json 형태에서 string 형으로 변환 성공 여부, true, false </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aeb29a19cad920d3ae0ce2530c3c65463"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Object sendrawtx </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;&#160;</td>
+          <td class="paramname"><em>client</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const string &amp;&#160;</td>
+          <td class="paramname"><em>rawTx</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>RPC 명령어를 통하여 createrawtx 를 통하여 만들어진 rawtransaction 을 전송 한다. </p>
+<p>createrawtx 명령어를 통하여 sign 된 16 진수 Hex rawtransaction 을 전송 한다. </p><dl class="params"><dt>매개변수</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">client</td><td>HDAC 네트워크 접속 정보를 제공한다. </td></tr>
+    <tr><td class="paramname">rawTx</td><td>createrawtx 명령어를 통하여 만들어진 sign 된 16진수 Hex rawtransaction 문자열</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>반환값</dt><dd>sendrawtx RPC 명령의 결과 값, transaction hash 값 </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ae3fa1a4f5c1af091b7ad63b89e2cd0ac"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Object signmessage </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;&#160;</td>
+          <td class="paramname"><em>client</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const string &amp;&#160;</td>
+          <td class="paramname"><em>strPrivateKey</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const string &amp;&#160;</td>
+          <td class="paramname"><em>strText</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>RPC 명령어를 통하여 개인키를 이용 하여 sign 된 메시지를 만든다. </p>
+<p>개인키를 이용하여 평문의 문자열을 sign 된 문자열로 변환 한다. </p><dl class="params"><dt>매개변수</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">client</td><td>HDAC 네트워크 접속 정보를 제공한다. </td></tr>
+    <tr><td class="paramname">strPrivateKey</td><td>sign 할려고하는 개인키 값 </td></tr>
+    <tr><td class="paramname">strText</td><td>sign 할려고하는 평문의 문자열</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>반환값</dt><dd>signmessage RPC 명령어의 결과 값, (생성되어진 sign 메시지 문자열) </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a26b955c094566e7d130ab73b50b5d930"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Object verifymessage </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_rpc_client.html">RpcClient</a> &amp;&#160;</td>
+          <td class="paramname"><em>client</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const string &amp;&#160;</td>
+          <td class="paramname"><em>strAddress</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const string &amp;&#160;</td>
+          <td class="paramname"><em>strSignmessage</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const string &amp;&#160;</td>
+          <td class="paramname"><em>strText</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>RPC 명령어를 통하여 sign 된 메시지를 검증 한다. </p>
+<p>signmessage 를 통하여 sign 된 메시지가 제대로 sign 되었는지 검증 한다. </p><dl class="params"><dt>매개변수</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">client</td><td>HDAC 네트워크 접속 정보를 제공한다. </td></tr>
+    <tr><td class="paramname">strAddress</td><td>sign 할 때 사용 된 지갑 주소 </td></tr>
+    <tr><td class="paramname">strSignmessage</td><td>sign 되어진 문자열 </td></tr>
+    <tr><td class="paramname">strText</td><td>sign 한 원본 문자열</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>반환값</dt><dd>verifymessage RPC 명령어의 결과 값, (검증 성공 여부, true, false) </dd></dl>
+
+</div>
+</div>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+다음에 의해 생성됨 :  &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.11
+</small></address>
+</body>
+</html>

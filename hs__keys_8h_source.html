@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.11"/>
+<title>hdac SDK: keys/include/keys/hs_keys.h 소스 파일</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { init_search(); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">hdac SDK
+   </div>
+   <div id="projectbrief">SDK for hdac blockchain development</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 다음에 의해 생성됨 :  Doxygen 1.8.11 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'검색');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>메인&#160;페이지</span></a></li>
+      <li><a href="pages.html"><span>관련된&#160;페이지</span></a></li>
+      <li><a href="namespaces.html"><span>네임스페이스</span></a></li>
+      <li><a href="annotated.html"><span>클래스</span></a></li>
+      <li class="current"><a href="files.html"><span>파일들</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="검색" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>파일&#160;목록</span></a></li>
+      <li><a href="globals.html"><span>파일&#160;멤버</span></a></li>
+    </ul>
+  </div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_920bbc8cdbd402dd0ef4452b97d4b215.html">keys</a></li><li class="navelem"><a class="el" href="dir_451687ece1428d47f3668f9eb75751c9.html">include</a></li><li class="navelem"><a class="el" href="dir_2f53815d0290b423eb2e6978ceb01c55.html">keys</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">hs_keys.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef HS_KEYS_H</span></div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define HS_KEYS_H</span></div><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;</div><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div><div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div><div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;bitcoinaddress.h&quot;</span></div><div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="struct_key_pairs.html">   16</a></span>&#160;<span class="keyword">struct </span><a class="code" href="struct_key_pairs.html">KeyPairs</a> {</div><div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    std::string privateKey;</div><div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    std::string pubkey;</div><div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    std::string pubkeyHash;</div><div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    std::string walletAddr;</div><div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;};</div><div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div><div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword">class </span><a class="code" href="class_i_private_key_helper.html">IPrivateKeyHelper</a>;</div><div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">class </span><a class="code" href="class_i_wallet_addr_helper.html">IWalletAddrHelper</a>;</div><div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div><div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<a class="code" href="struct_key_pairs.html">KeyPairs</a> <a class="code" href="hs__keys_8cpp.html#adcc5322d59f04bfe20bb06204218119d">createKeyPairs</a>(<span class="keyword">const</span> <a class="code" href="class_i_private_key_helper.html">IPrivateKeyHelper</a> &amp;privateHelper, <span class="keyword">const</span> <a class="code" href="class_i_wallet_addr_helper.html">IWalletAddrHelper</a> &amp;addrHelper);</div><div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div><div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">class </span><a class="code" href="class_i_wallet_addr_helper.html">IWalletAddrHelper</a>;</div><div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">class </span><a class="code" href="class_i_private_key_helper.html">IPrivateKeyHelper</a>;</div><div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div><div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;std::string <a class="code" href="hs__keys_8cpp.html#ab40d37014e2d541a23f5b38b51858a72">createStreamPublishTx</a>(<span class="keyword">const</span> std::string&amp; streamKey, <span class="keyword">const</span> std::string&amp; streamItem,</div><div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="keyword">const</span> std::string &amp;createTxid,</div><div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keyword">const</span> std::string &amp;unspentScriptPubKey, <span class="keyword">const</span> std::string &amp;unspentTxid, uint32_t unspentVOut,</div><div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="keyword">const</span> std::string &amp;unspentRedeemScript, <span class="keyword">const</span> std::string &amp;privateKey,</div><div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keyword">const</span> <a class="code" href="class_i_private_key_helper.html">IPrivateKeyHelper</a> &amp;helper);</div><div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div><div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;std::string <a class="code" href="hs__keys_8cpp.html#a4219641d4f2de2202fe4f3cae7de6e65">createAssetSendTx</a>(<span class="keyword">const</span> std::string&amp; toAddr, <span class="keywordtype">double</span> quantity,</div><div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keyword">const</span> std::string&amp; issueTxid, <span class="keywordtype">int</span> multiple,</div><div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keyword">const</span> std::string&amp; unspentScriptPubKey, <span class="keyword">const</span> std::string&amp; unspentTxid, uint32_t unspentVOut,</div><div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordtype">double</span> unspentQty, <span class="keyword">const</span> std::string &amp;unspentRedeemScript,</div><div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keyword">const</span> std::string&amp; privateKey, <span class="keyword">const</span> <a class="code" href="class_i_private_key_helper.html">IPrivateKeyHelper</a>&amp; privateHelper, <span class="keyword">const</span> <a class="code" href="class_i_wallet_addr_helper.html">IWalletAddrHelper</a> &amp;walletHelper);</div><div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div><div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;std::string <a class="code" href="hs__keys_8cpp.html#aa5ce10042a72b261dd197bce54899b4c">walletAddrFromPubKey</a>(<span class="keyword">const</span> std::string&amp; pubkeyStr, <span class="keyword">const</span> <a class="code" href="class_i_wallet_addr_helper.html">IWalletAddrHelper</a>&amp; addrHelpler);</div><div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div><div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="hs__keys_8cpp.html#a9ec2f6ea86138567326018d29ee5fade">VerifyMessage</a>(<span class="keyword">const</span> std::string &amp;strAddress, <span class="keyword">const</span> std::string &amp;strSign,</div><div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="keyword">const</span> std::string &amp;strMessage, <span class="keyword">const</span> <a class="code" href="class_i_wallet_addr_helper.html">IWalletAddrHelper</a> &amp;addrHelper);</div><div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div><div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;std::string <a class="code" href="hs__keys_8cpp.html#ae646cca1d6e167136737cf975ab9fdf9">SignMessage</a>(<span class="keyword">const</span> std::string &amp;strAddress, <span class="keyword">const</span> std::string &amp;strMessage, </div><div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keyword">const</span> <a class="code" href="class_i_private_key_helper.html">IPrivateKeyHelper</a> &amp;privateHelper, <span class="keyword">const</span> <a class="code" href="class_i_wallet_addr_helper.html">IWalletAddrHelper</a> &amp;addrHelper);</div><div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div><div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#endif // HS_KEYS_H</span></div><div class="ttc" id="hs__keys_8cpp_html_adcc5322d59f04bfe20bb06204218119d"><div class="ttname"><a href="hs__keys_8cpp.html#adcc5322d59f04bfe20bb06204218119d">createKeyPairs</a></div><div class="ttdeci">KeyPairs createKeyPairs(const IPrivateKeyHelper &amp;privateHelper, const IWalletAddrHelper &amp;addrHelper)</div><div class="ttdoc">개인키를 생성한다. </div><div class="ttdef"><b>Definition:</b> hs_keys.cpp:45</div></div>
+<div class="ttc" id="hs__keys_8cpp_html_ab40d37014e2d541a23f5b38b51858a72"><div class="ttname"><a href="hs__keys_8cpp.html#ab40d37014e2d541a23f5b38b51858a72">createStreamPublishTx</a></div><div class="ttdeci">string createStreamPublishTx(const string &amp;streamKey, const string &amp;streamValue, const string &amp;createTxid, const string &amp;unspentScriptPubKey, const string &amp;unspentTxid, uint32_t unspentVOut, const string &amp;unspentRedeemScript, const string &amp;privateKey, const IPrivateKeyHelper &amp;helper)</div><div class="ttdoc">스트림키 발행을 위한 raw-tx 문자열을 생성한다. </div><div class="ttdef"><b>Definition:</b> hs_keys.cpp:285</div></div>
+<div class="ttc" id="class_i_wallet_addr_helper_html"><div class="ttname"><a href="class_i_wallet_addr_helper.html">IWalletAddrHelper</a></div><div class="ttdef"><b>Definition:</b> keyshelper.h:26</div></div>
+<div class="ttc" id="hs__keys_8cpp_html_ae646cca1d6e167136737cf975ab9fdf9"><div class="ttname"><a href="hs__keys_8cpp.html#ae646cca1d6e167136737cf975ab9fdf9">SignMessage</a></div><div class="ttdeci">string SignMessage(const string &amp;strAddress, const string &amp;strMessage, const IPrivateKeyHelper &amp;privateHelper, const IWalletAddrHelper &amp;addrHelper)</div><div class="ttdoc">개인키를 이용하여 sign 된 메시지를 만든다. </div><div class="ttdef"><b>Definition:</b> hs_keys.cpp:438</div></div>
+<div class="ttc" id="hs__keys_8cpp_html_a9ec2f6ea86138567326018d29ee5fade"><div class="ttname"><a href="hs__keys_8cpp.html#a9ec2f6ea86138567326018d29ee5fade">VerifyMessage</a></div><div class="ttdeci">bool VerifyMessage(const string &amp;strAddress, const string &amp;strSign, const string &amp;strMessage, const IWalletAddrHelper &amp;addrHelper)</div><div class="ttdoc">개인키 또는 지갑주소로 sign 된 메시지를 검증 한다. </div><div class="ttdef"><b>Definition:</b> hs_keys.cpp:390</div></div>
+<div class="ttc" id="struct_key_pairs_html"><div class="ttname"><a href="struct_key_pairs.html">KeyPairs</a></div><div class="ttdoc">개인키 정보 </div><div class="ttdef"><b>Definition:</b> hs_keys.h:16</div></div>
+<div class="ttc" id="hs__keys_8cpp_html_a4219641d4f2de2202fe4f3cae7de6e65"><div class="ttname"><a href="hs__keys_8cpp.html#a4219641d4f2de2202fe4f3cae7de6e65">createAssetSendTx</a></div><div class="ttdeci">string createAssetSendTx(const string &amp;toAddr, double quantity, const string &amp;issueTxid, int multiple, const string &amp;unspentScriptPubKey, const string &amp;unspentTxid, uint32_t unspentVOut, double unspentQty, const string &amp;unspentRedeemScript, const string &amp;privateKey, const IPrivateKeyHelper &amp;privateHelper, const IWalletAddrHelper &amp;walletHelper)</div><div class="ttdoc">개인키 처리를 위한 정보 제공 인터페이스를 가져온다. </div><div class="ttdef"><b>Definition:</b> hs_keys.cpp:135</div></div>
+<div class="ttc" id="hs__keys_8cpp_html_aa5ce10042a72b261dd197bce54899b4c"><div class="ttname"><a href="hs__keys_8cpp.html#aa5ce10042a72b261dd197bce54899b4c">walletAddrFromPubKey</a></div><div class="ttdeci">string walletAddrFromPubKey(const string &amp;pubkeyStr, const IWalletAddrHelper &amp;addrHelpler)</div><div class="ttdoc">공개키로부터 지갑주소를 문자열로 얻는다. </div><div class="ttdef"><b>Definition:</b> hs_keys.cpp:371</div></div>
+<div class="ttc" id="class_i_private_key_helper_html"><div class="ttname"><a href="class_i_private_key_helper.html">IPrivateKeyHelper</a></div><div class="ttdef"><b>Definition:</b> keyshelper.h:30</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+다음에 의해 생성됨 :  &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.11
+</small></address>
+</body>
+</html>
